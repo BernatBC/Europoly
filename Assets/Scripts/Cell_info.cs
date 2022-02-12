@@ -8,9 +8,14 @@ public class Cell_info : MonoBehaviour
 {
     public Button buy_button;
     public Button pass_button;
+    public Button buy_house_button;
+    public Button sell_house_button;
 
     public GameObject owner_mark1;
     public GameObject owner_mark2;
+
+    public GameObject house;
+    public GameObject hotel;
 
     [Header("Street Card")]
     public GameObject CardUI;
@@ -48,6 +53,8 @@ public class Cell_info : MonoBehaviour
     bool income_card_shown = false;
     bool luxury_card_shown = false;
     bool just_buttons = false;
+    bool buy_selected = false;
+    bool sell_selected = false;
 
     int actual_player = -1;
     string actual_cell = "";
@@ -78,6 +85,7 @@ public class Cell_info : MonoBehaviour
     Dictionary<string, Cell> info;
     Dictionary<string, RailRoad> rr_info;
     Dictionary<string, GameObject> owner_prefabs;
+    Dictionary<string, GameObject[]> houses_prefabs;
 
     void InitializeCellDictionary() {
         info = new Dictionary<string, Cell>();
@@ -342,11 +350,40 @@ public class Cell_info : MonoBehaviour
         c.name = "Liverpool St";
         rr_info.Add("Station4", c);
     }
+
+    void InitializePrefabDictionary() {
+        houses_prefabs = new Dictionary<string, GameObject[]>();
+        GameObject[] v = new GameObject[5];
+        houses_prefabs.Add("Brown", v);
+        houses_prefabs.Add("Brown2", v);
+        houses_prefabs.Add("LightBlue", v);
+        houses_prefabs.Add("LightBlue2", v);
+        houses_prefabs.Add("LightBlue3", v);
+        houses_prefabs.Add("Purple", v);
+        houses_prefabs.Add("Purple2", v);
+        houses_prefabs.Add("Purple3", v);
+        houses_prefabs.Add("Orange", v);
+        houses_prefabs.Add("Orange2", v);
+        houses_prefabs.Add("Orange3", v);
+        houses_prefabs.Add("Red", v);
+        houses_prefabs.Add("Red2", v);
+        houses_prefabs.Add("Red3", v);
+        houses_prefabs.Add("Yellow", v);
+        houses_prefabs.Add("Yellow2", v);
+        houses_prefabs.Add("Yellow3", v);
+        houses_prefabs.Add("Green", v);
+        houses_prefabs.Add("Green2", v);
+        houses_prefabs.Add("Green3", v);
+        houses_prefabs.Add("DarkBlue", v);
+        houses_prefabs.Add("DarkBlue2", v);
+    }
+
     void Start()
     {
         scripts = GameObject.Find("GameHandler");
         InitializeCellDictionary();
         InitializeRRDictionary();
+        InitializePrefabDictionary();
         electrical = new Utility { };
         owner_prefabs = new Dictionary<string, GameObject>();
         electrical.owner = -1;
@@ -357,6 +394,18 @@ public class Cell_info : MonoBehaviour
         water.mortgaged = false;
         buy_button.onClick.AddListener(buy_property);
         pass_button.onClick.AddListener(pass_clicked);
+        buy_house_button.onClick.AddListener(buy_house);
+        sell_house_button.onClick.AddListener(sell_house);
+    }
+
+    void buy_house() {
+        buy_selected = true;
+        sell_selected = false;
+    }
+
+    void sell_house() {
+        sell_selected = true;
+        buy_selected = false;
     }
 
     void pass_clicked() {
@@ -423,14 +472,103 @@ public class Cell_info : MonoBehaviour
 
     void add_owner_marker() {
         Vector3 pos = scripts.GetComponent<Movements>().cell_pos(actual_cell);
-        if (actual_cell == "Brown" || actual_cell == "Brown2" || actual_cell == "LightBlue" || actual_cell == "LightBlue2" || actual_cell == "LightBlue3" || actual_cell == "Station") pos.z = pos.z + 1.5f;
-        else if (actual_cell == "Purple" || actual_cell == "Purple2" || actual_cell == "Purple3" || actual_cell == "Electric" || actual_cell == "Orange" || actual_cell == "Station2" || actual_cell == "Orange2" || actual_cell == "Orange3") pos.x = pos.x + 1.5f;
-        else if (actual_cell == "Red" || actual_cell == "Red2" || actual_cell == "Red3" || actual_cell == "Station3" || actual_cell == "Yellow" || actual_cell == "Yellow2" || actual_cell == "Yellow3" || actual_cell == "Water") pos.z = pos.z - 1.5f;
-        else if (actual_cell == "Green" || actual_cell == "Green2" || actual_cell == "Green3" || actual_cell == "DarkBlue" || actual_cell == "DarkBlue2" || actual_cell == "Station4") pos.x = pos.x - 1.5f;
+        if (actual_cell == "Brown" || actual_cell == "Brown2" || actual_cell == "LightBlue" || actual_cell == "LightBlue2" || actual_cell == "LightBlue3" || actual_cell == "Station") pos.z += 1.5f;
+        else if (actual_cell == "Purple" || actual_cell == "Purple2" || actual_cell == "Purple3" || actual_cell == "Electric" || actual_cell == "Orange" || actual_cell == "Station2" || actual_cell == "Orange2" || actual_cell == "Orange3") pos.x += 1.5f;
+        else if (actual_cell == "Red" || actual_cell == "Red2" || actual_cell == "Red3" || actual_cell == "Station3" || actual_cell == "Yellow" || actual_cell == "Yellow2" || actual_cell == "Yellow3" || actual_cell == "Water") pos.z -= 1.5f;
+        else if (actual_cell == "Green" || actual_cell == "Green2" || actual_cell == "Green3" || actual_cell == "DarkBlue" || actual_cell == "DarkBlue2" || actual_cell == "Station4") pos.x -= 1.5f;
         GameObject a;
         if (actual_player == 0) a = Instantiate(owner_mark1, new Vector3(pos.x, 0.55f, pos.z), owner_mark1.gameObject.transform.rotation);
         else a = Instantiate(owner_mark2, new Vector3(pos.x, 0.55f, pos.z), owner_mark2.gameObject.transform.rotation);
         owner_prefabs.Add(actual_cell, a);
+    }
+
+    void add_house(string cell_name, int house_pos) {
+        Vector3 pos = scripts.GetComponent<Movements>().cell_pos(cell_name);
+        if (cell_name == "Brown" || cell_name == "Brown2" || cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3")
+        {
+            pos.z -= 1.9f;
+            if (house_pos == 1) pos.x += 1;
+            else if (house_pos == 2) pos.x += 0.33f;
+            else if (house_pos == 3) pos.x -= 0.33f;
+            else if (house_pos == 4) pos.x -= 1;
+            else {
+                GameObject[] k = houses_prefabs[cell_name];
+                houses_prefabs.Remove(cell_name);
+                for (int i = 0; i < 4; ++i) Destroy(k[i]);
+                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
+                houses_prefabs.Add(cell_name, k);
+                return;
+            }
+        }
+        else if (cell_name == "Purple" || cell_name == "Purple2" || cell_name == "Purple3" || cell_name == "Orange" || cell_name == "Orange2" || cell_name == "Orange3")
+        {
+            pos.x -= 1.9f;
+            if (house_pos == 1) pos.z -= 1;
+            else if (house_pos == 2) pos.z -= 0.33f;
+            else if (house_pos == 3) pos.z += 0.33f;
+            else if (house_pos == 4) pos.z += 1;
+            else
+            {
+                GameObject[] k = houses_prefabs[cell_name];
+                houses_prefabs.Remove(cell_name);
+                for (int i = 0; i < 4; ++i) Destroy(k[i]);
+                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
+                k[4].transform.Rotate(0, 90, 0);
+                houses_prefabs.Add(cell_name, k);
+                return;
+            }
+        }
+        else if (cell_name == "Red" || cell_name == "Red2" || cell_name == "Red3" || cell_name == "Yellow" || cell_name == "Yellow2" || cell_name == "Yellow3")
+        {
+            pos.z += 1.9f;
+            if (house_pos == 1) pos.x -= 1;
+            else if (house_pos == 2) pos.x -= 0.33f;
+            else if (house_pos == 3) pos.x += 0.33f;
+            else if (house_pos == 4) pos.x += 1;
+            else
+            {
+                GameObject[] k = houses_prefabs[cell_name];
+                houses_prefabs.Remove(cell_name);
+                for (int i = 0; i < 4; ++i) Destroy(k[i]);
+                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
+                houses_prefabs.Add(cell_name, k);
+                return;
+            }
+        }
+        else if (cell_name == "Green" || cell_name == "Green2" || cell_name == "Green3" || cell_name == "DarkBlue" || cell_name == "DarkBlue2") {
+            pos.x += 1.9f;
+            if (house_pos == 1) pos.z += 1;
+            else if (house_pos == 2) pos.z += 0.33f;
+            else if (house_pos == 3) pos.z -= 0.33f;
+            else if (house_pos == 4) pos.z -= 1;
+            else
+            {
+                GameObject[] k = houses_prefabs[cell_name];
+                houses_prefabs.Remove(cell_name);
+                for (int i = 0; i < 4; ++i) Destroy(k[i]);
+                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
+                k[4].transform.Rotate(0, 90, 0);
+                houses_prefabs.Add(cell_name, k);
+                return;
+            }
+        }
+        
+        GameObject a = Instantiate(house, new Vector3(pos.x, 0.7f, pos.z), house.gameObject.transform.rotation);
+        GameObject[] v = houses_prefabs[cell_name];
+        houses_prefabs.Remove(cell_name);
+        v[house_pos - 1] = a;
+        houses_prefabs.Add(cell_name, v);
+    }
+
+    void remove_house(string cell_name, int house_pos) {
+        GameObject[] k = houses_prefabs[cell_name];
+        Destroy(k[house_pos]);
+        if (house_pos == 4) {
+            add_house(cell_name, 1);
+            add_house(cell_name, 2);
+            add_house(cell_name, 3);
+            add_house(cell_name, 4);
+        }
     }
 
     bool disableCard() {
@@ -528,9 +666,13 @@ public class Cell_info : MonoBehaviour
     }
 
     int calculateRent(string cell_name) {
-        int k = info[cell_name].rent;
-        if (sameColor(cell_name)) k *= 2;
-        return k;
+        if (info[cell_name].houses == 1) return info[cell_name].rent1;
+        if (info[cell_name].houses == 2) return info[cell_name].rent2;
+        if (info[cell_name].houses == 3) return info[cell_name].rent3;
+        if (info[cell_name].houses == 4) return info[cell_name].rent4;
+        if (info[cell_name].houses == 5) return info[cell_name].rentH;
+        if (sameColor(cell_name)) return info[cell_name].rent * 2;
+        return info[cell_name].rent;
     }
     public void LandedOn(string cell_name, int player, int dices) {
         actual_cell = cell_name;
@@ -644,7 +786,29 @@ public class Cell_info : MonoBehaviour
         else if (cell_name == "GoToJail") Debug.Log("GoToJail Card in progress");
         else if (cell_name == "Parking") Debug.Log("Parking Card in progress");
         else if (cell_name == "Start") Debug.Log("Start Card in progress");
-        else ShowRentCard(cell_name);
+        else {
+            int player_torn = scripts.GetComponent<Movements>().getPlayerTorn();
+            if (buy_selected && player_torn == info[cell_name].owner && sameColor(cell_name) && info[cell_name].houses < 5) {
+                //Buy house
+                Cell c = info[cell_name];
+                info.Remove(cell_name);
+                ++c.houses;
+                add_house(cell_name, c.houses);
+                info.Add(cell_name, c);
+                scripts.GetComponent<Cash_management>().modify_cash(player_torn, -info[cell_name].house_cost, false);
+            }
+            else if (sell_selected && player_torn == info[cell_name].owner && info[cell_name].houses > 0) {
+                //Sell house
+                Cell c = info[cell_name];
+                info.Remove(cell_name);
+                --c.houses;
+                remove_house(cell_name, c.houses);
+                info.Add(cell_name, c);
+                scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].house_cost/2, false);
+            }
+            else ShowRentCard(cell_name);
+        }
+        
     }
 
     void Update()
@@ -659,6 +823,8 @@ public class Cell_info : MonoBehaviour
                     if (cell_name != "Background") ShowCard(cell_name);
                 }
             }
+            buy_selected = false;
+            sell_selected = false;
         }
     }
 }
