@@ -29,7 +29,7 @@ public class Cash_management : MonoBehaviour
         tax_cash = 0;
     }
 
-    public void modify_cash(int player, int amount, bool taxes) {
+    public bool modify_cash(int player, int amount, bool taxes) {
         Debug.Log("Player " + player + " " + amount);
         if (player == 0)
         {
@@ -41,6 +41,7 @@ public class Cash_management : MonoBehaviour
             cash2_text.text = cash2 + "";
         }
         if (taxes) tax_cash -= amount;
+        return true;
     }
     public void modify_cash_per(int player, float amount, bool taxes)
     {

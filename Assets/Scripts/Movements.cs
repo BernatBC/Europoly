@@ -94,6 +94,10 @@ public class Movements : MonoBehaviour
         return zero;
     }
 
+    public int getPlayerTorn() {
+        return player_torn;
+    }
+
     public void GoToJail() {
         Debug.Log("Go to jail");
         end_torn.gameObject.SetActive(false);
