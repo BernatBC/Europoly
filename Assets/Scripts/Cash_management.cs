@@ -15,7 +15,7 @@ public class Cash_management : MonoBehaviour
     int tax_cash = 0;
 
     public void refund_cash(int player) {
-        Debug.Log("Player " + player + " " + tax_cash);
+        //Debug.Log("Player " + player + " " + tax_cash);
         if (player == 0)
         {
             cash1 += tax_cash;
@@ -30,7 +30,7 @@ public class Cash_management : MonoBehaviour
     }
 
     public bool modify_cash(int player, int amount, bool taxes) {
-        Debug.Log("Player " + player + " " + amount);
+        //Debug.Log("Player " + player + " " + amount);
         if (player == 0)
         {
             cash1 += amount;
@@ -45,7 +45,7 @@ public class Cash_management : MonoBehaviour
     }
     public void modify_cash_per(int player, float amount, bool taxes)
     {
-        Debug.Log("Player " + player + " " + Mathf.RoundToInt(cash1 * amount));
+        //Debug.Log("Player " + player + " " + Mathf.RoundToInt(cash1 * amount));
         if (player == 0)
         {
             int am = Mathf.RoundToInt(cash1 * amount);

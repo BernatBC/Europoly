@@ -492,11 +492,9 @@ public class Cell_info : MonoBehaviour
             else if (house_pos == 3) pos.x -= 0.33f;
             else if (house_pos == 4) pos.x -= 1;
             else {
-                GameObject[] k = houses_prefabs[cell_name];
-                houses_prefabs.Remove(cell_name);
-                for (int i = 0; i < 4; ++i) Destroy(k[i]);
-                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
-                houses_prefabs.Add(cell_name, k);
+                for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
+                houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
+                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
                 return;
             }
         }
@@ -509,12 +507,10 @@ public class Cell_info : MonoBehaviour
             else if (house_pos == 4) pos.z += 1;
             else
             {
-                GameObject[] k = houses_prefabs[cell_name];
-                houses_prefabs.Remove(cell_name);
-                for (int i = 0; i < 4; ++i) Destroy(k[i]);
-                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
-                k[4].transform.Rotate(0, 90, 0);
-                houses_prefabs.Add(cell_name, k);
+                for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
+                houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
+                houses_prefabs[cell_name][4].transform.Rotate(0, 90, 0);
+                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
                 return;
             }
         }
@@ -527,11 +523,9 @@ public class Cell_info : MonoBehaviour
             else if (house_pos == 4) pos.x += 1;
             else
             {
-                GameObject[] k = houses_prefabs[cell_name];
-                houses_prefabs.Remove(cell_name);
-                for (int i = 0; i < 4; ++i) Destroy(k[i]);
-                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
-                houses_prefabs.Add(cell_name, k);
+                for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
+                houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
+                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
                 return;
             }
         }
@@ -543,32 +537,27 @@ public class Cell_info : MonoBehaviour
             else if (house_pos == 4) pos.z -= 1;
             else
             {
-                GameObject[] k = houses_prefabs[cell_name];
-                houses_prefabs.Remove(cell_name);
-                for (int i = 0; i < 4; ++i) Destroy(k[i]);
-                k[4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), house.gameObject.transform.rotation);
-                k[4].transform.Rotate(0, 90, 0);
-                houses_prefabs.Add(cell_name, k);
+                for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
+                houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
+                houses_prefabs[cell_name][4].transform.Rotate(0, 90, 0);
+                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
                 return;
             }
         }
-        
-        GameObject a = Instantiate(house, new Vector3(pos.x, 0.7f, pos.z), house.gameObject.transform.rotation);
-        GameObject[] v = houses_prefabs[cell_name];
-        houses_prefabs.Remove(cell_name);
-        v[house_pos - 1] = a;
-        houses_prefabs.Add(cell_name, v);
+        Debug.Log(cell_name);
+        houses_prefabs[cell_name][house_pos - 1] = Instantiate(house, new Vector3(pos.x, 0.7f, pos.z), Quaternion.identity);
+        houses_prefabs[cell_name][house_pos - 1].gameObject.name = "_" + cell_name + house_pos.ToString();
     }
 
-    void remove_house(string cell_name, int house_pos) {
-        GameObject[] k = houses_prefabs[cell_name];
-        Destroy(k[house_pos]);
-        if (house_pos == 4) {
-            add_house(cell_name, 1);
-            add_house(cell_name, 2);
-            add_house(cell_name, 3);
-            add_house(cell_name, 4);
+    void remove_house (string cell_name, int house_pos) {
+        if (house_pos < 5) {
+            GameObject h = GameObject.Find(cell_name + house_pos.ToString());
+            Destroy(h);
+            return;
         }
+        GameObject h2 = GameObject.Find("_" + cell_name + "H");
+        Destroy(h2);
+        for (int i = 0; i < 4; ++i) add_house("_" + cell_name, i + 1);
     }
 
     bool disableCard() {
@@ -801,8 +790,8 @@ public class Cell_info : MonoBehaviour
                 //Sell house
                 Cell c = info[cell_name];
                 info.Remove(cell_name);
-                --c.houses;
                 remove_house(cell_name, c.houses);
+                --c.houses;
                 info.Add(cell_name, c);
                 scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].house_cost/2, false);
             }
