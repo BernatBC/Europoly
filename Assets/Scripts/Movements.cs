@@ -144,8 +144,8 @@ public class Movements : MonoBehaviour
         roll_dice.gameObject.SetActive(false);
         d1 = Random.Range(1, 7);
         d2 = Random.Range(1, 7);
-        //d1 = 1;
-        //d2 = 1;
+        //d1 = 4;
+        //d2 = 3;
         dice1.text = d1 + "";
         dice2.text = d2 + "";
         movements_remaining = d1 + d2;
@@ -170,6 +170,14 @@ public class Movements : MonoBehaviour
 
             destination = new Vector3(cells[players_pos[player_torn]].transform.position.x, cells[players_pos[player_torn]].transform.position.y + 1, cells[players_pos[player_torn]].transform.position.z);
             --movements_remaining;
+        }
+
+        if (!moving && movements_remaining < 0)
+        {
+            moving = true;
+            --players_pos[player_torn];
+            destination = new Vector3(cells[players_pos[player_torn]].transform.position.x, cells[players_pos[player_torn]].transform.position.y + 1, cells[players_pos[player_torn]].transform.position.z);
+            ++movements_remaining;
         }
 
         if (Vector3.Distance(players[player_torn].transform.position, destination) > 0.001f)
