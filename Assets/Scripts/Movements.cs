@@ -11,12 +11,14 @@ public class Movements : MonoBehaviour
     public Button end_torn;
     public Button roll_doubles;
     public Button pay50;
+    public Button getOutForFree;
 
     public Text dice1;
     public Text dice2;
 
     private int[] players_pos;
     private int[] penalized_torns;
+    private int[] outofjail;
     private bool moving = false;
     private int movements_remaining = 0;
     private int player_torn = 0;
@@ -35,19 +37,23 @@ public class Movements : MonoBehaviour
         end_torn.onClick.AddListener(NextTorn);
         roll_doubles.onClick.AddListener(roll_dices_doubles);
         pay50.onClick.AddListener(pay);
+        getOutForFree.onClick.AddListener(use_card);
         end_torn.gameObject.SetActive(false);
         roll_dice.gameObject.SetActive(true);
         pay50.gameObject.SetActive(false);
         roll_doubles.gameObject.SetActive(false);
-
+        getOutForFree.gameObject.SetActive(false);
+        
         players_pos = new int[players.Length];
         penalized_torns = new int[players.Length];
+        outofjail = new int[players.Length];
         for (int i = 0; i < players.Length; ++i)
         {
             players[i].transform.position = new Vector3(cells[0].transform.position.x, cells[0].transform.position.y + 1, cells[0].transform.position.z);
             destination = players[i].transform.position;
             players_pos[i] = 0;
             penalized_torns[i] = 0;
+            outofjail[i] = 0;
         }
     }
 
@@ -61,6 +67,7 @@ public class Movements : MonoBehaviour
         else {
             roll_doubles.gameObject.SetActive(true);
             pay50.gameObject.SetActive(true);
+            if (outofjail[player_torn] > 0) getOutForFree.gameObject.SetActive(true);
             --penalized_torns[player_torn];
         }
         
@@ -69,15 +76,30 @@ public class Movements : MonoBehaviour
     void pay() { 
         roll_doubles.gameObject.SetActive(false);
         pay50.gameObject.SetActive(false);
+        getOutForFree.gameObject.SetActive(false);
         scripts.GetComponent<Cash_management>().modify_cash(player_torn, -100, false);
         penalized_torns[player_torn] = 0;
         roll_dice.gameObject.SetActive(true);
     }
 
+    void use_card() {
+        roll_doubles.gameObject.SetActive(false);
+        pay50.gameObject.SetActive(false);
+        getOutForFree.gameObject.SetActive(false);
+        penalized_torns[player_torn] = 0;
+        roll_dice.gameObject.SetActive(true);
+        outofjail[player_torn]--;
+    }
+
+    public void add_out_of_jail(int player) {
+        outofjail[player]++;
+    }
+    
     void roll_dices_doubles()
     {
         roll_doubles.gameObject.SetActive(false);
         pay50.gameObject.SetActive(false);
+        getOutForFree.gameObject.SetActive(false);
         d1 = Random.Range(1, 7);
         d2 = Random.Range(1, 7);
         dice1.text = d1 + "";
@@ -113,13 +135,17 @@ public class Movements : MonoBehaviour
         penalized_torns[player_torn] = 3;
     }
 
+    public void MoveNCells(int n) {
+        movements_remaining = n;
+    }
+
     void RollDice()
     {
         roll_dice.gameObject.SetActive(false);
         d1 = Random.Range(1, 7);
         d2 = Random.Range(1, 7);
-        //d1 = 5;
-        //d2 = 5;
+        //d1 = 1;
+        //d2 = 1;
         dice1.text = d1 + "";
         dice2.text = d2 + "";
         movements_remaining = d1 + d2;

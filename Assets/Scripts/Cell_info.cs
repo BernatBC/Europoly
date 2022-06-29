@@ -36,6 +36,10 @@ public class Cell_info : MonoBehaviour
     public GameObject rrcard;
     public Text rr_title;
 
+    [Header("Community Chest Card")]
+    public GameObject chestcard;
+    public Text chest_title;
+
     [Header("Utilities")]
     public GameObject electric_card;
     public GameObject water_card;
@@ -52,6 +56,7 @@ public class Cell_info : MonoBehaviour
     bool water_card_shown = false;
     bool income_card_shown = false;
     bool luxury_card_shown = false;
+    bool cc_card_shown = false;
     bool just_buttons = false;
     bool buy_selected = false;
     bool sell_selected = false;
@@ -457,6 +462,102 @@ public class Cell_info : MonoBehaviour
         }
     }
 
+    private int Repairs() {
+        int total = 0;
+        foreach (Cell c in info.Values)
+        {
+            if (c.owner == actual_player && c.houses > 0) {
+                if (c.houses == 5) total += 115;
+                else total += 40*c.houses;
+            }
+        }
+        return total;
+    }
+
+    private void ChestCard(int n) {
+        if (n == 1) {
+            chest_title.text = "Advance to Go (Collect 200)";
+            if (actual_cell == "Chest") scripts.GetComponent<Movements>().MoveNCells(38);
+            else if (actual_cell == "Chest2") scripts.GetComponent<Movements>().MoveNCells(23);
+            else scripts.GetComponent<Movements>().MoveNCells(7);
+        }
+        else if (n == 2) {
+            chest_title.text = "Bank error in your favour. Collect 200";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 200, false);
+        }
+        else if (n == 3)
+        {
+            chest_title.text = "Doctor’s fee. Pay 50";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
+        }
+        else if (n == 4)
+        {
+            chest_title.text = "From sale of stock you get 50";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false);
+        }
+        else if (n == 5)
+        {
+            chest_title.text = "Get Out of Jail Free";
+            scripts.GetComponent<Movements>().add_out_of_jail(actual_player);
+        }
+        else if (n == 6)
+        {
+            chest_title.text = "Go to Jail. Go directly to jail, do not pass Go, do not collect 200";
+            scripts.GetComponent<Movements>().GoToJail();
+        }
+        else if (n == 7)
+        {
+            chest_title.text = "Holiday fund matures. Receive 100";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+        }
+        else if (n == 8)
+        {
+            chest_title.text = "Income tax refund. Collect 20";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 20, false);
+        }
+        else if (n == 9)
+        {
+            chest_title.text = "It is your birthday. Collect 10 from every player";
+            scripts.GetComponent<Cash_management>().collect_from_everybody(actual_player, 10);
+        }
+        else if (n == 10)
+        {
+            chest_title.text = "Life insurance matures. Collect 100";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+        }
+        else if (n == 11)
+        {
+            chest_title.text = "Pay hospital fees of 100";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -100, false);
+        }
+        else if (n == 12)
+        {
+            chest_title.text = "Pay school fees of 50";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
+        }
+        else if (n == 13)
+        {
+            chest_title.text = "Receive 25 consultancy fee";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 25, false);
+        }
+        else if (n == 14)
+        {
+            chest_title.text = "You are assessed for street repairs. 40 per house. 115 per hotel";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(), false);
+        }
+        else if (n == 15)
+        {
+            chest_title.text = "You have won second prize in a beauty contest. Collect 10";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 10, false);
+        }
+        else if (n == 16)
+        {
+            chest_title.text = "You inherit 100";
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+        }
+        chestcard.gameObject.SetActive(true);
+        cc_card_shown = true;
+    }
     void ShowTaxCard(string cell_name) {
         if (cell_name == "Tax")
         {
@@ -597,6 +698,11 @@ public class Cell_info : MonoBehaviour
             luxury_card_shown = false;
             return true;
         }
+        else if (cc_card_shown) {
+            chestcard.gameObject.SetActive(false);
+            cc_card_shown = false;
+            return true;
+        }
         return false;
     }
 
@@ -669,12 +775,14 @@ public class Cell_info : MonoBehaviour
         if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4")
         {
             ShowRRCard(cell_name);
-            if (rr_info[cell_name].owner == -1) {
+            if (rr_info[cell_name].owner == -1)
+            {
                 just_buttons = true;
                 buy_button.gameObject.SetActive(true);
                 pass_button.gameObject.SetActive(true);
-            } 
-            else if (player != rr_info[cell_name].owner) {
+            }
+            else if (player != rr_info[cell_name].owner)
+            {
                 int k = countStations(rr_info[cell_name].owner);
                 int p = 0;
                 if (k == 1) p = 25;
@@ -685,7 +793,8 @@ public class Cell_info : MonoBehaviour
                 scripts.GetComponent<Cash_management>().modify_cash(rr_info[cell_name].owner, p, false);
             }
         }
-        else if (cell_name == "Water") {
+        else if (cell_name == "Water")
+        {
             ShowUtiliyCard(cell_name);
             if (water.owner == -1)
             {
@@ -697,15 +806,16 @@ public class Cell_info : MonoBehaviour
             {
                 if (water.owner == electrical.owner)
                 {
-                    scripts.GetComponent<Cash_management>().modify_cash(player, -10*dices, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(player, -10 * dices, false);
                     scripts.GetComponent<Cash_management>().modify_cash(water.owner, 10 * dices, false);
                 }
-                else {
+                else
+                {
                     scripts.GetComponent<Cash_management>().modify_cash(player, -4 * dices, false);
                     scripts.GetComponent<Cash_management>().modify_cash(water.owner, 4 * dices, false);
                 }
             }
-        } 
+        }
         else if (cell_name == "Electric")
         {
             ShowUtiliyCard(cell_name);
@@ -715,7 +825,7 @@ public class Cell_info : MonoBehaviour
                 buy_button.gameObject.SetActive(true);
                 pass_button.gameObject.SetActive(true);
             }
-            else if(player != electrical.owner)
+            else if (player != electrical.owner)
             {
                 if (water.owner == electrical.owner)
                 {
@@ -729,7 +839,7 @@ public class Cell_info : MonoBehaviour
                 }
             }
         }
-        else if (cell_name == "Chest" || cell_name == "Chest2" || cell_name == "Chest3") Debug.Log("Chest Card in progress");
+        else if (cell_name == "Chest" || cell_name == "Chest2" || cell_name == "Chest3") ChestCard(Random.Range(1, 17));
         else if (cell_name == "Chance" || cell_name == "Chance2" || cell_name == "Chance3") Debug.Log("Chance Card in progress");
         else if (cell_name == "Tax")
         {
@@ -749,7 +859,8 @@ public class Cell_info : MonoBehaviour
             scripts.GetComponent<Cash_management>().refund_cash(player);
         }
         else if (cell_name == "Start") Debug.Log("Start Card in progress");
-        else {
+        else
+        {
             ShowRentCard(cell_name);
             if (info[cell_name].owner == -1)
             {
