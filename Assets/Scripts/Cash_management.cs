@@ -62,6 +62,17 @@ public class Cash_management : MonoBehaviour
         }
     }
 
+    public void collect_from_everybody(int player, int amount) {
+        if (player == 0) {
+            modify_cash(1, -amount, false);
+            modify_cash(0, amount, false);
+        }
+        else {
+            modify_cash(0, -amount, false);
+            modify_cash(1, amount, false);
+        }
+    }
+
     void Start()
     {
         cash1 = initial_cash;
