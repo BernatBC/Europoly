@@ -494,7 +494,7 @@ public class Cell_info : MonoBehaviour
             else {
                 for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
                 houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
-                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
+                houses_prefabs[cell_name][4].gameObject.name = cell_name + "_H";
                 return;
             }
         }
@@ -510,7 +510,7 @@ public class Cell_info : MonoBehaviour
                 for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
                 houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
                 houses_prefabs[cell_name][4].transform.Rotate(0, 90, 0);
-                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
+                houses_prefabs[cell_name][4].gameObject.name = cell_name + "_H";
                 return;
             }
         }
@@ -525,7 +525,7 @@ public class Cell_info : MonoBehaviour
             {
                 for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
                 houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
-                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
+                houses_prefabs[cell_name][4].gameObject.name = cell_name + "_H";
                 return;
             }
         }
@@ -540,24 +540,24 @@ public class Cell_info : MonoBehaviour
                 for (int i = 0; i < 4; ++i) remove_house(cell_name, i + 1);
                 houses_prefabs[cell_name][4] = Instantiate(hotel, new Vector3(pos.x, 1.4f, pos.z), Quaternion.identity);
                 houses_prefabs[cell_name][4].transform.Rotate(0, 90, 0);
-                houses_prefabs[cell_name][4].gameObject.name = "_" + cell_name + "H";
+                houses_prefabs[cell_name][4].gameObject.name = cell_name + "_H";
                 return;
             }
         }
         Debug.Log(cell_name);
         houses_prefabs[cell_name][house_pos - 1] = Instantiate(house, new Vector3(pos.x, 0.7f, pos.z), Quaternion.identity);
-        houses_prefabs[cell_name][house_pos - 1].gameObject.name = "_" + cell_name + house_pos.ToString();
+        houses_prefabs[cell_name][house_pos - 1].gameObject.name = cell_name + "_" + house_pos.ToString();
     }
 
     void remove_house (string cell_name, int house_pos) {
         if (house_pos < 5) {
-            GameObject h = GameObject.Find(cell_name + house_pos.ToString());
+            GameObject h = GameObject.Find(cell_name + "_" + house_pos.ToString());
             Destroy(h);
             return;
         }
-        GameObject h2 = GameObject.Find("_" + cell_name + "H");
+        GameObject h2 = GameObject.Find(cell_name + "_H");
         Destroy(h2);
-        for (int i = 0; i < 4; ++i) add_house("_" + cell_name, i + 1);
+        for (int i = 1; i <= 4; ++i) add_house(cell_name, i);
     }
 
     bool disableCard() {
