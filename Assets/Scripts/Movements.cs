@@ -82,7 +82,10 @@ public class Movements : MonoBehaviour
         d2 = Random.Range(1, 7);
         dice1.text = d1 + "";
         dice2.text = d2 + "";
-        if (d1 == d2) movements_remaining = d1 + d2;
+        if (d1 == d2) {
+            movements_remaining = d1 + d2;
+            penalized_torns[player_torn] = 0;
+        } 
         else end_torn.gameObject.SetActive(true);
     }
 
