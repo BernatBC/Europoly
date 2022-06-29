@@ -73,6 +73,20 @@ public class Cash_management : MonoBehaviour
         }
     }
 
+    public void pay_everybody(int player, int amount)
+    {
+        if (player == 0)
+        {
+            modify_cash(0, -amount, false);
+            modify_cash(1, amount, false);
+        }
+        else
+        {
+            modify_cash(1, -amount, false);
+            modify_cash(0, amount, false);
+        }
+    }
+
     void Start()
     {
         cash1 = initial_cash;
