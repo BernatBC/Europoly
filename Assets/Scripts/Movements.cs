@@ -94,7 +94,35 @@ public class Movements : MonoBehaviour
     public void add_out_of_jail(int player) {
         outofjail[player]++;
     }
-    
+
+    public void mortgage(string cell) {
+        for (int i = 0; i < cells.Length; ++i) {
+            if (cells[i].name == cell) {
+                Transform t = cells[i].transform;
+                foreach (Transform tr in t) {
+                    if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(55, 55, 55, 255);
+                }
+                return;
+            }
+        }
+    }
+
+    public void unmortgage(string cell)
+    {
+        for (int i = 0; i < cells.Length; ++i)
+        {
+            if (cells[i].name == cell)
+            {
+                Transform t = cells[i].transform;
+                foreach (Transform tr in t)
+                {
+                    if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
+                }
+                return;
+            }
+        }
+    }
+
     void roll_dices_doubles()
     {
         roll_doubles.gameObject.SetActive(false);
@@ -144,7 +172,7 @@ public class Movements : MonoBehaviour
         roll_dice.gameObject.SetActive(false);
         d1 = Random.Range(1, 7);
         d2 = Random.Range(1, 7);
-        //d1 = 4;
+        //d1 = 5;
         //d2 = 3;
         dice1.text = d1 + "";
         dice2.text = d2 + "";
