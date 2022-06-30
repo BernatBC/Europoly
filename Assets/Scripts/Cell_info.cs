@@ -10,6 +10,7 @@ public class Cell_info : MonoBehaviour
     public Button pass_button;
     public Button buy_house_button;
     public Button sell_house_button;
+    public Button mortgage;
 
     public GameObject owner_mark1;
     public GameObject owner_mark2;
@@ -65,6 +66,7 @@ public class Cell_info : MonoBehaviour
     bool just_buttons = false;
     bool buy_selected = false;
     bool sell_selected = false;
+    bool mortgage_selected = false;
 
     int actual_player = -1;
     string actual_cell = "";
@@ -408,16 +410,19 @@ public class Cell_info : MonoBehaviour
         pass_button.onClick.AddListener(pass_clicked);
         buy_house_button.onClick.AddListener(buy_house);
         sell_house_button.onClick.AddListener(sell_house);
+        mortgage.onClick.AddListener(mortgage_unmortgage);
     }
 
     void buy_house() {
         buy_selected = true;
         sell_selected = false;
+        mortgage_selected = false;
     }
 
     void sell_house() {
         sell_selected = true;
         buy_selected = false;
+        mortgage_selected = false;
     }
 
     void pass_clicked() {
@@ -447,12 +452,16 @@ public class Cell_info : MonoBehaviour
         card_costHs.text = info[cell_name].house_cost + "";
         card_costHt.text = info[cell_name].house_cost + "";
         card_mortgage.text = info[cell_name].cost / 2 + "";
+        if (info[cell_name].mortgaged) CardUI.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+        else CardUI.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(245, 234, 223, 255);
         CardUI.gameObject.SetActive(true);
         card_shown = true;
     }
 
     private void ShowRRCard(string cell_name) {
         rr_title.text = rr_info[cell_name].name;
+        if (rr_info[cell_name].mortgaged) rrcard.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+        else rrcard.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(245, 234, 223, 255);
         rrcard.gameObject.SetActive(true);
         rr_card_shown = true;
     }
@@ -460,10 +469,14 @@ public class Cell_info : MonoBehaviour
     private void ShowUtiliyCard(string cell_name) {
         if (cell_name == "Electric")
         {
+            if (electrical.mortgaged) electric_card.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else electric_card.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(245, 234, 223, 255);
             electric_card.gameObject.SetActive(true);
             electric_card_shown = true;
         }
         else {
+            if (water.mortgaged) water_card.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else water_card.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(245, 234, 223, 255);
             water_card.gameObject.SetActive(true);
             water_card_shown = true;
         }
@@ -773,7 +786,6 @@ public class Cell_info : MonoBehaviour
                 return;
             }
         }
-        Debug.Log(cell_name);
         houses_prefabs[cell_name][house_pos - 1] = Instantiate(house, new Vector3(pos.x, 0.7f, pos.z), Quaternion.identity);
         houses_prefabs[cell_name][house_pos - 1].gameObject.name = cell_name + "_" + house_pos.ToString();
     }
@@ -882,6 +894,12 @@ public class Cell_info : MonoBehaviour
         return k;
     }
 
+    private void mortgage_unmortgage() {
+        mortgage_selected = true;
+        buy_selected = false;
+        sell_selected = false;
+    }
+
     bool sameColor(string cell_name) {
         if (cell_name == "Brown" || cell_name == "Brown2") return info["Brown"].owner == info["Brown2"].owner;
         if (cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3") return info["LightBlue"].owner == info["LightBlue2"].owner && info["LightBlue"].owner == info["LightBlue3"].owner;
@@ -915,7 +933,7 @@ public class Cell_info : MonoBehaviour
                 buy_button.gameObject.SetActive(true);
                 pass_button.gameObject.SetActive(true);
             }
-            else if (player != rr_info[cell_name].owner)
+            else if (player != rr_info[cell_name].owner && !rr_info[cell_name].mortgaged)
             {
                 int k = countStations(rr_info[cell_name].owner);
                 int p = 0;
@@ -937,7 +955,7 @@ public class Cell_info : MonoBehaviour
                 buy_button.gameObject.SetActive(true);
                 pass_button.gameObject.SetActive(true);
             }
-            else if (player != water.owner)
+            else if (player != water.owner && !water.mortgaged)
             {
                 if (water.owner == electrical.owner || multiplier != 1)
                 {
@@ -961,7 +979,7 @@ public class Cell_info : MonoBehaviour
                 buy_button.gameObject.SetActive(true);
                 pass_button.gameObject.SetActive(true);
             }
-            else if (player != electrical.owner)
+            else if (player != electrical.owner && !electrical.mortgaged)
             {
                 if (water.owner == electrical.owner || multiplier != 1)
                 {
@@ -1005,7 +1023,7 @@ public class Cell_info : MonoBehaviour
                 buy_button.gameObject.SetActive(true);
                 pass_button.gameObject.SetActive(true);
             }
-            else if (player != info[cell_name].owner)
+            else if (player != info[cell_name].owner && !info[cell_name].mortgaged)
             {
                 int value = calculateRent(cell_name);
                 scripts.GetComponent<Cash_management>().modify_cash(player, -value, false);
@@ -1014,8 +1032,57 @@ public class Cell_info : MonoBehaviour
         }
     }
     public void ShowCard(string cell_name) {
-        if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4") ShowRRCard(cell_name);
-        else if (cell_name == "Water" || cell_name == "Electric") ShowUtiliyCard(cell_name);
+        if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4") {
+            if (!mortgage_selected) ShowRRCard(cell_name);
+            else {
+                RailRoad r = rr_info[cell_name];
+                rr_info.Remove(cell_name);
+                r.mortgaged = !r.mortgaged;
+                rr_info.Add(cell_name, r);
+                if (rr_info[cell_name].mortgaged)
+                {
+                    scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+                    scripts.GetComponent<Movements>().mortgage(cell_name);
+                }
+                else {
+                    scripts.GetComponent<Cash_management>().modify_cash(actual_player, -110, false);
+                    scripts.GetComponent<Movements>().unmortgage(cell_name);
+                }
+            }
+        } 
+        else if (cell_name == "Water" || cell_name == "Electric") {
+            if (!mortgage_selected) ShowUtiliyCard(cell_name);
+            else {
+                if (cell_name == "Water")
+                {
+                    water.mortgaged = !water.mortgaged;
+                    if (water.mortgaged)
+                    {
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, 75, false);
+                        scripts.GetComponent<Movements>().mortgage(cell_name);
+                    }
+                    else
+                    {
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, -83, false);
+                        scripts.GetComponent<Movements>().unmortgage(cell_name);
+                    }
+                }
+                else
+                {
+                    electrical.mortgaged = !water.mortgaged;
+                    if (electrical.mortgaged)
+                    {
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, 75, false);
+                        scripts.GetComponent<Movements>().mortgage(cell_name);
+                    }
+                    else
+                    {
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, -83, false);
+                        scripts.GetComponent<Movements>().unmortgage(cell_name);
+                    }
+                }
+            }
+        }
         else if (cell_name == "Chest" || cell_name == "Chest2" || cell_name == "Chest3") Debug.Log("Chest Card in progress");
         else if (cell_name == "Chance" || cell_name == "Chance2" || cell_name == "Chance3") Debug.Log("Chance Card in progress");
         else if (cell_name == "Tax" || cell_name == "Tax2") ShowTaxCard(cell_name);
@@ -1025,7 +1092,7 @@ public class Cell_info : MonoBehaviour
         else if (cell_name == "Start") Debug.Log("Start Card in progress");
         else {
             int player_torn = scripts.GetComponent<Movements>().getPlayerTorn();
-            if (buy_selected && player_torn == info[cell_name].owner && sameColor(cell_name) && info[cell_name].houses < 5) {
+            if (buy_selected && player_torn == info[cell_name].owner && sameColor(cell_name) && info[cell_name].houses < 5 && !info[cell_name].mortgaged) {
                 //Buy house
                 Cell c = info[cell_name];
                 info.Remove(cell_name);
@@ -1034,14 +1101,30 @@ public class Cell_info : MonoBehaviour
                 info.Add(cell_name, c);
                 scripts.GetComponent<Cash_management>().modify_cash(player_torn, -info[cell_name].house_cost, false);
             }
-            else if (sell_selected && player_torn == info[cell_name].owner && info[cell_name].houses > 0) {
+            else if (sell_selected && player_torn == info[cell_name].owner && info[cell_name].houses > 0 && !info[cell_name].mortgaged) {
                 //Sell house
                 Cell c = info[cell_name];
                 info.Remove(cell_name);
                 remove_house(cell_name, c.houses);
                 --c.houses;
                 info.Add(cell_name, c);
-                scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].house_cost/2, false);
+                scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].house_cost / 2, false);
+            }
+            else if (mortgage_selected && player_torn == info[cell_name].owner && info[cell_name].houses == 0) {
+                //Mortgage-Unmortgage
+                Cell c = info[cell_name];
+                info.Remove(cell_name);
+                c.mortgaged = !c.mortgaged;
+                info.Add(cell_name, c);
+                if (c.mortgaged)
+                {
+                    scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].cost / 2, false);
+                    scripts.GetComponent<Movements>().mortgage(cell_name);
+                }
+                else {
+                    scripts.GetComponent<Cash_management>().modify_cash(player_torn, (int) (-1.1f*(info[cell_name].cost / 2)), false);
+                    scripts.GetComponent<Movements>().unmortgage(cell_name);
+                }
             }
             else ShowRentCard(cell_name);
         }
@@ -1062,6 +1145,7 @@ public class Cell_info : MonoBehaviour
             }
             buy_selected = false;
             sell_selected = false;
+            mortgage_selected = false;
         }
     }
 }

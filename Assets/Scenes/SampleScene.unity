@@ -341,7 +341,7 @@ GameObject:
   - component: {fileID: 36721876}
   m_Layer: 0
   m_Name: GoToJail
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1240,7 +1240,7 @@ GameObject:
   - component: {fileID: 97099395}
   m_Layer: 0
   m_Name: Station3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1544,7 +1544,7 @@ GameObject:
   - component: {fileID: 128312171}
   m_Layer: 0
   m_Name: Water
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1797,7 +1797,7 @@ GameObject:
   - component: {fileID: 164224752}
   m_Layer: 0
   m_Name: LightBlue3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1924,7 +1924,7 @@ GameObject:
   - component: {fileID: 176601227}
   m_Layer: 0
   m_Name: Purple2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2098,7 +2098,7 @@ GameObject:
   - component: {fileID: 195331505}
   m_Layer: 0
   m_Name: Jail
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3200,7 +3200,7 @@ GameObject:
   - component: {fileID: 329630401}
   m_Layer: 0
   m_Name: Yellow3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3923,7 +3923,7 @@ GameObject:
   - component: {fileID: 446510319}
   m_Layer: 0
   m_Name: Tax
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4458,7 +4458,7 @@ GameObject:
   - component: {fileID: 527360133}
   m_Layer: 0
   m_Name: Green
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4617,6 +4617,85 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 528187819}
+  m_CullTransparentMesh: 1
+--- !u!1 &535063101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 535063102}
+  - component: {fileID: 535063104}
+  - component: {fileID: 535063103}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &535063102
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535063101}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1667813546}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &535063103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535063101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 40
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 4
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: (Un)mortgage
+--- !u!222 &535063104
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535063101}
   m_CullTransparentMesh: 1
 --- !u!1 &552708741
 GameObject:
@@ -5447,7 +5526,7 @@ GameObject:
   - component: {fileID: 700438901}
   m_Layer: 0
   m_Name: Chest2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5695,7 +5774,7 @@ GameObject:
   - component: {fileID: 710470164}
   m_Layer: 0
   m_Name: Orange3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5960,7 +6039,7 @@ GameObject:
   - component: {fileID: 744227534}
   m_Layer: 0
   m_Name: DarkBlue2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6793,7 +6872,7 @@ GameObject:
   - component: {fileID: 814856296}
   m_Layer: 0
   m_Name: Electric
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6963,7 +7042,7 @@ GameObject:
   - component: {fileID: 831551478}
   m_Layer: 0
   m_Name: LightBlue2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7552,6 +7631,7 @@ MonoBehaviour:
   pass_button: {fileID: 811123603}
   buy_house_button: {fileID: 857784614}
   sell_house_button: {fileID: 352124053}
+  mortgage: {fileID: 1667813547}
   owner_mark1: {fileID: 6670623557262340564, guid: 660c33d81f5a2c54a84dc036f09c4529, type: 3}
   owner_mark2: {fileID: 6684730073386088811, guid: 565d5d4ef642283489bdf693ea44091e, type: 3}
   house: {fileID: 1770622311039951764, guid: b2db1f87e54590340974bfa3fc4103b8, type: 3}
@@ -7646,7 +7726,7 @@ GameObject:
   - component: {fileID: 926633818}
   m_Layer: 0
   m_Name: Start
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7741,7 +7821,7 @@ GameObject:
   - component: {fileID: 949518285}
   m_Layer: 0
   m_Name: Green2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8225,6 +8305,7 @@ RectTransform:
   - {fileID: 921890588}
   - {fileID: 1299414339}
   - {fileID: 89446844}
+  - {fileID: 1667813546}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8611,7 +8692,7 @@ GameObject:
   - component: {fileID: 990023573}
   m_Layer: 0
   m_Name: Red
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9427,7 +9508,7 @@ GameObject:
   - component: {fileID: 1117128872}
   m_Layer: 0
   m_Name: Orange2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9522,7 +9603,7 @@ GameObject:
   - component: {fileID: 1120304298}
   m_Layer: 0
   m_Name: Purple
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9617,7 +9698,7 @@ GameObject:
   - component: {fileID: 1120613288}
   m_Layer: 0
   m_Name: Brown2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10286,7 +10367,7 @@ GameObject:
   - component: {fileID: 1238721311}
   m_Layer: 0
   m_Name: Orange
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10769,7 +10850,7 @@ GameObject:
   - component: {fileID: 1289575987}
   m_Layer: 0
   m_Name: LightBlue
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10943,7 +11024,7 @@ GameObject:
   - component: {fileID: 1292152775}
   m_Layer: 0
   m_Name: Yellow
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11333,7 +11414,7 @@ GameObject:
   - component: {fileID: 1316598613}
   m_Layer: 0
   m_Name: Brown
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11428,7 +11509,7 @@ GameObject:
   - component: {fileID: 1321193068}
   m_Layer: 0
   m_Name: Green3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11950,7 +12031,7 @@ GameObject:
   - component: {fileID: 1361190918}
   m_Layer: 0
   m_Name: Chest3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12108,7 +12189,7 @@ GameObject:
   - component: {fileID: 1393591364}
   m_Layer: 0
   m_Name: Red2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12203,7 +12284,7 @@ GameObject:
   - component: {fileID: 1408207141}
   m_Layer: 0
   m_Name: Chance
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12756,7 +12837,7 @@ GameObject:
   - component: {fileID: 1497244596}
   m_Layer: 0
   m_Name: Station2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13540,7 +13621,7 @@ GameObject:
   - component: {fileID: 1575037192}
   m_Layer: 0
   m_Name: Yellow2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13714,7 +13795,7 @@ GameObject:
   - component: {fileID: 1603612882}
   m_Layer: 0
   m_Name: Station
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13809,7 +13890,7 @@ GameObject:
   - component: {fileID: 1614003180}
   m_Layer: 0
   m_Name: Chance3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14286,6 +14367,127 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661859899}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1667813545
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1667813546}
+  - component: {fileID: 1667813549}
+  - component: {fileID: 1667813548}
+  - component: {fileID: 1667813547}
+  m_Layer: 5
+  m_Name: Mortgage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1667813546
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667813545}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 535063102}
+  m_Father: {fileID: 963911777}
+  m_RootOrder: 23
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 500, y: -475}
+  m_SizeDelta: {x: 250, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1667813547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667813545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1667813548}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1667813548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667813545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1667813549
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667813545}
+  m_CullTransparentMesh: 1
 --- !u!1 &1673937159
 GameObject:
   m_ObjectHideFlags: 0
@@ -14300,7 +14502,7 @@ GameObject:
   - component: {fileID: 1673937161}
   m_Layer: 0
   m_Name: Chest
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14631,7 +14833,7 @@ GameObject:
   - component: {fileID: 1781646814}
   m_Layer: 0
   m_Name: DarkBlue
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14726,7 +14928,7 @@ GameObject:
   - component: {fileID: 1790445256}
   m_Layer: 0
   m_Name: Jail
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14905,7 +15107,7 @@ GameObject:
   - component: {fileID: 1841896289}
   m_Layer: 0
   m_Name: Tax2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15000,7 +15202,7 @@ GameObject:
   - component: {fileID: 1854039188}
   m_Layer: 0
   m_Name: Purple3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16286,7 +16488,7 @@ GameObject:
   - component: {fileID: 1992709916}
   m_Layer: 0
   m_Name: Parking
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16939,7 +17141,7 @@ GameObject:
   - component: {fileID: 2089654106}
   m_Layer: 0
   m_Name: Red3
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17309,7 +17511,7 @@ GameObject:
   - component: {fileID: 2116994833}
   m_Layer: 0
   m_Name: Station4
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17435,7 +17637,7 @@ GameObject:
   - component: {fileID: 2118996732}
   m_Layer: 0
   m_Name: Chance2
-  m_TagString: Untagged
+  m_TagString: CellBody
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
