@@ -67,6 +67,7 @@ public class Cell_info : MonoBehaviour
     bool buy_selected = false;
     bool sell_selected = false;
     bool mortgage_selected = false;
+    bool travel_selected = false;
 
     int actual_player = -1;
     string actual_cell = "";
@@ -862,8 +863,9 @@ public class Cell_info : MonoBehaviour
             RailRoad r = rr_info[actual_cell];
             rr_info.Remove(actual_cell);
             r.owner = actual_player;
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -200, false);
             rr_info.Add(actual_cell, r);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -200, false);
+            possibilityToTravel();
         }
         else if (actual_cell == "Electric")
         {
@@ -887,10 +889,10 @@ public class Cell_info : MonoBehaviour
 
     int countStations(int owner) {
         int k = 0;
-        if (rr_info["Station"].owner == owner) ++k;
-        if (rr_info["Station2"].owner == owner) ++k;
-        if (rr_info["Station3"].owner == owner) ++k;
-        if (rr_info["Station4"].owner == owner) ++k;
+        if (rr_info["Station"].owner == owner && !rr_info["Station"].mortgaged) ++k;
+        if (rr_info["Station2"].owner == owner && !rr_info["Station2"].mortgaged) ++k;
+        if (rr_info["Station3"].owner == owner && !rr_info["Station3"].mortgaged) ++k;
+        if (rr_info["Station4"].owner == owner && !rr_info["Station4"].mortgaged) ++k;
         return k;
     }
 
@@ -912,6 +914,19 @@ public class Cell_info : MonoBehaviour
         return false;
     }
 
+    public void travelSelected() {
+        travel_selected = true;
+    }
+
+    bool CanTravel(string cell_name) {
+        if (rr_info[cell_name].owner == actual_player && actual_cell != cell_name && !rr_info[cell_name].mortgaged) return true;
+        return false;
+    }
+
+    void possibilityToTravel() {
+        if (countStations(actual_player) >= 2) scripts.GetComponent<Movements>().ShowTravelButton(CanTravel("Station"), CanTravel("Station2"), CanTravel("Station3"), CanTravel("Station4"));
+    }
+
     int calculateRent(string cell_name) {
         if (info[cell_name].houses == 1) return info[cell_name].rent1;
         if (info[cell_name].houses == 2) return info[cell_name].rent2;
@@ -926,24 +941,25 @@ public class Cell_info : MonoBehaviour
         actual_player = player;
         if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4")
         {
-            ShowRRCard(cell_name);
             if (rr_info[cell_name].owner == -1)
             {
                 just_buttons = true;
                 buy_button.gameObject.SetActive(true);
                 pass_button.gameObject.SetActive(true);
             }
-            else if (player != rr_info[cell_name].owner && !rr_info[cell_name].mortgaged)
+            else if (rr_info[cell_name].owner == player) possibilityToTravel();
+            else if (!rr_info[cell_name].mortgaged)
             {
                 int k = countStations(rr_info[cell_name].owner);
                 int p = 0;
-                if (k == 1) p = 25*multiplier;
+                if (k == 1) p = 25 * multiplier;
                 else if (k == 2) p = 100 * multiplier;
                 else if (k == 3) p = 200 * multiplier;
                 else if (k == 4) p = 400 * multiplier;
                 scripts.GetComponent<Cash_management>().modify_cash(player, -p, false);
                 scripts.GetComponent<Cash_management>().modify_cash(rr_info[cell_name].owner, p, false);
             }
+            ShowRRCard(cell_name);
             multiplier = 1;
         }
         else if (cell_name == "Water")
@@ -1033,7 +1049,34 @@ public class Cell_info : MonoBehaviour
     }
     public void ShowCard(string cell_name) {
         if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4") {
-            if (!mortgage_selected) ShowRRCard(cell_name);
+            if (travel_selected && CanTravel(cell_name)) {
+                if (actual_cell == "Station") {
+                    if (cell_name == "Station2") scripts.GetComponent<Movements>().MoveNCells(10);
+                    if (cell_name == "Station3") scripts.GetComponent<Movements>().MoveNCells(20);
+                    if (cell_name == "Station4") scripts.GetComponent<Movements>().MoveNCells(30);
+                }
+                if (actual_cell == "Station2")
+                {
+                    if (cell_name == "Station") scripts.GetComponent<Movements>().MoveNCells(30);
+                    if (cell_name == "Station3") scripts.GetComponent<Movements>().MoveNCells(10);
+                    if (cell_name == "Station4") scripts.GetComponent<Movements>().MoveNCells(20);
+                }
+                if (actual_cell == "Station3")
+                {
+                    if (cell_name == "Station") scripts.GetComponent<Movements>().MoveNCells(20);
+                    if (cell_name == "Station2") scripts.GetComponent<Movements>().MoveNCells(30);
+                    if (cell_name == "Station4") scripts.GetComponent<Movements>().MoveNCells(10);
+                }
+                if (actual_cell == "Station4")
+                {
+                    if (cell_name == "Station") scripts.GetComponent<Movements>().MoveNCells(10);
+                    if (cell_name == "Station2") scripts.GetComponent<Movements>().MoveNCells(20);
+                    if (cell_name == "Station3") scripts.GetComponent<Movements>().MoveNCells(30);
+                }
+                travel_selected = false;
+                scripts.GetComponent<Movements>().undoChanges(CanTravel("Station"), CanTravel("Station2"), CanTravel("Station3"), CanTravel("Station4"));
+            }
+            else if (!mortgage_selected) ShowRRCard(cell_name);
             else {
                 RailRoad r = rr_info[cell_name];
                 rr_info.Remove(cell_name);

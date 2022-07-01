@@ -12,6 +12,7 @@ public class Movements : MonoBehaviour
     public Button roll_doubles;
     public Button pay50;
     public Button getOutForFree;
+    public Button travel;
 
     public Text dice1;
     public Text dice2;
@@ -24,6 +25,13 @@ public class Movements : MonoBehaviour
     private int player_torn = 0;
     private int doubles_rolled = 0;
     private Vector3 destination;
+
+    bool already_traveled = false;
+
+    bool s1 = false;
+    bool s2 = false;
+    bool s3 = false;
+    bool s4 = false;
 
     int d1 = 1;
     int d2 = 1;
@@ -38,11 +46,13 @@ public class Movements : MonoBehaviour
         roll_doubles.onClick.AddListener(roll_dices_doubles);
         pay50.onClick.AddListener(pay);
         getOutForFree.onClick.AddListener(use_card);
+        travel.onClick.AddListener(Travel);
         end_torn.gameObject.SetActive(false);
         roll_dice.gameObject.SetActive(true);
         pay50.gameObject.SetActive(false);
         roll_doubles.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
+        travel.gameObject.SetActive(false);
         
         players_pos = new int[players.Length];
         penalized_torns = new int[players.Length];
@@ -57,8 +67,106 @@ public class Movements : MonoBehaviour
         }
     }
 
+    void Travel() {
+        travel.gameObject.SetActive(false);
+        end_torn.gameObject.SetActive(false);
+        scripts.GetComponent<Cell_info>().travelSelected();
+        if (s1)
+        {
+            Transform t = cells[5].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
+            }
+            return;
+        }
+        if (s2)
+        {
+            Transform t = cells[15].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
+            }
+            return;
+        }
+        if (s3)
+        {
+            Transform t = cells[25].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
+            }
+            return;
+        }
+        if (s4)
+        {
+            Transform t = cells[35].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
+            }
+            return;
+        }
+    }
+
+    public void ShowTravelButton(bool station1, bool station2, bool station3, bool station4) {
+        if (already_traveled) already_traveled = false;
+        else {
+            already_traveled = true;
+            travel.gameObject.SetActive(true);
+            s1 = station1;
+            s2 = station2;
+            s3 = station3;
+            s4 = station4;
+        }
+    }
+
+    public void undoChanges(bool station1, bool station2, bool station3, bool station4)
+    {
+        if (station1) {
+            Transform t = cells[5].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
+            }
+            return;
+        }
+        if (station2)
+        {
+            Transform t = cells[15].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
+            }
+            return;
+        }
+        if (station3)
+        {
+            Transform t = cells[25].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
+            }
+            return;
+        }
+        if (station4)
+        {
+            Transform t = cells[35].transform;
+            foreach (Transform tr in t)
+            {
+                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
+            }
+            return;
+        }
+        s1 = false;
+        s2 = false;
+        s3 = false;
+        s4 = false;
+    }
+
     void NextTorn()
     {
+        travel.gameObject.SetActive(false);
         end_torn.gameObject.SetActive(false);
         ++player_torn;
         if (player_torn == players.Length) player_torn = 0;
@@ -172,7 +280,7 @@ public class Movements : MonoBehaviour
         roll_dice.gameObject.SetActive(false);
         d1 = Random.Range(1, 7);
         d2 = Random.Range(1, 7);
-        //d1 = 5;
+        //d1 = 2;
         //d2 = 3;
         dice1.text = d1 + "";
         dice2.text = d2 + "";
