@@ -1,3 +1,3 @@
-# Monopoly-in_progress-
+# Monopoly
 Just making a Monopoly clone via Unity.
 The project is still in progress.
