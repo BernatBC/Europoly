@@ -498,29 +498,31 @@ public class Cell_info : MonoBehaviour
     private void ChestCard(int n) {
         if (n == 1) {
             chest_title.text = "Advance to Go (Collect 200)";
-            if (actual_cell == "Chest") scripts.GetComponent<Movements>().MoveNCells(38);
-            else if (actual_cell == "Chest2") scripts.GetComponent<Movements>().MoveNCells(23);
-            else scripts.GetComponent<Movements>().MoveNCells(7);
+            scripts.GetComponent<Movements>().MoveTo(actual_cell, "Start");
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 2) {
             chest_title.text = "Bank error in your favour. Collect 200";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 200, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 3)
         {
             chest_title.text = "Doctor’s fee. Pay 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 4)
         {
             chest_title.text = "From sale of stock you get 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 5)
         {
             chest_title.text = "Get Out of Jail Free";
             scripts.GetComponent<Movements>().add_out_of_jail(actual_player);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 6)
         {
@@ -532,51 +534,61 @@ public class Cell_info : MonoBehaviour
         {
             chest_title.text = "Holiday fund matures. Receive 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 8)
         {
             chest_title.text = "Income tax refund. Collect 20";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 20, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 9)
         {
             chest_title.text = "It is your birthday. Collect 10 from every player";
             scripts.GetComponent<Cash_management>().collect_from_everybody(actual_player, 10);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 10)
         {
             chest_title.text = "Life insurance matures. Collect 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 11)
         {
             chest_title.text = "Pay hospital fees of 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -100, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 12)
         {
             chest_title.text = "Pay school fees of 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 13)
         {
             chest_title.text = "Receive 25 consultancy fee";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 25, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 14)
         {
             chest_title.text = "You are assessed for street repairs. 40 per house. 115 per hotel";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(40, 115), false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 15)
         {
             chest_title.text = "You have won second prize in a beauty contest. Collect 10";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 10, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 16)
         {
             chest_title.text = "You inherit 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+            StartCoroutine(WaitAndDisableCard2(3));
         }
         chestcard.gameObject.SetActive(true);
         cc_card_shown = true;
@@ -600,50 +612,41 @@ public class Cell_info : MonoBehaviour
         if (n == 1)
         {
             chance_title.text = "Advance to Go (Collect 200)";
-            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveNCells(33);
-            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveNCells(18);
-            else scripts.GetComponent<Movements>().MoveNCells(4);
+            scripts.GetComponent<Movements>().MoveTo(actual_cell, "Start");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 2)
         {
             chance_title.text = "Advance to Trafalgar Square. If you pass Go, collect 200";
-            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveNCells(17);
-            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveNCells(2);
-            else scripts.GetComponent<Movements>().MoveNCells(28);
+            scripts.GetComponent<Movements>().MoveTo(actual_cell, "Red3");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 3)
         {
             chance_title.text = "Advance to Mayfair";
-            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveNCells(32);
-            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveNCells(17);
-            else scripts.GetComponent<Movements>().MoveNCells(3);
+            scripts.GetComponent<Movements>().MoveTo(actual_cell, "DarkBlue2");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 4)
         {
             chance_title.text = "Advance to Pall Mall. If you pass Go, collect 200";
-            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveNCells(4);
-            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveNCells(29);
-            else scripts.GetComponent<Movements>().MoveNCells(15);
+            scripts.GetComponent<Movements>().MoveTo(actual_cell, "Purple");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 5 || n == 6)
         {
             chance_title.text = "Advance to the nearest Station. If unowned, you may buy it from the Bank. If owned, pay wonder twice the rental to which they are otherwise entitled";
-            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveNCells(8);
-            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveNCells(3);
-            else scripts.GetComponent<Movements>().MoveNCells(9);
+            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station2");
+            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station3");
+            else scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station");
             multiplier = 2;
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 7)
         {
             chance_title.text = "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, pay owner a total ten times amount thrown.";
-            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveNCells(5);
-            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveNCells(6);
-            else scripts.GetComponent<Movements>().MoveNCells(16);
+            if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveTo(actual_cell, "Water");
+            else scripts.GetComponent<Movements>().MoveTo(actual_cell, "Electric");
             multiplier = 10;
             StartCoroutine(WaitAndDisableCard(3));
         }
@@ -651,11 +654,13 @@ public class Cell_info : MonoBehaviour
         {
             chance_title.text = "Bank pays you dividend of 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false);
+            StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 9)
         {
             chance_title.text = "Get Out of Jail Free";
             scripts.GetComponent<Movements>().add_out_of_jail(actual_player);
+            StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 10)
         {
@@ -673,29 +678,31 @@ public class Cell_info : MonoBehaviour
         {
             chance_title.text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(25, 100), false);
+            StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 13)
         {
             chance_title.text = "Speeding fine 15";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -15, false);
+            StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 14)
         {
             chance_title.text = "Take a trip to Kings Cross Station. If you pass Go, collect 200";
-            if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveNCells(38);
-            else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveNCells(23);
-            else scripts.GetComponent<Movements>().MoveNCells(9);
+            scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 15)
         {
             chance_title.text = "You have been elected Chairman of the Board. Pay each player 50";
             scripts.GetComponent<Cash_management>().pay_everybody(actual_player, 50);
+            StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 16)
         {
             chance_title.text = "Your building loan matures. Collect 150";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 150, false);
+            StartCoroutine(WaitAndDisableCard(3));
         }
         chancecard.gameObject.SetActive(true);
         chance_card_shown = true;
@@ -1050,31 +1057,9 @@ public class Cell_info : MonoBehaviour
     public void ShowCard(string cell_name) {
         if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4") {
             if (travel_selected && CanTravel(cell_name)) {
-                if (actual_cell == "Station") {
-                    if (cell_name == "Station2") scripts.GetComponent<Movements>().MoveNCells(10);
-                    if (cell_name == "Station3") scripts.GetComponent<Movements>().MoveNCells(20);
-                    if (cell_name == "Station4") scripts.GetComponent<Movements>().MoveNCells(30);
-                }
-                if (actual_cell == "Station2")
-                {
-                    if (cell_name == "Station") scripts.GetComponent<Movements>().MoveNCells(30);
-                    if (cell_name == "Station3") scripts.GetComponent<Movements>().MoveNCells(10);
-                    if (cell_name == "Station4") scripts.GetComponent<Movements>().MoveNCells(20);
-                }
-                if (actual_cell == "Station3")
-                {
-                    if (cell_name == "Station") scripts.GetComponent<Movements>().MoveNCells(20);
-                    if (cell_name == "Station2") scripts.GetComponent<Movements>().MoveNCells(30);
-                    if (cell_name == "Station4") scripts.GetComponent<Movements>().MoveNCells(10);
-                }
-                if (actual_cell == "Station4")
-                {
-                    if (cell_name == "Station") scripts.GetComponent<Movements>().MoveNCells(10);
-                    if (cell_name == "Station2") scripts.GetComponent<Movements>().MoveNCells(20);
-                    if (cell_name == "Station3") scripts.GetComponent<Movements>().MoveNCells(30);
-                }
+                scripts.GetComponent<Movements>().MoveTo(actual_cell, cell_name);
                 travel_selected = false;
-                scripts.GetComponent<Movements>().undoChanges(CanTravel("Station"), CanTravel("Station2"), CanTravel("Station3"), CanTravel("Station4"));
+                scripts.GetComponent<Movements>().undoChanges();
             }
             else if (!mortgage_selected) ShowRRCard(cell_name);
             else {

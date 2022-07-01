@@ -47,6 +47,7 @@ public class Movements : MonoBehaviour
         pay50.onClick.AddListener(pay);
         getOutForFree.onClick.AddListener(use_card);
         travel.onClick.AddListener(Travel);
+
         end_torn.gameObject.SetActive(false);
         roll_dice.gameObject.SetActive(true);
         pay50.gameObject.SetActive(false);
@@ -71,42 +72,10 @@ public class Movements : MonoBehaviour
         travel.gameObject.SetActive(false);
         end_torn.gameObject.SetActive(false);
         scripts.GetComponent<Cell_info>().travelSelected();
-        if (s1)
-        {
-            Transform t = cells[5].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
-            }
-            return;
-        }
-        if (s2)
-        {
-            Transform t = cells[15].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
-            }
-            return;
-        }
-        if (s3)
-        {
-            Transform t = cells[25].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
-            }
-            return;
-        }
-        if (s4)
-        {
-            Transform t = cells[35].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 241, 56, 255);
-            }
-            return;
-        }
+        if (s1) SetColor(5, new Color32(255, 241, 56, 255));
+        if (s2) SetColor(15, new Color32(255, 241, 56, 255));
+        if (s3) SetColor(25, new Color32(255, 241, 56, 255));
+        if (s4) SetColor(35, new Color32(255, 241, 56, 255));
     }
 
     public void ShowTravelButton(bool station1, bool station2, bool station3, bool station4) {
@@ -121,47 +90,28 @@ public class Movements : MonoBehaviour
         }
     }
 
-    public void undoChanges(bool station1, bool station2, bool station3, bool station4)
+
+    public void undoChanges()
     {
-        if (station1) {
-            Transform t = cells[5].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
-            }
-            return;
-        }
-        if (station2)
-        {
-            Transform t = cells[15].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
-            }
-            return;
-        }
-        if (station3)
-        {
-            Transform t = cells[25].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
-            }
-            return;
-        }
-        if (station4)
-        {
-            Transform t = cells[35].transform;
-            foreach (Transform tr in t)
-            {
-                if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
-            }
-            return;
-        }
+        if (s1) SetColor(5, new Color32(255, 255, 255, 255));
+        if (s2) SetColor(15, new Color32(255, 255, 255, 255));
+        if (s3) SetColor(25, new Color32(255, 255, 255, 255));
+        if (s4) SetColor(35, new Color32(255, 255, 255, 255));
         s1 = false;
         s2 = false;
         s3 = false;
         s4 = false;
+    }
+
+
+    void SetColor(int cell, Color32 col)
+    {
+        Transform t = cells[cell].transform;
+        foreach (Transform tr in t)
+        {
+            if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = col;
+        }
+        return;
     }
 
     void NextTorn()
@@ -204,31 +154,25 @@ public class Movements : MonoBehaviour
     }
 
     public void mortgage(string cell) {
-        for (int i = 0; i < cells.Length; ++i) {
-            if (cells[i].name == cell) {
-                Transform t = cells[i].transform;
-                foreach (Transform tr in t) {
-                    if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(55, 55, 55, 255);
-                }
-                return;
-            }
-        }
+        for (int i = 0; i < cells.Length; ++i) if (cells[i].name == cell) SetColor(i, new Color32(55, 55, 55, 255));
     }
 
     public void unmortgage(string cell)
     {
-        for (int i = 0; i < cells.Length; ++i)
-        {
-            if (cells[i].name == cell)
-            {
-                Transform t = cells[i].transform;
-                foreach (Transform tr in t)
-                {
-                    if (tr.tag == "CellBody") tr.GetComponent<Renderer>().material.color = new Color32(255, 255, 255, 255);
-                }
-                return;
-            }
-        }
+        for (int i = 0; i < cells.Length; ++i) if (cells[i].name == cell) SetColor(i, new Color32(255, 255, 255, 255));
+    }
+
+    int StringToPos(string cell_name) {
+        for (int i = 0; i < cells.Length; ++i) if (cells[i].name == cell_name) return i;
+        return -1;
+    }
+
+    public void MoveTo(string o, string d) {
+        int pos_o = StringToPos(o);
+        int pos_d = StringToPos(d);
+        int dist = pos_d - pos_o;
+        if (dist < 0) dist += cells.Length;
+        MoveNCells(dist);
     }
 
     void roll_dices_doubles()
@@ -273,6 +217,8 @@ public class Movements : MonoBehaviour
 
     public void MoveNCells(int n) {
         movements_remaining = n;
+        end_torn.gameObject.SetActive(false);
+        roll_dice.gameObject.SetActive(false);
     }
 
     void RollDice()
@@ -280,8 +226,8 @@ public class Movements : MonoBehaviour
         roll_dice.gameObject.SetActive(false);
         d1 = Random.Range(1, 7);
         d2 = Random.Range(1, 7);
-        //d1 = 2;
-        //d2 = 3;
+        //d1 = 3;
+        //d2 = 4;
         dice1.text = d1 + "";
         dice2.text = d2 + "";
         movements_remaining = d1 + d2;
