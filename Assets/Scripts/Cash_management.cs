@@ -89,6 +89,7 @@ public class Cash_management : MonoBehaviour
 
     void Start()
     {
+        initial_cash = DataHolder.initial_cash;
         cash1 = initial_cash;
         cash2 = initial_cash;
         cash1_text.text = cash1 + "";
