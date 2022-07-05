@@ -17,9 +17,6 @@ public class Movements : MonoBehaviour
     public Text dice1;
     public Text dice2;
 
-    private int[] players_pos;
-    private int[] penalized_torns;
-    private int[] outofjail;
     private bool moving = false;
     private int movements_remaining = 0;
     private int player_torn = 0;
@@ -35,6 +32,16 @@ public class Movements : MonoBehaviour
 
     int d1 = 1;
     int d2 = 1;
+
+    private Player[] Players;
+
+    struct Player {
+        public int pos;
+        public int penalized_torns;
+        public int outofjail;
+    };
+
+    int n_players;
 
     GameObject scripts;
 
@@ -54,17 +61,16 @@ public class Movements : MonoBehaviour
         roll_doubles.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
         travel.gameObject.SetActive(false);
-        
-        players_pos = new int[players.Length];
-        penalized_torns = new int[players.Length];
-        outofjail = new int[players.Length];
-        for (int i = 0; i < players.Length; ++i)
+
+        n_players = DataHolder.n_players;
+        Players = new Player[n_players];
+        for (int i = 0; i < n_players; ++i)
         {
             players[i].transform.position = new Vector3(cells[0].transform.position.x, cells[0].transform.position.y + 1, cells[0].transform.position.z);
             destination = players[i].transform.position;
-            players_pos[i] = 0;
-            penalized_torns[i] = 0;
-            outofjail[i] = 0;
+            Players[i].pos = 0;
+            Players[i].penalized_torns = 0;
+            Players[i].outofjail = 0;
         }
     }
 
@@ -119,14 +125,14 @@ public class Movements : MonoBehaviour
         travel.gameObject.SetActive(false);
         end_torn.gameObject.SetActive(false);
         ++player_torn;
-        if (player_torn == players.Length) player_torn = 0;
+        if (player_torn == n_players) player_torn = 0;
         destination = players[player_torn].transform.position;
-        if (penalized_torns[player_torn] == 0) roll_dice.gameObject.SetActive(true);
+        if (Players[player_torn].penalized_torns == 0) roll_dice.gameObject.SetActive(true);
         else {
             roll_doubles.gameObject.SetActive(true);
             pay50.gameObject.SetActive(true);
-            if (outofjail[player_torn] > 0) getOutForFree.gameObject.SetActive(true);
-            --penalized_torns[player_torn];
+            if (Players[player_torn].outofjail > 0) getOutForFree.gameObject.SetActive(true);
+            --Players[player_torn].penalized_torns;
         }
         
     }
@@ -136,7 +142,7 @@ public class Movements : MonoBehaviour
         pay50.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
         scripts.GetComponent<Cash_management>().modify_cash(player_torn, -100, false);
-        penalized_torns[player_torn] = 0;
+        Players[player_torn].penalized_torns = 0;
         roll_dice.gameObject.SetActive(true);
     }
 
@@ -144,13 +150,13 @@ public class Movements : MonoBehaviour
         roll_doubles.gameObject.SetActive(false);
         pay50.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
-        penalized_torns[player_torn] = 0;
+        Players[player_torn].penalized_torns = 0;
         roll_dice.gameObject.SetActive(true);
-        outofjail[player_torn]--;
+        Players[player_torn].outofjail--;
     }
 
     public void add_out_of_jail(int player) {
-        outofjail[player]++;
+        Players[player].outofjail++;
     }
 
     public void mortgage(string cell) {
@@ -186,7 +192,7 @@ public class Movements : MonoBehaviour
         dice2.text = d2 + "";
         if (d1 == d2) {
             movements_remaining = d1 + d2;
-            penalized_torns[player_torn] = 0;
+            Players[player_torn].penalized_torns = 0;
         } 
         else end_torn.gameObject.SetActive(true);
     }
@@ -211,8 +217,8 @@ public class Movements : MonoBehaviour
         moving = true;
         movements_remaining = 0;
         doubles_rolled = 0;
-        players_pos[player_torn] = 10;
-        penalized_torns[player_torn] = 3;
+        Players[player_torn].pos = 10;
+        Players[player_torn].penalized_torns = 3;
     }
 
     public void MoveNCells(int n) {
@@ -244,21 +250,21 @@ public class Movements : MonoBehaviour
         if (!moving && movements_remaining > 0)
         {
             moving = true;
-            ++players_pos[player_torn];
-            if (players_pos[player_torn] == cells.Length) {
-                players_pos[player_torn] = 0;
+            ++Players[player_torn].pos;
+            if (Players[player_torn].pos == cells.Length) {
+                Players[player_torn].pos = 0;
                 scripts.GetComponent<Cash_management>().modify_cash(player_torn, 200, false);
             }
 
-            destination = new Vector3(cells[players_pos[player_torn]].transform.position.x, cells[players_pos[player_torn]].transform.position.y + 1, cells[players_pos[player_torn]].transform.position.z);
+            destination = new Vector3(cells[Players[player_torn].pos].transform.position.x, cells[Players[player_torn].pos].transform.position.y + 1, cells[Players[player_torn].pos].transform.position.z);
             --movements_remaining;
         }
 
         if (!moving && movements_remaining < 0)
         {
             moving = true;
-            --players_pos[player_torn];
-            destination = new Vector3(cells[players_pos[player_torn]].transform.position.x, cells[players_pos[player_torn]].transform.position.y + 1, cells[players_pos[player_torn]].transform.position.z);
+            --Players[player_torn].pos;
+            destination = new Vector3(cells[Players[player_torn].pos].transform.position.x, cells[Players[player_torn].pos].transform.position.y + 1, cells[Players[player_torn].pos].transform.position.z);
             ++movements_remaining;
         }
 
@@ -271,7 +277,7 @@ public class Movements : MonoBehaviour
                 if (movements_remaining == 0) {
                     if (doubles_rolled > 0) roll_dice.gameObject.SetActive(true);
                     else end_torn.gameObject.SetActive(true);
-                    string cell_name = cells[players_pos[player_torn]].name;
+                    string cell_name = cells[Players[player_torn].pos].name;
                     if (cell_name == "GoToJail") GoToJail();
                     else if (cell_name != "Start") scripts.GetComponent<Cell_info>().LandedOn(cell_name, player_torn, d1 + d2);
                 }
