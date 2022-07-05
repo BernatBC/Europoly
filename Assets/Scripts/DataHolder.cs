@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class DataHolder : MonoBehaviour
 {
-    public static int initial_cash;
+    public static int initial_cash = 2000;
+    public static int n_players = 4;
 }

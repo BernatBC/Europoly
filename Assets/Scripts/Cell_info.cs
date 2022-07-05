@@ -14,6 +14,8 @@ public class Cell_info : MonoBehaviour
 
     public GameObject owner_mark1;
     public GameObject owner_mark2;
+    public GameObject owner_mark3;
+    public GameObject owner_mark4;
 
     public GameObject house;
     public GameObject hotel;
@@ -728,7 +730,9 @@ public class Cell_info : MonoBehaviour
         else if (actual_cell == "Green" || actual_cell == "Green2" || actual_cell == "Green3" || actual_cell == "DarkBlue" || actual_cell == "DarkBlue2" || actual_cell == "Station4") pos.x -= 1.5f;
         GameObject a;
         if (actual_player == 0) a = Instantiate(owner_mark1, new Vector3(pos.x, 0.55f, pos.z), owner_mark1.gameObject.transform.rotation);
-        else a = Instantiate(owner_mark2, new Vector3(pos.x, 0.55f, pos.z), owner_mark2.gameObject.transform.rotation);
+        else if (actual_player == 1) a = Instantiate(owner_mark2, new Vector3(pos.x, 0.55f, pos.z), owner_mark2.gameObject.transform.rotation);
+        else if (actual_player == 2) a = Instantiate(owner_mark3, new Vector3(pos.x, 0.55f, pos.z), owner_mark3.gameObject.transform.rotation);
+        else a = Instantiate(owner_mark4, new Vector3(pos.x, 0.55f, pos.z), owner_mark4.gameObject.transform.rotation);
         owner_prefabs.Add(actual_cell, a);
     }
 
