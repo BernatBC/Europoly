@@ -913,6 +913,31 @@ public class Cell_info : MonoBehaviour
         sell_selected = false;
     }
 
+    bool ColorHasHousing(string cell_name) {
+        if (cell_name == "Brown" || cell_name == "Brown2") return info["Brown"].houses > 0 || info["Brown2"].houses > 0;
+        if (cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3") return info["LightBlue"].houses > 0 || info["LightBlue2"].houses > 0 || info["LightBlue3"].houses > 0;
+        if (cell_name == "Purple" || cell_name == "Purple2" || cell_name == "Purple3") return info["Purple"].houses > 0 || info["Purple2"].houses > 0 || info["Purple3"].houses > 0;
+        if (cell_name == "Orange" || cell_name == "Orange2" || cell_name == "Orange3") return info["Orange"].houses > 0 || info["Orange2"].houses > 0 || info["Orange3"].houses > 0;
+        if (cell_name == "Red" || cell_name == "Red2" || cell_name == "Red3") return info["Red"].houses > 0 || info["Red2"].houses > 0 || info["Red3"].houses > 0;
+        if (cell_name == "Yellow" || cell_name == "Yellow2" || cell_name == "Yellow3") return info["Yellow"].houses > 0 || info["Yellow2"].houses > 0 || info["Yellow3"].houses > 0;
+        if (cell_name == "Green" || cell_name == "Green2" || cell_name == "Green3") return info["Green"].houses > 0 || info["Green2"].houses > 0 || info["Green3"].houses > 0;
+        if (cell_name == "DarkBlue" || cell_name == "DarkBlue2") return info["DarkBlue"].houses > 0 || info["DarkBlue2"].houses > 0;
+        return false;
+    }
+
+    bool ColorMortgaged(string cell_name)
+    {
+        if (cell_name == "Brown" || cell_name == "Brown2") return info["Brown"].mortgaged || info["Brown2"].mortgaged;
+        if (cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3") return info["LightBlue"].mortgaged || info["LightBlue2"].mortgaged || info["LightBlue3"].mortgaged;
+        if (cell_name == "Purple" || cell_name == "Purple2" || cell_name == "Purple3") return info["Purple"].mortgaged || info["Purple2"].mortgaged || info["Purple3"].mortgaged;
+        if (cell_name == "Orange" || cell_name == "Orange2" || cell_name == "Orange3") return info["Orange"].mortgaged || info["Orange2"].mortgaged || info["Orange3"].mortgaged;
+        if (cell_name == "Red" || cell_name == "Red2" || cell_name == "Red3") return info["Red"].mortgaged || info["Red2"].mortgaged || info["Red3"].mortgaged;
+        if (cell_name == "Yellow" || cell_name == "Yellow2" || cell_name == "Yellow3") return info["Yellow"].mortgaged || info["Yellow2"].mortgaged || info["Yellow3"].mortgaged;
+        if (cell_name == "Green" || cell_name == "Green2" || cell_name == "Green3") return info["Green"].mortgaged || info["Green2"].mortgaged || info["Green3"].mortgaged;
+        if (cell_name == "DarkBlue" || cell_name == "DarkBlue2") return info["DarkBlue"].mortgaged || info["DarkBlue2"].mortgaged;
+        return false;
+    }
+
     bool sameColor(string cell_name) {
         if (cell_name == "Brown" || cell_name == "Brown2") return info["Brown"].owner == info["Brown2"].owner;
         if (cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3") return info["LightBlue"].owner == info["LightBlue2"].owner && info["LightBlue"].owner == info["LightBlue3"].owner;
@@ -1124,7 +1149,7 @@ public class Cell_info : MonoBehaviour
         else if (cell_name == "Start") Debug.Log("Start Card in progress");
         else {
             int player_torn = scripts.GetComponent<Movements>().getPlayerTorn();
-            if (buy_selected && player_torn == info[cell_name].owner && sameColor(cell_name) && info[cell_name].houses < 5 && !info[cell_name].mortgaged) {
+            if (buy_selected && player_torn == info[cell_name].owner && sameColor(cell_name) && info[cell_name].houses < 5 && !ColorMortgaged(cell_name)) {
                 //Buy house
                 Cell c = info[cell_name];
                 info.Remove(cell_name);
@@ -1142,7 +1167,7 @@ public class Cell_info : MonoBehaviour
                 info.Add(cell_name, c);
                 scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].house_cost / 2, false);
             }
-            else if (mortgage_selected && player_torn == info[cell_name].owner && info[cell_name].houses == 0) {
+            else if (mortgage_selected && player_torn == info[cell_name].owner && !ColorHasHousing(cell_name)) {
                 //Mortgage-Unmortgage
                 Cell c = info[cell_name];
                 info.Remove(cell_name);
