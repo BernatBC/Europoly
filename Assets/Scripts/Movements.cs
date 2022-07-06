@@ -88,6 +88,7 @@ public class Movements : MonoBehaviour
         if (already_traveled) already_traveled = false;
         else {
             already_traveled = true;
+            Debug.Log("travel");
             travel.gameObject.SetActive(true);
             s1 = station1;
             s2 = station2;
@@ -210,7 +211,6 @@ public class Movements : MonoBehaviour
     }
 
     public void GoToJail() {
-        Debug.Log("Go to jail");
         end_torn.gameObject.SetActive(false);
         roll_dice.gameObject.SetActive(false);
         destination = new Vector3(cells[10].transform.position.x - 2, cells[10].transform.position.y + 1, cells[10].transform.position.z - 2);
@@ -233,7 +233,7 @@ public class Movements : MonoBehaviour
         d1 = Random.Range(1, 7);
         d2 = Random.Range(1, 7);
         //d1 = 3;
-        //d2 = 4;
+        //d2 = 2;
         dice1.text = d1 + "";
         dice2.text = d2 + "";
         movements_remaining = d1 + d2;
