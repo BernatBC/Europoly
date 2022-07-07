@@ -275,6 +275,10 @@ public class Movements : MonoBehaviour
         else doubles_rolled = 0;
     }
 
+    public int GetOutOfJail(int player) {
+        return Players[player].outofjail;
+    }
+
     void Update()
     {
         if (!moving && movements_remaining > 0)

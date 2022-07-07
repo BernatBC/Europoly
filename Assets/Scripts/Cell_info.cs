@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Cell_info : MonoBehaviour
 {
@@ -1186,6 +1187,40 @@ public class Cell_info : MonoBehaviour
             else ShowRentCard(cell_name);
         }
         
+    }
+
+    private void GetCells(int player) {
+        foreach (RailRoad r in rr_info.Values)
+        {
+            if (r.owner == player)
+            {
+                Debug.Log(r.name + " " + r.mortgaged);
+            }
+        }
+    }
+
+    private void GetUtilities(int player) {
+        if (electrical.owner == player) Debug.Log("Electrical " + electrical.mortgaged);
+        if (water.owner == player) Debug.Log("Water " + water.mortgaged);
+    }
+
+    private void GetRRCells(int player)
+    {
+        foreach (Cell c in info.Values)
+        {
+            if (c.owner == player)
+            {
+                Debug.Log(c.name + " " + c.houses + " " + c.mortgaged);
+            }
+        }
+    }
+
+    public void ShowPlayerInfo(int player) {
+        GetCells(player);
+        GetRRCells(player);
+        GetUtilities(player);
+        int outofjail = scripts.GetComponent<Movements>().GetOutOfJail(player);
+        Debug.Log("Out of jail " + outofjail.ToString());
     }
 
     void Update()
