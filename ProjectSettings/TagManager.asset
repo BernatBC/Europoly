@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - CellBody
+  - panel1
+  - panel2
+  - panel3
+  - panel4
   layers:
   - Default
   - TransparentFX
