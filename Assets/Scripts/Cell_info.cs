@@ -12,6 +12,8 @@ public class Cell_info : MonoBehaviour
     public Button buy_house_button;
     public Button sell_house_button;
     public Button mortgage;
+    public Button trade;
+    public Button cancel;
 
     public GameObject owner_mark1;
     public GameObject owner_mark2;
@@ -20,6 +22,9 @@ public class Cell_info : MonoBehaviour
 
     public GameObject house;
     public GameObject hotel;
+
+    public GameObject tradePanel1;
+    public GameObject tradePanel2;
 
     [Header("Street Card")]
     public GameObject CardUI;
@@ -71,6 +76,7 @@ public class Cell_info : MonoBehaviour
     bool sell_selected = false;
     bool mortgage_selected = false;
     bool travel_selected = false;
+    bool trading_selected = false;
 
     int actual_player = -1;
     string actual_cell = "";
@@ -415,15 +421,19 @@ public class Cell_info : MonoBehaviour
         buy_house_button.onClick.AddListener(buy_house);
         sell_house_button.onClick.AddListener(sell_house);
         mortgage.onClick.AddListener(mortgage_unmortgage);
+        trade.onClick.AddListener(trading);
+        cancel.onClick.AddListener(canceling);
     }
 
     void buy_house() {
+        if (trading_selected) return;
         buy_selected = true;
         sell_selected = false;
         mortgage_selected = false;
     }
 
     void sell_house() {
+        if (trading_selected) return;
         sell_selected = true;
         buy_selected = false;
         mortgage_selected = false;
@@ -484,6 +494,21 @@ public class Cell_info : MonoBehaviour
             water_card.gameObject.SetActive(true);
             water_card_shown = true;
         }
+    }
+
+    private void canceling() {
+        trading_selected = false;
+        cancel.gameObject.SetActive(false);
+        tradePanel1.gameObject.SetActive(false);
+        tradePanel2.gameObject.SetActive(false);
+    }
+
+    private void trading() {
+        cancel.gameObject.SetActive(true);
+        trading_selected = true;
+        tradePanel1.gameObject.SetActive(true);
+        tradePanel2.gameObject.SetActive(true);
+        //CODE
     }
 
     private int Repairs(int house, int hotel) {
@@ -909,6 +934,7 @@ public class Cell_info : MonoBehaviour
     }
 
     private void mortgage_unmortgage() {
+        if (trading_selected) return;
         mortgage_selected = true;
         buy_selected = false;
         sell_selected = false;
@@ -1227,7 +1253,7 @@ public class Cell_info : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!just_buttons && !disableCard()) {
+            if (!just_buttons && !disableCard() && !trading_selected) {
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit))
                 {
