@@ -12,9 +12,9 @@ public class Panel : MonoBehaviour
     }
     public void Show()
     {
-        if (CompareTag("panel1")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(0);
-        else if (CompareTag("panel2")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(1);
-        else if (CompareTag("panel3")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(2);
-        else if (CompareTag("panel4")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(3);
+        if (CompareTag("panel1")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(0, 1, true);
+        else if (CompareTag("panel2")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(1, 1, true);
+        else if (CompareTag("panel3")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(2, 1, true);
+        else if (CompareTag("panel4")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(3, 1, true);
     }
 }

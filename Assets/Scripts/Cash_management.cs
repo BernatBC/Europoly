@@ -162,6 +162,14 @@ public class Cash_management : MonoBehaviour
         }
     }
 
+    public int GetCash(int player) {
+        if (player == 0) return cash1;
+        if (player == 1) return cash2;
+        if (player == 2) return cash3;
+        if (player == 3) return cash4;
+        return cash1;
+    }
+
     void Start()
     {
         initial_cash = DataHolder.initial_cash;

@@ -78,7 +78,10 @@ public class Cell_info : MonoBehaviour
     bool travel_selected = false;
     bool trading_selected = false;
 
-    int actual_player = -1;
+    bool tradePanel1_on = false;
+    bool tradePanel2_on = false;
+
+    int actual_player = 0;
     string actual_cell = "";
 
     int multiplier = 1;
@@ -506,9 +509,17 @@ public class Cell_info : MonoBehaviour
     private void trading() {
         cancel.gameObject.SetActive(true);
         trading_selected = true;
+        ShowPlayerInfo(actual_player, 1, false);
+
+        //Provisional, falta triar jugador
+        int second_player = 1;
+        if (actual_player == 1) second_player = 0;
+
+        ShowPlayerInfo(second_player, 2, false);
         tradePanel1.gameObject.SetActive(true);
         tradePanel2.gameObject.SetActive(true);
-        //CODE
+        //Seleccionar amb qui tradejar
+
     }
 
     private int Repairs(int house, int hotel) {
@@ -1215,38 +1226,167 @@ public class Cell_info : MonoBehaviour
         
     }
 
-    private void GetCells(int player) {
-        foreach (RailRoad r in rr_info.Values)
-        {
-            if (r.owner == player)
-            {
-                Debug.Log(r.name + " " + r.mortgaged);
-            }
-        }
-    }
-
-    private void GetUtilities(int player) {
-        if (electrical.owner == player) Debug.Log("Electrical " + electrical.mortgaged);
-        if (water.owner == player) Debug.Log("Water " + water.mortgaged);
-    }
-
-    private void GetRRCells(int player)
-    {
-        foreach (Cell c in info.Values)
-        {
-            if (c.owner == player)
-            {
-                Debug.Log(c.name + " " + c.houses + " " + c.mortgaged);
-            }
-        }
-    }
-
-    public void ShowPlayerInfo(int player) {
-        GetCells(player);
-        GetRRCells(player);
-        GetUtilities(player);
+    public void ShowPlayerInfo(int player, int panel, bool disable_on_click) {
+        Debug.Log("Cash: " + scripts.GetComponent<Cash_management>().GetCash(actual_player));
         int outofjail = scripts.GetComponent<Movements>().GetOutOfJail(player);
         Debug.Log("Out of jail " + outofjail.ToString());
+        GameObject tradePanel;
+        if (panel == 1) {
+            tradePanel = tradePanel1;
+            if (disable_on_click) tradePanel1_on = true;
+        } 
+        else {
+            tradePanel = tradePanel2;
+            if (disable_on_click) tradePanel2_on = true;
+        }
+        tradePanel.transform.Find("Panel1").gameObject.transform.Find("player_text").gameObject.GetComponentInChildren<Text>().text = "Player " + (player + 1).ToString();
+        int i = 0;
+        foreach (var c in info) if (c.Value.owner == player) ShowMiniCard(c.Key, i++, tradePanel);
+        foreach (var r in rr_info) if (r.Value.owner == player) ShowMiniRail(r.Key, i++, tradePanel);
+        if (electrical.owner == player) ShowMiniUtility("electrical", i++, tradePanel);
+        if (water.owner == player) ShowMiniUtility("water", i++, tradePanel);
+        for (int j = i; j < 30; ++j) DisableMiniCard(j, tradePanel);
+
+        tradePanel.SetActive(true);
+    }
+
+    void DisableMiniCard(int n, GameObject tradePanel) {
+        tradePanel.transform.Find("targeta" + n).gameObject.SetActive(false);
+    }
+
+    void ShowMiniCard(string cell_name, int n, GameObject tradePanel)
+    {
+        tradePanel.transform.Find("targeta" + n).gameObject.SetActive(true);
+        GameObject minicard = tradePanel.transform.Find("targeta" + n).gameObject;
+        GameObject franja = minicard.transform.Find("franja").gameObject;
+        minicard.transform.Find("inicial").gameObject.SetActive(true);
+        minicard.transform.Find("franja").gameObject.SetActive(true);
+        minicard.transform.Find("cash").gameObject.SetActive(true);
+        if (cell_name == "Brown" || cell_name == "Brown2") franja.GetComponentInChildren<Image>().color = new Color32(166, 84, 31, 255);
+        else if (cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3") franja.GetComponentInChildren<Image>().color = new Color32(0, 203, 255, 255);
+        else if (cell_name == "Purple" || cell_name == "Purple2" || cell_name == "Purple3") franja.GetComponentInChildren<Image>().color = new Color32(255, 0, 117, 255);
+        else if (cell_name == "Orange" || cell_name == "Orange2" || cell_name == "Orange3") franja.GetComponentInChildren<Image>().color = new Color32(255, 78, 0, 255);
+        else if (cell_name == "Red" || cell_name == "Red2" || cell_name == "Red3") franja.GetComponentInChildren<Image>().color = new Color32(255, 15, 0, 255);
+        else if (cell_name == "Yellow" || cell_name == "Yellow2" || cell_name == "Yellow3") franja.GetComponentInChildren<Image>().color = new Color32(255, 236, 0, 255);
+        else if (cell_name == "Green" || cell_name == "Green2" || cell_name == "Green3") franja.GetComponentInChildren<Image>().color = new Color32(0, 142, 7, 255);
+        else if (cell_name == "DarkBlue" || cell_name == "DarkBlue2") franja.GetComponentInChildren<Image>().color = new Color32(57, 70, 255, 255);
+        else return;
+
+        Cell c = info[cell_name];
+        minicard.transform.Find("inicial").gameObject.GetComponentInChildren<Text>().text = c.name[0].ToString();
+        minicard.transform.Find("cash").gameObject.GetComponentInChildren<Text>().text = c.cost.ToString();
+
+        minicard.transform.Find("Train").gameObject.SetActive(false);
+        minicard.transform.Find("WaterTap").gameObject.SetActive(false);
+        minicard.transform.Find("inicial2").gameObject.SetActive(false);
+        minicard.transform.Find("cash2").gameObject.SetActive(false);
+        minicard.transform.Find("LightBulb").gameObject.SetActive(false);
+
+        if (c.houses == 0 || c.houses == 5) {
+            minicard.transform.Find("casa1").gameObject.SetActive(false);
+            minicard.transform.Find("casa2").gameObject.SetActive(false);
+            minicard.transform.Find("casa3").gameObject.SetActive(false);
+            minicard.transform.Find("casa4").gameObject.SetActive(false);
+            if (c.houses == 5) {
+                minicard.transform.Find("inicial").gameObject.GetComponentInChildren<Text>().text = "H";
+            }
+        }
+        else if (c.houses == 1)
+        {
+            minicard.transform.Find("casa1").gameObject.SetActive(true);
+            minicard.transform.Find("casa2").gameObject.SetActive(false);
+            minicard.transform.Find("casa3").gameObject.SetActive(false);
+            minicard.transform.Find("casa4").gameObject.SetActive(false);
+        }
+        else if (c.houses == 2)
+        {
+            minicard.transform.Find("casa1").gameObject.SetActive(true);
+            minicard.transform.Find("casa2").gameObject.SetActive(true);
+            minicard.transform.Find("casa3").gameObject.SetActive(false);
+            minicard.transform.Find("casa4").gameObject.SetActive(false);
+        }
+        else if (c.houses == 3)
+        {
+            minicard.transform.Find("casa1").gameObject.SetActive(true);
+            minicard.transform.Find("casa2").gameObject.SetActive(true);
+            minicard.transform.Find("casa3").gameObject.SetActive(true);
+            minicard.transform.Find("casa4").gameObject.SetActive(false);
+        }
+        else if (c.houses == 4)
+        {
+            minicard.transform.Find("casa1").gameObject.SetActive(true);
+            minicard.transform.Find("casa2").gameObject.SetActive(true);
+            minicard.transform.Find("casa3").gameObject.SetActive(true);
+            minicard.transform.Find("casa4").gameObject.SetActive(true);
+        }
+
+        if (c.mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+        else minicard.GetComponentInChildren<Image>().color = new Color32(255, 255, 255, 255);
+    }
+
+    void ShowMiniRail(string cell_name, int n, GameObject tradePanel)
+    {
+        tradePanel.transform.Find("targeta" + n).gameObject.SetActive(true);
+        GameObject minicard = tradePanel.transform.Find("targeta" + n).gameObject;
+        minicard.transform.Find("inicial").gameObject.SetActive(false);
+        minicard.transform.Find("franja").gameObject.SetActive(false);
+        minicard.transform.Find("cash").gameObject.SetActive(false);
+        minicard.transform.Find("casa1").gameObject.SetActive(false);
+        minicard.transform.Find("casa2").gameObject.SetActive(false);
+        minicard.transform.Find("casa3").gameObject.SetActive(false);
+        minicard.transform.Find("casa4").gameObject.SetActive(false);
+
+        minicard.transform.Find("Train").gameObject.SetActive(true);
+        minicard.transform.Find("WaterTap").gameObject.SetActive(false);
+        minicard.transform.Find("inicial2").gameObject.SetActive(true);
+        minicard.transform.Find("cash2").gameObject.SetActive(true);
+        minicard.transform.Find("LightBulb").gameObject.SetActive(false);
+
+        minicard.transform.Find("cash2").gameObject.GetComponentInChildren<Text>().text = "200";
+        minicard.transform.Find("inicial2").gameObject.GetComponentInChildren<Text>().text = rr_info[cell_name].name[0].ToString();
+
+        if (rr_info[cell_name].mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+        else minicard.GetComponentInChildren<Image>().color = new Color32(255, 255, 255, 255);
+    }
+
+    void ShowMiniUtility(string cell_name, int n, GameObject tradePanel)
+    {
+        tradePanel.transform.Find("targeta" + n).gameObject.SetActive(true);
+        GameObject minicard = tradePanel.transform.Find("targeta" + n).gameObject;
+        minicard.transform.Find("inicial").gameObject.SetActive(false);
+        minicard.transform.Find("franja").gameObject.SetActive(false);
+        minicard.transform.Find("cash").gameObject.SetActive(false);
+        minicard.transform.Find("casa1").gameObject.SetActive(false);
+        minicard.transform.Find("casa2").gameObject.SetActive(false);
+        minicard.transform.Find("casa3").gameObject.SetActive(false);
+        minicard.transform.Find("casa4").gameObject.SetActive(false);
+
+        minicard.transform.Find("Train").gameObject.SetActive(false);
+        minicard.transform.Find("inicial2").gameObject.SetActive(false);
+        minicard.transform.Find("cash2").gameObject.SetActive(true);
+       
+
+        minicard.transform.Find("cash2").gameObject.GetComponentInChildren<Text>().text = "150";
+
+        if (cell_name == "electrical")
+        {
+            minicard.transform.Find("WaterTap").gameObject.SetActive(false);
+            minicard.transform.Find("LightBulb").gameObject.SetActive(true);
+
+            if (electrical.mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else minicard.GetComponentInChildren<Image>().color = new Color32(255, 255, 255, 255);
+        }
+        else {
+            minicard.transform.Find("WaterTap").gameObject.SetActive(true);
+            minicard.transform.Find("LightBulb").gameObject.SetActive(false);
+
+            if (water.mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else minicard.GetComponentInChildren<Image>().color = new Color32(255, 255, 255, 255);
+        }
+    }
+
+    public void SetPlayer(int player) {
+        actual_player = player;
     }
 
     void Update()
@@ -1264,6 +1404,16 @@ public class Cell_info : MonoBehaviour
             buy_selected = false;
             sell_selected = false;
             mortgage_selected = false;
+            if (tradePanel1_on) {
+                tradePanel1.gameObject.SetActive(false);
+                tradePanel1_on = false;
+            }
+
+            if (tradePanel2_on) {
+                tradePanel2.gameObject.SetActive(false);
+                tradePanel2_on = false;
+            }
+            
         }
     }
 }

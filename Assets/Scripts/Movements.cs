@@ -156,6 +156,7 @@ public class Movements : MonoBehaviour
         ChangeColor(panels[player_torn], new Color32(241, 241, 241, 255));
         ++player_torn;
         if (player_torn == n_players) player_torn = 0;
+        scripts.GetComponent<Cell_info>().SetPlayer(player_torn);
         destination = players[player_torn].transform.position;
         ChangeColor(panels[player_torn], new Color32(255, 182, 65, 255));
         if (Players[player_torn].penalized_torns == 0) roll_dice.gameObject.SetActive(true);
