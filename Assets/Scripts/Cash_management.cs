@@ -10,9 +10,6 @@ public class Cash_management : MonoBehaviour
     public Text cash3_text;
     public Text cash4_text;
 
-    public Text player3_title;
-    public Text player4_title;
-
     public int initial_cash;
     int cash1;
     int cash2;
@@ -165,18 +162,18 @@ public class Cash_management : MonoBehaviour
         }
     }
 
+    public int GetCash(int player) {
+        if (player == 0) return cash1;
+        if (player == 1) return cash2;
+        if (player == 2) return cash3;
+        if (player == 3) return cash4;
+        return cash1;
+    }
+
     void Start()
     {
         initial_cash = DataHolder.initial_cash;
         n_players = DataHolder.n_players;
-        if (n_players <= 3) {
-            player4_title.gameObject.SetActive(false);
-            cash4_text.gameObject.SetActive(false);
-            if (n_players == 2) {
-                player3_title.gameObject.SetActive(false);
-                cash3_text.gameObject.SetActive(false);
-            }
-        }
         cash1 = initial_cash;
         cash2 = initial_cash;
         cash3 = initial_cash;

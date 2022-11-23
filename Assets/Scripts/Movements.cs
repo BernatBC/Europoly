@@ -7,6 +7,7 @@ public class Movements : MonoBehaviour
 {
     public GameObject[] cells;
     public GameObject[] players;
+    public GameObject[] panels;
     public Button roll_dice;
     public Button end_torn;
     public Button roll_doubles;
@@ -72,6 +73,24 @@ public class Movements : MonoBehaviour
             Players[i].penalized_torns = 0;
             Players[i].outofjail = 0;
         }
+
+        if (n_players <= 3)
+        {
+            panels[3].gameObject.SetActive(false);
+            if (n_players == 2)
+            {
+                panels[2].gameObject.SetActive(false);
+                panels[0].transform.position = new Vector3(panels[0].transform.position.x, panels[0].transform.position.y - 150, panels[0].transform.position.z);
+                panels[1].transform.position = new Vector3(panels[1].transform.position.x, panels[1].transform.position.y - 150, panels[1].transform.position.z);
+            }
+            else
+            {
+                panels[0].transform.position = new Vector3(panels[0].transform.position.x, panels[0].transform.position.y - 50, panels[0].transform.position.z);
+                panels[1].transform.position = new Vector3(panels[1].transform.position.x, panels[1].transform.position.y - 50, panels[1].transform.position.z);
+                panels[2].transform.position = new Vector3(panels[2].transform.position.x, panels[2].transform.position.y - 50, panels[2].transform.position.z);
+            }
+        }
+        ChangeColor(panels[0], new Color32(255, 182, 65, 255));
     }
 
     void Travel() {
@@ -88,7 +107,6 @@ public class Movements : MonoBehaviour
         if (already_traveled) already_traveled = false;
         else {
             already_traveled = true;
-            Debug.Log("travel");
             travel.gameObject.SetActive(true);
             s1 = station1;
             s2 = station2;
@@ -121,13 +139,26 @@ public class Movements : MonoBehaviour
         return;
     }
 
+    void ChangeColor(GameObject panel, Color32 col) {
+        Transform t = panel.transform;
+        foreach (Transform tr in t)
+        {
+            if (tr.name == "Panel") tr.GetComponent<Image>().color = col;
+        }
+        return;
+    }
+
     void NextTorn()
     {
         travel.gameObject.SetActive(false);
         end_torn.gameObject.SetActive(false);
+        //panels[player_torn].GetComponents<Image>().color = new Color32(241, 241, 241, 255);
+        ChangeColor(panels[player_torn], new Color32(241, 241, 241, 255));
         ++player_torn;
         if (player_torn == n_players) player_torn = 0;
+        scripts.GetComponent<Cell_info>().SetPlayer(player_torn);
         destination = players[player_torn].transform.position;
+        ChangeColor(panels[player_torn], new Color32(255, 182, 65, 255));
         if (Players[player_torn].penalized_torns == 0) roll_dice.gameObject.SetActive(true);
         else {
             roll_doubles.gameObject.SetActive(true);
@@ -243,6 +274,10 @@ public class Movements : MonoBehaviour
             if (doubles_rolled >= 3) GoToJail();
         }
         else doubles_rolled = 0;
+    }
+
+    public int GetOutOfJail(int player) {
+        return Players[player].outofjail;
     }
 
     void Update()
