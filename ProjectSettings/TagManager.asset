@@ -9,6 +9,9 @@ TagManager:
   - panel2
   - panel3
   - panel4
+  - trade1
+  - trade2
+  - trade3
   layers:
   - Default
   - TransparentFX
