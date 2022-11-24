@@ -61,6 +61,11 @@ public class Cell_info : MonoBehaviour
     public GameObject income_tax_card;
     public GameObject luxury_tax_card;
 
+    [Header("Select trading player buttons")]
+    public GameObject TradingButton1;
+    public GameObject TradingButton2;
+    public GameObject TradingButton3;
+
     RaycastHit hit;
     Ray ray;
     bool card_shown = false;
@@ -506,20 +511,97 @@ public class Cell_info : MonoBehaviour
         tradePanel2.gameObject.SetActive(false);
     }
 
-    private void trading() {
+    public void SecondTradePanel(int tag) {
+        TradingButton1.gameObject.SetActive(false);
+        TradingButton2.gameObject.SetActive(false);
+        TradingButton3.gameObject.SetActive(false);
+        int player;
+        if (actual_player == 0) player = tag;
+        else if (actual_player == 1)
+        {
+            if (tag == 1) player = 0;
+            else player = tag;
+        }
+        else if (actual_player == 2)
+        {
+            if (tag == 3) player = 3;
+            else player = tag - 1;
+        }
+        else player = tag - 1;
+
         cancel.gameObject.SetActive(true);
         trading_selected = true;
         ShowPlayerInfo(actual_player, 1, false);
 
-        //Provisional, falta triar jugador
-        int second_player = 1;
-        if (actual_player == 1) second_player = 0;
-
-        ShowPlayerInfo(second_player, 2, false);
+        ShowPlayerInfo(player, 2, false);
         tradePanel1.gameObject.SetActive(true);
         tradePanel2.gameObject.SetActive(true);
-        //Seleccionar amb qui tradejar
+    }
 
+    private void EnableTradingButtons(int n_players) {
+        if (n_players == 3)
+        {
+            if (actual_player == 0)
+            {
+                TradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(0, 137, 255, 255);
+                TradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(234, 241, 0, 255);
+            }
+            else if (actual_player == 1)
+            {
+                TradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 78, 78, 255);
+                TradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(234, 241, 0, 255);
+            }
+            else {
+                TradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 78, 78, 255);
+                TradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(0, 137, 255, 255);
+            }
+        }
+        else {
+            if (actual_player == 0)
+            {
+                TradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(0, 137, 255, 255);
+                TradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(234, 241, 0, 255);
+                TradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(62, 233, 54, 255);
+            }
+            else if (actual_player == 1)
+            {
+                TradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 78, 78, 255);
+                TradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(234, 241, 0, 255);
+                TradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(62, 233, 54, 255);
+            }
+            else if (actual_player == 2)
+            {
+                TradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 78, 78, 255);
+                TradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(0, 137, 255, 255);
+                TradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(62, 233, 54, 255);
+            }
+            else {
+                TradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 78, 78, 255);
+                TradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(0, 137, 255, 255);
+                TradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(234, 241, 0, 255);
+            }
+
+            TradingButton3.gameObject.SetActive(true);
+        }
+        TradingButton1.gameObject.SetActive(true);
+        TradingButton2.gameObject.SetActive(true);
+    }
+
+    private void trading() {
+        trading_selected = true;
+        int n_players = scripts.GetComponent<Movements>().GetNPlayers();
+        if (n_players > 2) {
+            EnableTradingButtons(n_players);
+            return;
+        }
+        cancel.gameObject.SetActive(true);
+        
+        ShowPlayerInfo(actual_player, 1, false);
+
+        if (actual_player == 1) ShowPlayerInfo(0, 2, false);
+        else ShowPlayerInfo(1, 2, false);
+        tradePanel1.gameObject.SetActive(true);
+        tradePanel2.gameObject.SetActive(true);
     }
 
     private int Repairs(int house, int hotel) {
@@ -1239,7 +1321,12 @@ public class Cell_info : MonoBehaviour
             tradePanel = tradePanel2;
             if (disable_on_click) tradePanel2_on = true;
         }
-        tradePanel.transform.Find("Panel1").gameObject.transform.Find("player_text").gameObject.GetComponentInChildren<Text>().text = "Player " + (player + 1).ToString();
+
+        if (player == 0) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 78, 78, 255);
+        else if (player == 1) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(0, 137, 255, 255);
+        else if (player == 2) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(234, 241, 0, 255);
+        else tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(62, 233, 54, 255);
+
         int i = 0;
         foreach (var c in info) if (c.Value.owner == player) ShowMiniCard(c.Key, i++, tradePanel);
         foreach (var r in rr_info) if (r.Value.owner == player) ShowMiniRail(r.Key, i++, tradePanel);
@@ -1407,13 +1494,14 @@ public class Cell_info : MonoBehaviour
             if (tradePanel1_on) {
                 tradePanel1.gameObject.SetActive(false);
                 tradePanel1_on = false;
+                trading_selected = false;
             }
 
             if (tradePanel2_on) {
                 tradePanel2.gameObject.SetActive(false);
                 tradePanel2_on = false;
+                trading_selected = false;
             }
-            
         }
     }
 }

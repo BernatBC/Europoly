@@ -280,6 +280,10 @@ public class Movements : MonoBehaviour
         return Players[player].outofjail;
     }
 
+    public int GetNPlayers() {
+        return n_players;
+    }
+
     void Update()
     {
         if (!moving && movements_remaining > 0)

@@ -16,5 +16,8 @@ public class Panel : MonoBehaviour
         else if (CompareTag("panel2")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(1, 1, true);
         else if (CompareTag("panel3")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(2, 1, true);
         else if (CompareTag("panel4")) scripts.GetComponent<Cell_info>().ShowPlayerInfo(3, 1, true);
+        else if (CompareTag("trade1")) scripts.GetComponent<Cell_info>().SecondTradePanel(1);
+        else if (CompareTag("trade2")) scripts.GetComponent<Cell_info>().SecondTradePanel(2);
+        else if (CompareTag("trade3")) scripts.GetComponent<Cell_info>().SecondTradePanel(3);
     }
 }
