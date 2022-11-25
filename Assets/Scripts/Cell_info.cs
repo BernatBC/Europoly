@@ -103,6 +103,8 @@ public class Cell_info : MonoBehaviour
     int cash2 = 0;
     int trading_partner = 0;
 
+    bool freeze_trading = false;
+
     GameObject scripts;
 
     struct Cell {
@@ -559,6 +561,9 @@ public class Cell_info : MonoBehaviour
 
     private void canceling() {
         trading_selected = false;
+        freeze_trading = false;
+        tradePanel1.transform.Find("Cash").GetComponent<InputField>().readOnly = false;
+        tradePanel2.transform.Find("Cash").GetComponent<InputField>().readOnly = false;
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
         tradePanel1.gameObject.SetActive(false);
@@ -569,6 +574,9 @@ public class Cell_info : MonoBehaviour
 
     private void offering()
     {
+        freeze_trading = true;
+        tradePanel1.transform.Find("Cash").GetComponent<InputField>().readOnly = true;
+        tradePanel2.transform.Find("Cash").GetComponent<InputField>().readOnly = true;
         accept.gameObject.SetActive(true);
         reject.gameObject.SetActive(true);
         cancel.gameObject.SetActive(false);
@@ -654,6 +662,7 @@ public class Cell_info : MonoBehaviour
     }
 
     private void trading() {
+        if (freeze_trading) return;
         trading_selected = true;
         int n_players = scripts.GetComponent<Movements>().GetNPlayers();
         if (n_players > 2) {
@@ -1556,6 +1565,7 @@ public class Cell_info : MonoBehaviour
     }
 
     public void ToggleSelected(int panel, int cell) {
+        if (freeze_trading) return;
         if (panel == 1)
         {
             CellSelected1[cell] = !CellSelected1[cell];
