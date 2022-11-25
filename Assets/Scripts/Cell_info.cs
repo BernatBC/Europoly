@@ -14,6 +14,9 @@ public class Cell_info : MonoBehaviour
     public Button mortgage;
     public Button trade;
     public Button cancel;
+    public Button offer;
+    public Button accept;
+    public Button reject;
 
     public GameObject owner_mark1;
     public GameObject owner_mark2;
@@ -90,6 +93,15 @@ public class Cell_info : MonoBehaviour
     string actual_cell = "";
 
     int multiplier = 1;
+
+    //Trading info
+    string[] TradingCells1 = new string[30];
+    string[] TradingCells2 = new string[30];
+    bool[] CellSelected1 = new bool[30];
+    bool[] CellSelected2 = new bool[30];
+    int cash1 = 0;
+    int cash2 = 0;
+    int trading_partner = 0;
 
     GameObject scripts;
 
@@ -431,6 +443,9 @@ public class Cell_info : MonoBehaviour
         mortgage.onClick.AddListener(mortgage_unmortgage);
         trade.onClick.AddListener(trading);
         cancel.onClick.AddListener(canceling);
+        offer.onClick.AddListener(offering);
+        reject.onClick.AddListener(canceling);
+        accept.onClick.AddListener(makeTrade);
     }
 
     void buy_house() {
@@ -504,36 +519,87 @@ public class Cell_info : MonoBehaviour
         }
     }
 
+    private void makeTrade() {
+        for (int i = 0; i < CellSelected1.Length; ++i) {
+            if (CellSelected1[i]) new_owner(TradingCells1[i], trading_partner);
+            if (CellSelected2[i]) new_owner(TradingCells2[i], actual_player);
+        }
+        scripts.GetComponent<Cash_management>().modify_cash(actual_player, cash2 - cash1, false);
+        scripts.GetComponent<Cash_management>().modify_cash(trading_partner, cash1 - cash2, false);
+        canceling();
+    }
+
+    void new_owner(string cell, int player)
+    {
+        if (cell == "Station" || cell == "Station2" || cell == "Station3" || cell == "Station4")
+        {
+            RailRoad r = rr_info[cell];
+            rr_info.Remove(cell);
+            r.owner = player;
+            rr_info.Add(cell, r);
+        }
+        else if (cell == "Electric") electrical.owner = player;
+        else if (cell == "Water") water.owner = player;
+        else
+        {
+            Cell c = info[cell];
+            info.Remove(cell);
+            c.owner = player;
+            info.Add(cell, c);
+        }
+        remove_owner_marker(cell);
+        add_owner_marker(cell, player);
+    }
+
+    private void remove_owner_marker(string cell) {
+        GameObject a = owner_prefabs[cell];
+        Destroy(a);
+        owner_prefabs.Remove(cell);
+    }
+
     private void canceling() {
         trading_selected = false;
         cancel.gameObject.SetActive(false);
+        offer.gameObject.SetActive(false);
         tradePanel1.gameObject.SetActive(false);
         tradePanel2.gameObject.SetActive(false);
+        accept.gameObject.SetActive(false);
+        reject.gameObject.SetActive(false);
+    }
+
+    private void offering()
+    {
+        accept.gameObject.SetActive(true);
+        reject.gameObject.SetActive(true);
+        cancel.gameObject.SetActive(false);
+        offer.gameObject.SetActive(false);
+
     }
 
     public void SecondTradePanel(int tag) {
         TradingButton1.gameObject.SetActive(false);
         TradingButton2.gameObject.SetActive(false);
         TradingButton3.gameObject.SetActive(false);
-        int player;
-        if (actual_player == 0) player = tag;
+
+        if (actual_player == 0) trading_partner = tag;
         else if (actual_player == 1)
         {
-            if (tag == 1) player = 0;
-            else player = tag;
+            if (tag == 1) trading_partner = 0;
+            else trading_partner = tag;
         }
         else if (actual_player == 2)
         {
-            if (tag == 3) player = 3;
-            else player = tag - 1;
+            if (tag == 3) trading_partner = 3;
+            else trading_partner = tag - 1;
         }
-        else player = tag - 1;
+        else trading_partner = tag - 1;
 
         cancel.gameObject.SetActive(true);
+        offer.gameObject.SetActive(true);
         trading_selected = true;
         ShowPlayerInfo(actual_player, 1, false);
 
-        ShowPlayerInfo(player, 2, false);
+        ShowPlayerInfo(trading_partner, 2, false);
         tradePanel1.gameObject.SetActive(true);
         tradePanel2.gameObject.SetActive(true);
     }
@@ -595,11 +661,13 @@ public class Cell_info : MonoBehaviour
             return;
         }
         cancel.gameObject.SetActive(true);
-        
+        offer.gameObject.SetActive(true);
+
         ShowPlayerInfo(actual_player, 1, false);
 
-        if (actual_player == 1) ShowPlayerInfo(0, 2, false);
-        else ShowPlayerInfo(1, 2, false);
+        if (actual_player == 1) trading_partner = 0;
+        else trading_partner = 1;
+        ShowPlayerInfo(trading_partner, 2, false);
         tradePanel1.gameObject.SetActive(true);
         tradePanel2.gameObject.SetActive(true);
     }
@@ -841,18 +909,18 @@ public class Cell_info : MonoBehaviour
         }
     }
 
-    void add_owner_marker() {
-        Vector3 pos = scripts.GetComponent<Movements>().cell_pos(actual_cell);
-        if (actual_cell == "Brown" || actual_cell == "Brown2" || actual_cell == "LightBlue" || actual_cell == "LightBlue2" || actual_cell == "LightBlue3" || actual_cell == "Station") pos.z += 1.5f;
-        else if (actual_cell == "Purple" || actual_cell == "Purple2" || actual_cell == "Purple3" || actual_cell == "Electric" || actual_cell == "Orange" || actual_cell == "Station2" || actual_cell == "Orange2" || actual_cell == "Orange3") pos.x += 1.5f;
-        else if (actual_cell == "Red" || actual_cell == "Red2" || actual_cell == "Red3" || actual_cell == "Station3" || actual_cell == "Yellow" || actual_cell == "Yellow2" || actual_cell == "Yellow3" || actual_cell == "Water") pos.z -= 1.5f;
-        else if (actual_cell == "Green" || actual_cell == "Green2" || actual_cell == "Green3" || actual_cell == "DarkBlue" || actual_cell == "DarkBlue2" || actual_cell == "Station4") pos.x -= 1.5f;
+    void add_owner_marker(string cell, int player) {
+        Vector3 pos = scripts.GetComponent<Movements>().cell_pos(cell);
+        if (cell == "Brown" || cell == "Brown2" || cell == "LightBlue" || cell == "LightBlue2" || cell == "LightBlue3" || cell == "Station") pos.z += 1.5f;
+        else if (cell == "Purple" || cell == "Purple2" || cell == "Purple3" || cell == "Electric" || cell == "Orange" || cell == "Station2" || cell == "Orange2" || cell == "Orange3") pos.x += 1.5f;
+        else if (cell == "Red" || cell == "Red2" || cell == "Red3" || cell == "Station3" || cell == "Yellow" || cell == "Yellow2" || cell == "Yellow3" || cell == "Water") pos.z -= 1.5f;
+        else if (cell == "Green" || cell == "Green2" || cell == "Green3" || cell == "DarkBlue" || cell == "DarkBlue2" || cell == "Station4") pos.x -= 1.5f;
         GameObject a;
-        if (actual_player == 0) a = Instantiate(owner_mark1, new Vector3(pos.x, 0.55f, pos.z), owner_mark1.gameObject.transform.rotation);
-        else if (actual_player == 1) a = Instantiate(owner_mark2, new Vector3(pos.x, 0.55f, pos.z), owner_mark2.gameObject.transform.rotation);
-        else if (actual_player == 2) a = Instantiate(owner_mark3, new Vector3(pos.x, 0.55f, pos.z), owner_mark3.gameObject.transform.rotation);
+        if (player == 0) a = Instantiate(owner_mark1, new Vector3(pos.x, 0.55f, pos.z), owner_mark1.gameObject.transform.rotation);
+        else if (player == 1) a = Instantiate(owner_mark2, new Vector3(pos.x, 0.55f, pos.z), owner_mark2.gameObject.transform.rotation);
+        else if (player == 2) a = Instantiate(owner_mark3, new Vector3(pos.x, 0.55f, pos.z), owner_mark3.gameObject.transform.rotation);
         else a = Instantiate(owner_mark4, new Vector3(pos.x, 0.55f, pos.z), owner_mark4.gameObject.transform.rotation);
-        owner_prefabs.Add(actual_cell, a);
+        owner_prefabs.Add(cell, a);
     }
 
     void add_house(string cell_name, int house_pos) {
@@ -1014,7 +1082,7 @@ public class Cell_info : MonoBehaviour
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -c.cost, false);
             info.Add(actual_cell, c);
         }
-        add_owner_marker();
+        add_owner_marker(actual_cell, actual_player);
     }
 
     int countStations(int owner) {
@@ -1316,16 +1384,22 @@ public class Cell_info : MonoBehaviour
         if (panel == 1) {
             tradePanel = tradePanel1;
             if (disable_on_click) tradePanel1_on = true;
+            for (int k = 0; k < CellSelected1.Length; ++k) CellSelected1[k] = false;
+            cash1 = 0;
         } 
         else {
             tradePanel = tradePanel2;
             if (disable_on_click) tradePanel2_on = true;
+            for (int k = 0; k < CellSelected2.Length; ++k) CellSelected2[k] = false;
+            cash2 = 0;
         }
 
         if (player == 0) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 78, 78, 255);
         else if (player == 1) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(0, 137, 255, 255);
         else if (player == 2) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(234, 241, 0, 255);
         else tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(62, 233, 54, 255);
+
+        tradePanel.transform.Find("Cash").GetComponent<InputField>().text = "";
 
         int i = 0;
         foreach (var c in info) if (c.Value.owner == player) ShowMiniCard(c.Key, i++, tradePanel);
@@ -1343,6 +1417,9 @@ public class Cell_info : MonoBehaviour
 
     void ShowMiniCard(string cell_name, int n, GameObject tradePanel)
     {
+        if (tradePanel == tradePanel1) TradingCells1[n] = cell_name;
+        else TradingCells2[n] = cell_name;
+
         tradePanel.transform.Find("targeta" + n).gameObject.SetActive(true);
         GameObject minicard = tradePanel.transform.Find("targeta" + n).gameObject;
         GameObject franja = minicard.transform.Find("franja").gameObject;
@@ -1413,6 +1490,9 @@ public class Cell_info : MonoBehaviour
 
     void ShowMiniRail(string cell_name, int n, GameObject tradePanel)
     {
+        if (tradePanel == tradePanel1) TradingCells1[n] = cell_name;
+        else TradingCells2[n] = cell_name;
+
         tradePanel.transform.Find("targeta" + n).gameObject.SetActive(true);
         GameObject minicard = tradePanel.transform.Find("targeta" + n).gameObject;
         minicard.transform.Find("inicial").gameObject.SetActive(false);
@@ -1438,6 +1518,9 @@ public class Cell_info : MonoBehaviour
 
     void ShowMiniUtility(string cell_name, int n, GameObject tradePanel)
     {
+        if (tradePanel == tradePanel1) TradingCells1[n] = cell_name;
+        else TradingCells2[n] = cell_name;
+
         tradePanel.transform.Find("targeta" + n).gameObject.SetActive(true);
         GameObject minicard = tradePanel.transform.Find("targeta" + n).gameObject;
         minicard.transform.Find("inicial").gameObject.SetActive(false);
@@ -1470,6 +1553,27 @@ public class Cell_info : MonoBehaviour
             if (water.mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
             else minicard.GetComponentInChildren<Image>().color = new Color32(255, 255, 255, 255);
         }
+    }
+
+    public void ToggleSelected(int panel, int cell) {
+        if (panel == 1)
+        {
+            CellSelected1[cell] = !CellSelected1[cell];
+            if (CellSelected1[cell]) tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color =  new Color32(255, 182, 65, 255);
+            else if (info[TradingCells1[cell]].mortgaged) tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        }
+        else if (panel == 2) {
+            CellSelected2[cell] = !CellSelected2[cell];
+            if (CellSelected2[cell]) tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(255, 182, 65, 255);
+            else if (info[TradingCells2[cell]].mortgaged) tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        }
+    }
+
+    public void UpdateTradingCash(int panel, int amount) {
+        if (panel == 1) cash1 = amount;
+        else cash2 = amount;
     }
 
     public void SetPlayer(int player) {
