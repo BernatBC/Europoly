@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class Cell_info : MonoBehaviour
 {
+    [Header("Buttons")]
     public Button buy_button;
     public Button pass_button;
     public Button buy_house_button;
@@ -18,49 +19,13 @@ public class Cell_info : MonoBehaviour
     public Button accept;
     public Button reject;
 
-    public GameObject owner_mark1;
-    public GameObject owner_mark2;
-    public GameObject owner_mark3;
-    public GameObject owner_mark4;
-
-    public GameObject house;
-    public GameObject hotel;
-
-    public GameObject tradePanel1;
-    public GameObject tradePanel2;
-
-    [Header("Street Card")]
+    [Header("Cards")]
     public GameObject CardUI;
-    public Text card_title;
-    public Text card_cost;
-    public Text card_rent;
-    public Text card_rent1;
-    public Text card_rent2;
-    public Text card_rent3;
-    public Text card_rent4;
-    public Text card_rentH;
-    public Text card_costHs;
-    public Text card_costHt;
-    public Text card_mortgage;
-    public Image top;
-
-    [Header("Railroad Card")]
     public GameObject rrcard;
-    public Text rr_title;
-
-    [Header("Community Chest Card")]
     public GameObject chestcard;
-    public Text chest_title;
-
-    [Header("Chance Card")]
     public GameObject chancecard;
-    public Text chance_title;
-
-    [Header("Utilities")]
     public GameObject electric_card;
     public GameObject water_card;
-
-    [Header("Taxes")]
     public GameObject income_tax_card;
     public GameObject luxury_tax_card;
 
@@ -68,6 +33,13 @@ public class Cell_info : MonoBehaviour
     public GameObject TradingButton1;
     public GameObject TradingButton2;
     public GameObject TradingButton3;
+
+    [Header("Other")]
+    public GameObject[] owner_mark;
+    public GameObject house;
+    public GameObject hotel;
+    public GameObject tradePanel1;
+    public GameObject tradePanel2;
 
     RaycastHit hit;
     Ray ray;
@@ -471,6 +443,8 @@ public class Cell_info : MonoBehaviour
         pass_button.gameObject.SetActive(false);
     }
     void ShowRentCard(string cell_name) {
+        Image top = CardUI.transform.Find("Top").GetComponent<Image>();
+
         if (cell_name == "Brown" || cell_name == "Brown2") top.color = new Color32(166, 84, 31, 255);
         else if (cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3") top.color = new Color32(0, 203, 255, 255);
         else if (cell_name == "Purple" || cell_name == "Purple2" || cell_name == "Purple3") top.color = new Color32(255, 0, 117, 255);
@@ -480,17 +454,19 @@ public class Cell_info : MonoBehaviour
         else if (cell_name == "Green" || cell_name == "Green2" || cell_name == "Green3") top.color = new Color32(0, 142, 7, 255);
         else if (cell_name == "DarkBlue" || cell_name == "DarkBlue2") top.color = new Color32(57, 70, 255, 255);
         else return;
-        card_title.text = info[cell_name].name;
-        card_cost.text = info[cell_name].cost + "";
-        card_rent.text = info[cell_name].rent + "";
-        card_rent1.text = info[cell_name].rent1 + "";
-        card_rent2.text = info[cell_name].rent2 + "";
-        card_rent3.text = info[cell_name].rent3 + "";
-        card_rent4.text = info[cell_name].rent4 + "";
-        card_rentH.text = info[cell_name].rentH + "";
-        card_costHs.text = info[cell_name].house_cost + "";
-        card_costHt.text = info[cell_name].house_cost + "";
-        card_mortgage.text = info[cell_name].cost / 2 + "";
+
+        CardUI.transform.Find("Name").GetComponent<Text>().text = info[cell_name].name;
+        CardUI.transform.Find("Cost_value").GetComponent<Text>().text = info[cell_name].cost + "";
+        CardUI.transform.Find("Rent_value").GetComponent<Text>().text = info[cell_name].rent + "";
+        CardUI.transform.Find("Rent1_value").GetComponent<Text>().text = info[cell_name].rent1 + "";
+        CardUI.transform.Find("Rent2_value").GetComponent<Text>().text = info[cell_name].rent2 + "";
+        CardUI.transform.Find("Rent3_value").GetComponent<Text>().text = info[cell_name].rent3 + "";
+        CardUI.transform.Find("Rent4_value").GetComponent<Text>().text = info[cell_name].rent4 + "";
+        CardUI.transform.Find("RentH_value").GetComponent<Text>().text = info[cell_name].rentH + "";
+        CardUI.transform.Find("CostHouse_value").GetComponent<Text>().text = info[cell_name].house_cost + "";
+        CardUI.transform.Find("CostHotel_value").GetComponent<Text>().text = info[cell_name].house_cost + "";
+        CardUI.transform.Find("Mortgage_value").GetComponent<Text>().text = info[cell_name].cost / 2 + "";
+
         if (info[cell_name].mortgaged) CardUI.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
         else CardUI.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(245, 234, 223, 255);
         CardUI.gameObject.SetActive(true);
@@ -498,7 +474,7 @@ public class Cell_info : MonoBehaviour
     }
 
     private void ShowRRCard(string cell_name) {
-        rr_title.text = rr_info[cell_name].name;
+        rrcard.transform.Find("Name").GetComponent<Text>().text = rr_info[cell_name].name;
         if (rr_info[cell_name].mortgaged) rrcard.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
         else rrcard.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(245, 234, 223, 255);
         rrcard.gameObject.SetActive(true);
@@ -695,96 +671,96 @@ public class Cell_info : MonoBehaviour
 
     private void ChestCard(int n) {
         if (n == 1) {
-            chest_title.text = "Advance to Go (Collect 200)";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Advance to Go (Collect 200)";
             scripts.GetComponent<Movements>().MoveTo(actual_cell, "Start");
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 2) {
-            chest_title.text = "Bank error in your favour. Collect 200";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Bank error in your favour. Collect 200";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 200, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 3)
         {
-            chest_title.text = "Doctor’s fee. Pay 50";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Doctor’s fee. Pay 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 4)
         {
-            chest_title.text = "From sale of stock you get 50";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "From sale of stock you get 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 5)
         {
-            chest_title.text = "Get Out of Jail Free";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Get Out of Jail Free";
             scripts.GetComponent<Movements>().add_out_of_jail(actual_player);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 6)
         {
-            chest_title.text = "Go directly to jail, do not pass Go, do not collect 200";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Go directly to jail, do not pass Go, do not collect 200";
             scripts.GetComponent<Movements>().GoToJail();
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 7)
         {
-            chest_title.text = "Holiday fund matures. Receive 100";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Holiday fund matures. Receive 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 8)
         {
-            chest_title.text = "Income tax refund. Collect 20";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Income tax refund. Collect 20";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 20, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 9)
         {
-            chest_title.text = "It is your birthday. Collect 10 from every player";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "It is your birthday. Collect 10 from every player";
             scripts.GetComponent<Cash_management>().collect_from_everybody(actual_player, 10);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 10)
         {
-            chest_title.text = "Life insurance matures. Collect 100";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Life insurance matures. Collect 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 11)
         {
-            chest_title.text = "Pay hospital fees of 100";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Pay hospital fees of 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -100, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 12)
         {
-            chest_title.text = "Pay school fees of 50";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Pay school fees of 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 13)
         {
-            chest_title.text = "Receive 25 consultancy fee";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "Receive 25 consultancy fee";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 25, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 14)
         {
-            chest_title.text = "You are assessed for street repairs. 40 per house. 115 per hotel";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "You are assessed for street repairs. 40 per house. 115 per hotel";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(40, 115), false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 15)
         {
-            chest_title.text = "You have won second prize in a beauty contest. Collect 10";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "You have won second prize in a beauty contest. Collect 10";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 10, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 16)
         {
-            chest_title.text = "You inherit 100";
+            chestcard.transform.Find("Name").GetComponent<Text>().text = "You inherit 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
             StartCoroutine(WaitAndDisableCard2(3));
         }
@@ -809,31 +785,31 @@ public class Cell_info : MonoBehaviour
     {
         if (n == 1)
         {
-            chance_title.text = "Advance to Go (Collect 200)";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Advance to Go (Collect 200)";
             scripts.GetComponent<Movements>().MoveTo(actual_cell, "Start");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 2)
         {
-            chance_title.text = "Advance to Trafalgar Square. If you pass Go, collect 200";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Advance to Trafalgar Square. If you pass Go, collect 200";
             scripts.GetComponent<Movements>().MoveTo(actual_cell, "Red3");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 3)
         {
-            chance_title.text = "Advance to Mayfair";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Advance to Mayfair";
             scripts.GetComponent<Movements>().MoveTo(actual_cell, "DarkBlue2");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 4)
         {
-            chance_title.text = "Advance to Pall Mall. If you pass Go, collect 200";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Advance to Pall Mall. If you pass Go, collect 200";
             scripts.GetComponent<Movements>().MoveTo(actual_cell, "Purple");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 5 || n == 6)
         {
-            chance_title.text = "Advance to the nearest Station. If unowned, you may buy it from the Bank. If owned, pay wonder twice the rental to which they are otherwise entitled";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Advance to the nearest Station. If unowned, you may buy it from the Bank. If owned, pay wonder twice the rental to which they are otherwise entitled";
             if (actual_cell == "Chance") scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station2");
             else if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station3");
             else scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station");
@@ -842,7 +818,7 @@ public class Cell_info : MonoBehaviour
         }
         else if (n == 7)
         {
-            chance_title.text = "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, pay owner a total ten times amount thrown.";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, pay owner a total ten times amount thrown.";
             if (actual_cell == "Chance2") scripts.GetComponent<Movements>().MoveTo(actual_cell, "Water");
             else scripts.GetComponent<Movements>().MoveTo(actual_cell, "Electric");
             multiplier = 10;
@@ -850,55 +826,55 @@ public class Cell_info : MonoBehaviour
         }
         else if (n == 8)
         {
-            chance_title.text = "Bank pays you dividend of 50";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Bank pays you dividend of 50";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 9)
         {
-            chance_title.text = "Get Out of Jail Free";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Get Out of Jail Free";
             scripts.GetComponent<Movements>().add_out_of_jail(actual_player);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 10)
         {
-            chance_title.text = "Go Back 3 Spaces";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Go Back 3 Spaces";
             scripts.GetComponent<Movements>().MoveNCells(-3);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 11)
         {
-            chance_title.text = "Go directly to Jail, do not pass Go, do not collect 200";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Go directly to Jail, do not pass Go, do not collect 200";
             scripts.GetComponent<Movements>().GoToJail();
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 12)
         {
-            chance_title.text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(25, 100), false);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 13)
         {
-            chance_title.text = "Speeding fine 15";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Speeding fine 15";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, -15, false);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 14)
         {
-            chance_title.text = "Take a trip to Kings Cross Station. If you pass Go, collect 200";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Take a trip to Kings Cross Station. If you pass Go, collect 200";
             scripts.GetComponent<Movements>().MoveTo(actual_cell, "Station");
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 15)
         {
-            chance_title.text = "You have been elected Chairman of the Board. Pay each player 50";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "You have been elected Chairman of the Board. Pay each player 50";
             scripts.GetComponent<Cash_management>().pay_everybody(actual_player, 50);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 16)
         {
-            chance_title.text = "Your building loan matures. Collect 150";
+            chancecard.transform.Find("Name").GetComponent<Text>().text = "Your building loan matures. Collect 150";
             scripts.GetComponent<Cash_management>().modify_cash(actual_player, 150, false);
             StartCoroutine(WaitAndDisableCard(3));
         }
@@ -924,11 +900,8 @@ public class Cell_info : MonoBehaviour
         else if (cell == "Purple" || cell == "Purple2" || cell == "Purple3" || cell == "Electric" || cell == "Orange" || cell == "Station2" || cell == "Orange2" || cell == "Orange3") pos.x += 1.5f;
         else if (cell == "Red" || cell == "Red2" || cell == "Red3" || cell == "Station3" || cell == "Yellow" || cell == "Yellow2" || cell == "Yellow3" || cell == "Water") pos.z -= 1.5f;
         else if (cell == "Green" || cell == "Green2" || cell == "Green3" || cell == "DarkBlue" || cell == "DarkBlue2" || cell == "Station4") pos.x -= 1.5f;
-        GameObject a;
-        if (player == 0) a = Instantiate(owner_mark1, new Vector3(pos.x, 0.55f, pos.z), owner_mark1.gameObject.transform.rotation);
-        else if (player == 1) a = Instantiate(owner_mark2, new Vector3(pos.x, 0.55f, pos.z), owner_mark2.gameObject.transform.rotation);
-        else if (player == 2) a = Instantiate(owner_mark3, new Vector3(pos.x, 0.55f, pos.z), owner_mark3.gameObject.transform.rotation);
-        else a = Instantiate(owner_mark4, new Vector3(pos.x, 0.55f, pos.z), owner_mark4.gameObject.transform.rotation);
+        
+        GameObject a = Instantiate(owner_mark[player], new Vector3(pos.x, 0.55f, pos.z), owner_mark[player].gameObject.transform.rotation);
         owner_prefabs.Add(cell, a);
     }
 
@@ -1386,9 +1359,7 @@ public class Cell_info : MonoBehaviour
     }
 
     public void ShowPlayerInfo(int player, int panel, bool disable_on_click) {
-        Debug.Log("Cash: " + scripts.GetComponent<Cash_management>().GetCash(actual_player));
         int outofjail = scripts.GetComponent<Movements>().GetOutOfJail(player);
-        Debug.Log("Out of jail " + outofjail.ToString());
         GameObject tradePanel;
         if (panel == 1) {
             tradePanel = tradePanel1;
@@ -1413,8 +1384,8 @@ public class Cell_info : MonoBehaviour
         int i = 0;
         foreach (var c in info) if (c.Value.owner == player) ShowMiniCard(c.Key, i++, tradePanel);
         foreach (var r in rr_info) if (r.Value.owner == player) ShowMiniRail(r.Key, i++, tradePanel);
-        if (electrical.owner == player) ShowMiniUtility("electrical", i++, tradePanel);
-        if (water.owner == player) ShowMiniUtility("water", i++, tradePanel);
+        if (electrical.owner == player) ShowMiniUtility("Electric", i++, tradePanel);
+        if (water.owner == player) ShowMiniUtility("Water", i++, tradePanel);
         for (int j = i; j < 30; ++j) DisableMiniCard(j, tradePanel);
 
         tradePanel.SetActive(true);
@@ -1547,7 +1518,7 @@ public class Cell_info : MonoBehaviour
 
         minicard.transform.Find("cash2").gameObject.GetComponentInChildren<Text>().text = "150";
 
-        if (cell_name == "electrical")
+        if (cell_name == "Electric")
         {
             minicard.transform.Find("WaterTap").gameObject.SetActive(false);
             minicard.transform.Find("LightBulb").gameObject.SetActive(true);
@@ -1564,19 +1535,140 @@ public class Cell_info : MonoBehaviour
         }
     }
 
-    public void ToggleSelected(int panel, int cell) {
+    private int CellToMinicard(string cell_name, int panel) {
+        if (panel == 1) for (int i = 0; i < TradingCells1.Length; ++i) if (TradingCells1[i] == cell_name) return i;
+        if (panel == 2) for (int i = 0; i < TradingCells2.Length; ++i) if (TradingCells2[i] == cell_name) return i;
+        return -1;
+    }
+
+    private void ToggleColor(int panel, int cell, string cell_name) {
+        if (cell_name == "Brown" || cell_name == "Brown2") {
+            if (info["Brown"].houses > 0 || info["Brown2"].houses > 0)
+            {
+                ToggleSelected(panel, CellToMinicard("Brown", panel));
+                ToggleSelected(panel, CellToMinicard("Brown2", panel));
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+
+        if (cell_name == "LightBlue" || cell_name == "LightBlue2" || cell_name == "LightBlue3") {
+            if (info["LightBlue"].houses > 0 || info["LightBlue2"].houses > 0 || info["LightBlue3"].houses > 0) {
+                ToggleSelected(panel, CellToMinicard("LightBlue", panel));
+                ToggleSelected(panel, CellToMinicard("LightBlue2", panel));
+                ToggleSelected(panel, CellToMinicard("LightBlue3", panel));
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+
+        if (cell_name == "Purple" || cell_name == "Purple2" || cell_name == "Purple3")
+        {
+            if (info["Purple"].houses > 0 || info["Purple2"].houses > 0 || info["Purple3"].houses > 0)
+            {
+                ToggleSelected(panel, CellToMinicard("Purple", panel));
+                ToggleSelected(panel, CellToMinicard("Purple2", panel));
+                ToggleSelected(panel, CellToMinicard("Purple3", panel));
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+
+        if (cell_name == "Orange" || cell_name == "Orange2" || cell_name == "Orange3")
+        {
+            if (info["Orange"].houses > 0 || info["Orange2"].houses > 0 || info["Orange3"].houses > 0)
+            {
+                ToggleSelected(panel, CellToMinicard("Orange", panel));
+                ToggleSelected(panel, CellToMinicard("Orange2", panel));
+                ToggleSelected(panel, CellToMinicard("Orange3", panel));
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+
+        if (cell_name == "Red" || cell_name == "Red2" || cell_name == "Red3")
+        {
+            if (info["Red"].houses > 0 || info["Red2"].houses > 0 || info["Red3"].houses > 0)
+            {
+                ToggleSelected(panel, CellToMinicard("Red", panel));
+                ToggleSelected(panel, CellToMinicard("Red2", panel));
+                ToggleSelected(panel, CellToMinicard("Red3", panel));
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+
+        if (cell_name == "Yellow" || cell_name == "Yellow2" || cell_name == "Yellow3")
+        {
+            if (info["Yellow"].houses > 0 || info["Yellow2"].houses > 0 || info["Yellow3"].houses > 0)
+            {
+                ToggleSelected(panel, CellToMinicard("Yellow", panel));
+                ToggleSelected(panel, CellToMinicard("Yellow2", panel));
+                ToggleSelected(panel, CellToMinicard("Yellow3", panel));
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+
+        if (cell_name == "Green" || cell_name == "Green2" || cell_name == "Green3")
+        {
+            if (info["Green"].houses > 0 || info["Green2"].houses > 0 || info["Green3"].houses > 0)
+            {
+                ToggleSelected(panel, CellToMinicard("Green", panel));
+                ToggleSelected(panel, CellToMinicard("Green2", panel));
+                ToggleSelected(panel, CellToMinicard("Green3", panel));
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+
+        if (cell_name == "DarkBlue" || cell_name == "DarkBlue2")
+        {
+            if (info["DarkBlue"].houses > 0 || info["DarkBlue2"].houses > 0)
+            {
+                ToggleSelected(panel, CellToMinicard("DarkBlue", panel));
+                ToggleSelected(panel, CellToMinicard("DarkBlue2", panel));
+
+            }
+            else ToggleSelected(panel, cell);
+            return;
+        }
+    }
+
+    public void Toggle(int panel, int cell) {
         if (freeze_trading) return;
+
+        string cell_name;
+        if (panel == 1) cell_name = TradingCells1[cell];
+        else cell_name = TradingCells2[cell];
+
+        if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4" || cell_name == "Electric" || cell_name == "Water")
+        {
+            ToggleSelected(panel, cell);
+            return;
+        }
+        ToggleColor(panel, cell, cell_name);
+    }
+
+    private bool Cell_Mortgaged(string cell_name) {
+        if (cell_name == "Electric") return electrical.mortgaged;
+        if (cell_name == "Water") return water.mortgaged;
+        if (cell_name == "Station" || cell_name == "Station2" || cell_name == "Station3" || cell_name == "Station4") return rr_info[cell_name].mortgaged;
+        return info[cell_name].mortgaged; ;
+    }
+
+    private void ToggleSelected(int panel, int cell) {
         if (panel == 1)
         {
             CellSelected1[cell] = !CellSelected1[cell];
             if (CellSelected1[cell]) tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color =  new Color32(255, 182, 65, 255);
-            else if (info[TradingCells1[cell]].mortgaged) tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else if (Cell_Mortgaged(TradingCells1[cell])) tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
             else tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
         }
         else if (panel == 2) {
             CellSelected2[cell] = !CellSelected2[cell];
             if (CellSelected2[cell]) tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(255, 182, 65, 255);
-            else if (info[TradingCells2[cell]].mortgaged) tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
+            else if (Cell_Mortgaged(TradingCells2[cell])) tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
             else tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
         }
     }

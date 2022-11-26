@@ -15,10 +15,10 @@ public class Trade : MonoBehaviour
         for (int i = 0; i < 30; ++i) {
             int num = i;
             Button b = firstPanel.transform.Find("targeta" + i.ToString()).gameObject.AddComponent(typeof(Button)) as Button;
-            b.onClick.AddListener(delegate { scripts.GetComponent<Cell_info>().ToggleSelected(1, num); });
+            b.onClick.AddListener(delegate { scripts.GetComponent<Cell_info>().Toggle(1, num); });
 
             b = secondPanel.transform.Find("targeta" + i.ToString()).gameObject.AddComponent(typeof(Button)) as Button;
-            b.onClick.AddListener(delegate { scripts.GetComponent<Cell_info>().ToggleSelected(2, num); ; });
+            b.onClick.AddListener(delegate { scripts.GetComponent<Cell_info>().Toggle(2, num); ; });
         }
     }
 
