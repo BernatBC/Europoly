@@ -44,25 +44,44 @@ public class Cash_management : MonoBehaviour
         tax_cash = 0;
     }
 
-    public bool modify_cash(int player, int amount, bool taxes) {
+    public bool modify_cash(int player, int amount, bool taxes, bool must_pay) {
         //Debug.Log("Player " + player + " " + amount);
         if (player == 0)
         {
             cash1 += amount;
+            if (!must_pay && cash1 < 0 && amount < 0) {
+                cash1 -= amount;
+                return false;
+            }
             cash1_text.text = cash1 + "";
         }
         else if (player == 1) {
             cash2 += amount;
+            if (!must_pay && cash2 < 0 && amount < 0)
+            {
+                cash2 -= amount;
+                return false;
+            }
             cash2_text.text = cash2 + "";
         }
         else if (player == 2)
         {
             cash3 += amount;
+            if (!must_pay && cash3 < 0 && amount < 0)
+            {
+                cash3 -= amount;
+                return false;
+            }
             cash3_text.text = cash3 + "";
         }
         else
         {
             cash4 += amount;
+            if (!must_pay && cash4 < 0 && amount < 0)
+            {
+                cash4 -= amount;
+                return false;
+            }
             cash4_text.text = cash4 + "";
         }
         if (taxes) tax_cash -= amount;
@@ -103,30 +122,30 @@ public class Cash_management : MonoBehaviour
 
     public void collect_from_everybody(int player, int amount) {
         if (player == 0) {
-            modify_cash(0, (n_players - 1) * amount, false);
-            modify_cash(1, -amount, false);
-            modify_cash(2, -amount, false);
-            modify_cash(3, -amount, false);
+            modify_cash(0, (n_players - 1) * amount, false, true);
+            modify_cash(1, -amount, false, true);
+            modify_cash(2, -amount, false, true);
+            modify_cash(3, -amount, false, true);
         }
         else if (player == 1) {
-            modify_cash(1, (n_players - 1) * amount, false);
-            modify_cash(0, -amount, false);
-            modify_cash(2, -amount, false);
-            modify_cash(3, -amount, false);
+            modify_cash(1, (n_players - 1) * amount, false, true);
+            modify_cash(0, -amount, false, true);
+            modify_cash(2, -amount, false, true);
+            modify_cash(3, -amount, false, true);
         }
         else if (player == 2)
         {
-            modify_cash(2, (n_players - 1) * amount, false);
-            modify_cash(0, -amount, false);
-            modify_cash(1, -amount, false);
-            modify_cash(3, -amount, false);
+            modify_cash(2, (n_players - 1) * amount, false, true);
+            modify_cash(0, -amount, false, true);
+            modify_cash(1, -amount, false, true);
+            modify_cash(3, -amount, false, true);
         }
         else if (player == 3)
         {
-            modify_cash(3, (n_players - 1) * amount, false);
-            modify_cash(0, -amount, false);
-            modify_cash(1, -amount, false);
-            modify_cash(2, -amount, false);
+            modify_cash(3, (n_players - 1) * amount, false, true);
+            modify_cash(0, -amount, false, true);
+            modify_cash(1, -amount, false, true);
+            modify_cash(2, -amount, false, true);
         }
     }
 
@@ -134,31 +153,31 @@ public class Cash_management : MonoBehaviour
     {
         if (player == 0)
         {
-            modify_cash(0, -(n_players - 1) * amount, false);
-            modify_cash(1, amount, false);
-            modify_cash(2, amount, false);
-            modify_cash(3, amount, false);
+            modify_cash(0, -(n_players - 1) * amount, false, true);
+            modify_cash(1, amount, false, true);
+            modify_cash(2, amount, false, true);
+            modify_cash(3, amount, false, true);
         }
         else if (player == 1)
         {
-            modify_cash(1, -(n_players - 1) * amount, false);
-            modify_cash(0, amount, false);
-            modify_cash(2, amount, false);
-            modify_cash(3, amount, false);
+            modify_cash(1, -(n_players - 1) * amount, false, true);
+            modify_cash(0, amount, false, true);
+            modify_cash(2, amount, false, true);
+            modify_cash(3, amount, false, true);
         }
         else if (player == 2)
         {
-            modify_cash(2, -(n_players - 1) * amount, false);
-            modify_cash(0, amount, false);
-            modify_cash(1, amount, false);
-            modify_cash(3, amount, false);
+            modify_cash(2, -(n_players - 1) * amount, false, true);
+            modify_cash(0, amount, false, true);
+            modify_cash(1, amount, false, true);
+            modify_cash(3, amount, false, true);
         }
         else if (player == 3)
         {
-            modify_cash(3, -(n_players - 1) * amount, false);
-            modify_cash(0, amount, false);
-            modify_cash(1, amount, false);
-            modify_cash(2, amount, false);
+            modify_cash(3, -(n_players - 1) * amount, false, true);
+            modify_cash(0, amount, false, true);
+            modify_cash(1, amount, false, true);
+            modify_cash(2, amount, false, true);
         }
     }
 

@@ -23,7 +23,11 @@ public class menu : MonoBehaviour
     }
     public void Play() {
         int l;
-        if (int.TryParse(k, out l)) DataHolder.initial_cash = l;
+        if (int.TryParse(k, out l))
+        {
+            if (l < 100) DataHolder.initial_cash = 100;
+            else DataHolder.initial_cash = l;
+        }
         else DataHolder.initial_cash = 2000;
         DataHolder.n_players = p;
         SceneManager.LoadScene("SampleScene");

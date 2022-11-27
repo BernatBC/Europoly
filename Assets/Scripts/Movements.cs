@@ -40,9 +40,11 @@ public class Movements : MonoBehaviour
         public int pos;
         public int penalized_torns;
         public int outofjail;
+        public bool dead;
     };
 
     int n_players;
+    int players_alive;
 
     GameObject scripts;
 
@@ -64,6 +66,7 @@ public class Movements : MonoBehaviour
         travel.gameObject.SetActive(false);
 
         n_players = DataHolder.n_players;
+        players_alive = n_players;
         Players = new Player[n_players];
         for (int i = 0; i < n_players; ++i)
         {
@@ -72,6 +75,7 @@ public class Movements : MonoBehaviour
             Players[i].pos = 0;
             Players[i].penalized_torns = 0;
             Players[i].outofjail = 0;
+            Players[i].dead = false;
         }
 
         if (n_players <= 3)
@@ -148,17 +152,28 @@ public class Movements : MonoBehaviour
         return;
     }
 
+    void EndGame() {
+        Debug.Log("Endgame for player " + player_torn);
+        if (!scripts.GetComponent<Cell_info>().EndgameForPlayer(player_torn)) return;
+        Debug.Log(player_torn + " dead");
+        Players[player_torn].dead = true;
+        //If only one player remaining -> endGame screen
+    }
+
     void NextTorn()
     {
         travel.gameObject.SetActive(false);
         end_torn.gameObject.SetActive(false);
-        //panels[player_torn].GetComponents<Image>().color = new Color32(241, 241, 241, 255);
-        ChangeColor(panels[player_torn], new Color32(241, 241, 241, 255));
+        
+        if (scripts.GetComponent<Cash_management>().GetCash(player_torn) < 0) EndGame();
+        if (Players[player_torn].dead) ChangeColor(panels[player_torn], new Color32(155, 155, 155, 255));
+        else ChangeColor(panels[player_torn], new Color32(241, 241, 241, 255));
         ++player_torn;
         if (player_torn == n_players) player_torn = 0;
         scripts.GetComponent<Cell_info>().SetPlayer(player_torn);
         destination = players[player_torn].transform.position;
         ChangeColor(panels[player_torn], new Color32(255, 182, 65, 255));
+        if (Players[player_torn].dead) NextTorn();
         if (Players[player_torn].penalized_torns == 0) roll_dice.gameObject.SetActive(true);
         else {
             roll_doubles.gameObject.SetActive(true);
@@ -169,11 +184,11 @@ public class Movements : MonoBehaviour
         
     }
 
-    void pay() { 
+    void pay() {
+        if (!scripts.GetComponent<Cash_management>().modify_cash(player_torn, -100, false, false)) return;
         roll_doubles.gameObject.SetActive(false);
         pay50.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
-        scripts.GetComponent<Cash_management>().modify_cash(player_torn, -100, false);
         Players[player_torn].penalized_torns = 0;
         roll_dice.gameObject.SetActive(true);
     }
@@ -286,25 +301,27 @@ public class Movements : MonoBehaviour
 
     void Update()
     {
-        if (!moving && movements_remaining > 0)
-        {
-            moving = true;
-            ++Players[player_torn].pos;
-            if (Players[player_torn].pos == cells.Length) {
-                Players[player_torn].pos = 0;
-                scripts.GetComponent<Cash_management>().modify_cash(player_torn, 200, false);
+        if (!moving) {
+            if (movements_remaining > 0) {
+                moving = true;
+                ++Players[player_torn].pos;
+                if (Players[player_torn].pos == cells.Length)
+                {
+                    Players[player_torn].pos = 0;
+                    scripts.GetComponent<Cash_management>().modify_cash(player_torn, 200, false, true);
+                }
+
+                destination = new Vector3(cells[Players[player_torn].pos].transform.position.x, cells[Players[player_torn].pos].transform.position.y + 1, cells[Players[player_torn].pos].transform.position.z);
+                --movements_remaining;
             }
 
-            destination = new Vector3(cells[Players[player_torn].pos].transform.position.x, cells[Players[player_torn].pos].transform.position.y + 1, cells[Players[player_torn].pos].transform.position.z);
-            --movements_remaining;
-        }
-
-        if (!moving && movements_remaining < 0)
-        {
-            moving = true;
-            --Players[player_torn].pos;
-            destination = new Vector3(cells[Players[player_torn].pos].transform.position.x, cells[Players[player_torn].pos].transform.position.y + 1, cells[Players[player_torn].pos].transform.position.z);
-            ++movements_remaining;
+            if (movements_remaining < 0)
+            {
+                moving = true;
+                --Players[player_torn].pos;
+                destination = new Vector3(cells[Players[player_torn].pos].transform.position.x, cells[Players[player_torn].pos].transform.position.y + 1, cells[Players[player_torn].pos].transform.position.z);
+                ++movements_remaining;
+            }
         }
 
         if (Vector3.Distance(players[player_torn].transform.position, destination) > 0.001f)

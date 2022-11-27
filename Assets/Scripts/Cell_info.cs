@@ -502,8 +502,8 @@ public class Cell_info : MonoBehaviour
             if (CellSelected1[i]) new_owner(TradingCells1[i], trading_partner);
             if (CellSelected2[i]) new_owner(TradingCells2[i], actual_player);
         }
-        scripts.GetComponent<Cash_management>().modify_cash(actual_player, cash2 - cash1, false);
-        scripts.GetComponent<Cash_management>().modify_cash(trading_partner, cash1 - cash2, false);
+        scripts.GetComponent<Cash_management>().modify_cash(actual_player, cash2 - cash1, false, false);
+        scripts.GetComponent<Cash_management>().modify_cash(trading_partner, cash1 - cash2, false, false);
         canceling();
     }
 
@@ -586,6 +586,47 @@ public class Cell_info : MonoBehaviour
         ShowPlayerInfo(trading_partner, 2, false);
         tradePanel1.gameObject.SetActive(true);
         tradePanel2.gameObject.SetActive(true);
+    }
+
+    public bool EndgameForPlayer(int player) {
+        //Sell houses + hotels while cash < 0
+        HashSet<string> to_delete = new HashSet<string>();
+        //Sell houses
+        foreach (string s in info.Keys) {
+            Cell c = info[s];
+            if (c.owner != player) continue;
+            to_delete.Add(s);
+            while (c.houses > 0) {
+                Cell k = info[s];
+                info.Remove(s);
+                remove_house(s, k.houses);
+                --k.houses;
+                info.Add(s, k);
+                scripts.GetComponent<Cash_management>().modify_cash(player, k.house_cost / 2, false, true);
+                if (scripts.GetComponent<Cash_management>().GetCash(player) >= 0) return false; 
+            }
+        }
+        //Mortgage
+        foreach (string s in to_delete) {
+            Cell k = info[s];
+            if (k.mortgaged) continue;
+            info.Remove(s);
+            remove_house(s, k.houses);
+            k.mortgaged = true;
+            info.Add(s, k);
+            scripts.GetComponent<Cash_management>().modify_cash(player, k.cost / 2, false, true);
+            scripts.GetComponent<Movements>().mortgage(s);
+            if (scripts.GetComponent<Cash_management>().GetCash(player) >= 0) return false;
+        }
+        //Remove propertries, player has lost
+        foreach (string s in to_delete) {
+            Cell k = info[s];
+            info.Remove(s);
+            k.owner = -1;
+            info.Add(s, k);
+            remove_owner_marker(s);
+        }
+        return true;
     }
 
     private void EnableTradingButtons(int n_players) {
@@ -677,19 +718,19 @@ public class Cell_info : MonoBehaviour
         }
         else if (n == 2) {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Bank error in your favour. Collect 200";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 200, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 200, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 3)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Doctor’s fee. Pay 50";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 4)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "From sale of stock you get 50";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 5)
@@ -707,13 +748,13 @@ public class Cell_info : MonoBehaviour
         else if (n == 7)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Holiday fund matures. Receive 100";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 8)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Income tax refund. Collect 20";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 20, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 20, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 9)
@@ -725,43 +766,43 @@ public class Cell_info : MonoBehaviour
         else if (n == 10)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Life insurance matures. Collect 100";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 11)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Pay hospital fees of 100";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -100, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -100, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 12)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Pay school fees of 50";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -50, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 13)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "Receive 25 consultancy fee";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 25, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 25, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 14)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "You are assessed for street repairs. 40 per house. 115 per hotel";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(40, 115), false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(40, 115), false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 15)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "You have won second prize in a beauty contest. Collect 10";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 10, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 10, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         else if (n == 16)
         {
             chestcard.transform.Find("Name").GetComponent<Text>().text = "You inherit 100";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false, true);
             StartCoroutine(WaitAndDisableCard2(3));
         }
         chestcard.gameObject.SetActive(true);
@@ -827,7 +868,7 @@ public class Cell_info : MonoBehaviour
         else if (n == 8)
         {
             chancecard.transform.Find("Name").GetComponent<Text>().text = "Bank pays you dividend of 50";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 50, false, true);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 9)
@@ -851,13 +892,13 @@ public class Cell_info : MonoBehaviour
         else if (n == 12)
         {
             chancecard.transform.Find("Name").GetComponent<Text>().text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(25, 100), false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -Repairs(25, 100), false, true);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 13)
         {
             chancecard.transform.Find("Name").GetComponent<Text>().text = "Speeding fine 15";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -15, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -15, false, true);
             StartCoroutine(WaitAndDisableCard(3));
         }
         else if (n == 14)
@@ -875,7 +916,7 @@ public class Cell_info : MonoBehaviour
         else if (n == 16)
         {
             chancecard.transform.Find("Name").GetComponent<Text>().text = "Your building loan matures. Collect 150";
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 150, false);
+            scripts.GetComponent<Cash_management>().modify_cash(actual_player, 150, false, true);
             StartCoroutine(WaitAndDisableCard(3));
         }
         chancecard.gameObject.SetActive(true);
@@ -1034,36 +1075,36 @@ public class Cell_info : MonoBehaviour
     }
 
     void buy_property() {
-        disableCard();
-        just_buttons = false;
-        buy_button.gameObject.SetActive(false);
-        pass_button.gameObject.SetActive(false);
         if (actual_cell == "Station" || actual_cell == "Station2" || actual_cell == "Station3" || actual_cell == "Station4")
         {
+            if (!scripts.GetComponent<Cash_management>().modify_cash(actual_player, -200, false, false)) return;
             RailRoad r = rr_info[actual_cell];
             rr_info.Remove(actual_cell);
             r.owner = actual_player;
             rr_info.Add(actual_cell, r);
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -200, false);
             possibilityToTravel();
         }
         else if (actual_cell == "Electric")
         {
+            if (!scripts.GetComponent<Cash_management>().modify_cash(actual_player, -150, false, false)) return;
             electrical.owner = actual_player;
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -150, false);
         }
         else if (actual_cell == "Water")
         {
+            if (!scripts.GetComponent<Cash_management>().modify_cash(actual_player, -150, false, false)) return;
             water.owner = actual_player;
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -150, false);
         }
         else {
             Cell c = info[actual_cell];
+            if (!scripts.GetComponent<Cash_management>().modify_cash(actual_player, -c.cost, false, false)) return;
             info.Remove(actual_cell);
             c.owner = actual_player;
-            scripts.GetComponent<Cash_management>().modify_cash(actual_player, -c.cost, false);
             info.Add(actual_cell, c);
         }
+        disableCard();
+        just_buttons = false;
+        buy_button.gameObject.SetActive(false);
+        pass_button.gameObject.SetActive(false);
         add_owner_marker(actual_cell, actual_player);
     }
 
@@ -1162,8 +1203,8 @@ public class Cell_info : MonoBehaviour
                 else if (k == 2) p = 100 * multiplier;
                 else if (k == 3) p = 200 * multiplier;
                 else if (k == 4) p = 400 * multiplier;
-                scripts.GetComponent<Cash_management>().modify_cash(player, -p, false);
-                scripts.GetComponent<Cash_management>().modify_cash(rr_info[cell_name].owner, p, false);
+                scripts.GetComponent<Cash_management>().modify_cash(player, -p, false, true);
+                scripts.GetComponent<Cash_management>().modify_cash(rr_info[cell_name].owner, p, false, true);
             }
             ShowRRCard(cell_name);
             multiplier = 1;
@@ -1181,13 +1222,13 @@ public class Cell_info : MonoBehaviour
             {
                 if (water.owner == electrical.owner || multiplier != 1)
                 {
-                    scripts.GetComponent<Cash_management>().modify_cash(player, -10 * dices, false);
-                    scripts.GetComponent<Cash_management>().modify_cash(water.owner, 10 * dices, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(player, -10 * dices, false, true);
+                    scripts.GetComponent<Cash_management>().modify_cash(water.owner, 10 * dices, false, true);
                 }
                 else
                 {
-                    scripts.GetComponent<Cash_management>().modify_cash(player, -4 * dices, false);
-                    scripts.GetComponent<Cash_management>().modify_cash(water.owner, 4 * dices, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(player, -4 * dices, false, true);
+                    scripts.GetComponent<Cash_management>().modify_cash(water.owner, 4 * dices, false, true);
                 }
             }
             multiplier = 1;
@@ -1205,13 +1246,13 @@ public class Cell_info : MonoBehaviour
             {
                 if (water.owner == electrical.owner || multiplier != 1)
                 {
-                    scripts.GetComponent<Cash_management>().modify_cash(player, -10 * dices, false);
-                    scripts.GetComponent<Cash_management>().modify_cash(electrical.owner, 10 * dices, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(player, -10 * dices, false, true);
+                    scripts.GetComponent<Cash_management>().modify_cash(electrical.owner, 10 * dices, false, true);
                 }
                 else
                 {
-                    scripts.GetComponent<Cash_management>().modify_cash(player, -4 * dices, false);
-                    scripts.GetComponent<Cash_management>().modify_cash(electrical.owner, 4 * dices, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(player, -4 * dices, false, true);
+                    scripts.GetComponent<Cash_management>().modify_cash(electrical.owner, 4 * dices, false, true);
                 }
                 multiplier = 1;
             }
@@ -1226,7 +1267,7 @@ public class Cell_info : MonoBehaviour
         else if (cell_name == "Tax2")
         {
             ShowTaxCard(cell_name);
-            scripts.GetComponent<Cash_management>().modify_cash(player, -100, true);
+            scripts.GetComponent<Cash_management>().modify_cash(player, -100, true, true);
         }
         else if (cell_name == "Jail") Debug.Log("Jail Card in progress");
         else if (cell_name == "GoToJail") Debug.Log("GoToJail Card in progress");
@@ -1248,8 +1289,8 @@ public class Cell_info : MonoBehaviour
             else if (player != info[cell_name].owner && !info[cell_name].mortgaged)
             {
                 int value = calculateRent(cell_name);
-                scripts.GetComponent<Cash_management>().modify_cash(player, -value, false);
-                scripts.GetComponent<Cash_management>().modify_cash(info[cell_name].owner, value, false);
+                scripts.GetComponent<Cash_management>().modify_cash(player, -value, false, true);
+                scripts.GetComponent<Cash_management>().modify_cash(info[cell_name].owner, value, false, true);
             }
         }
     }
@@ -1268,11 +1309,11 @@ public class Cell_info : MonoBehaviour
                 rr_info.Add(cell_name, r);
                 if (rr_info[cell_name].mortgaged)
                 {
-                    scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(actual_player, 100, false, true);
                     scripts.GetComponent<Movements>().mortgage(cell_name);
                 }
                 else {
-                    scripts.GetComponent<Cash_management>().modify_cash(actual_player, -110, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(actual_player, -110, false, true);
                     scripts.GetComponent<Movements>().unmortgage(cell_name);
                 }
             }
@@ -1285,12 +1326,12 @@ public class Cell_info : MonoBehaviour
                     water.mortgaged = !water.mortgaged;
                     if (water.mortgaged)
                     {
-                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, 75, false);
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, 75, false, true);
                         scripts.GetComponent<Movements>().mortgage(cell_name);
                     }
                     else
                     {
-                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, -83, false);
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, -83, false, true);
                         scripts.GetComponent<Movements>().unmortgage(cell_name);
                     }
                 }
@@ -1299,12 +1340,12 @@ public class Cell_info : MonoBehaviour
                     electrical.mortgaged = !water.mortgaged;
                     if (electrical.mortgaged)
                     {
-                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, 75, false);
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, 75, false, true);
                         scripts.GetComponent<Movements>().mortgage(cell_name);
                     }
                     else
                     {
-                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, -83, false);
+                        scripts.GetComponent<Cash_management>().modify_cash(actual_player, -83, false, true);
                         scripts.GetComponent<Movements>().unmortgage(cell_name);
                     }
                 }
@@ -1322,11 +1363,11 @@ public class Cell_info : MonoBehaviour
             if (buy_selected && player_torn == info[cell_name].owner && sameColor(cell_name) && info[cell_name].houses < 5 && !ColorMortgaged(cell_name)) {
                 //Buy house
                 Cell c = info[cell_name];
+                if (!scripts.GetComponent<Cash_management>().modify_cash(player_torn, -info[cell_name].house_cost, false, false)) return;
                 info.Remove(cell_name);
                 ++c.houses;
                 add_house(cell_name, c.houses);
                 info.Add(cell_name, c);
-                scripts.GetComponent<Cash_management>().modify_cash(player_torn, -info[cell_name].house_cost, false);
             }
             else if (sell_selected && player_torn == info[cell_name].owner && info[cell_name].houses > 0 && !info[cell_name].mortgaged) {
                 //Sell house
@@ -1335,7 +1376,7 @@ public class Cell_info : MonoBehaviour
                 remove_house(cell_name, c.houses);
                 --c.houses;
                 info.Add(cell_name, c);
-                scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].house_cost / 2, false);
+                scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].house_cost / 2, false, true);
             }
             else if (mortgage_selected && player_torn == info[cell_name].owner && !ColorHasHousing(cell_name)) {
                 //Mortgage-Unmortgage
@@ -1345,11 +1386,16 @@ public class Cell_info : MonoBehaviour
                 info.Add(cell_name, c);
                 if (c.mortgaged)
                 {
-                    scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].cost / 2, false);
+                    scripts.GetComponent<Cash_management>().modify_cash(player_torn, info[cell_name].cost / 2, false, true);
                     scripts.GetComponent<Movements>().mortgage(cell_name);
                 }
                 else {
-                    scripts.GetComponent<Cash_management>().modify_cash(player_torn, (int) (-1.1f*(info[cell_name].cost / 2)), false);
+                    if (!scripts.GetComponent<Cash_management>().modify_cash(player_torn, (int)(-1.1f * (info[cell_name].cost / 2)), false, false)) {
+                        info.Remove(cell_name);
+                        c.mortgaged = !c.mortgaged;
+                        info.Add(cell_name, c);
+                        return;
+                    }
                     scripts.GetComponent<Movements>().unmortgage(cell_name);
                 }
             }
@@ -1680,6 +1726,11 @@ public class Cell_info : MonoBehaviour
 
     public void SetPlayer(int player) {
         actual_player = player;
+    }
+
+    public int GetTradingPlayer(int panel) {
+        if (panel == 2) return trading_partner;
+        return actual_player;
     }
 
     void Update()
