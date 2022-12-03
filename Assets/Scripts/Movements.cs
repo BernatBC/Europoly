@@ -26,11 +26,6 @@ public class Movements : MonoBehaviour
 
     bool already_traveled = false;
 
-    bool s1 = false;
-    bool s2 = false;
-    bool s3 = false;
-    bool s4 = false;
-
     int d1 = 1;
     int d2 = 1;
 
@@ -99,37 +94,28 @@ public class Movements : MonoBehaviour
 
     void Travel() {
         travel.gameObject.SetActive(false);
-        end_torn.gameObject.SetActive(false);
         scripts.GetComponent<Cell_info>().travelSelected();
-        if (s1) SetColor(5, new Color32(255, 241, 56, 255));
-        if (s2) SetColor(15, new Color32(255, 241, 56, 255));
-        if (s3) SetColor(25, new Color32(255, 241, 56, 255));
-        if (s4) SetColor(35, new Color32(255, 241, 56, 255));
+        if (scripts.GetComponent<Cell_info>().CanTravel("Station", player_torn)) SetColor(5, new Color32(255, 241, 56, 255));
+        if (scripts.GetComponent<Cell_info>().CanTravel("Station2", player_torn)) SetColor(15, new Color32(255, 241, 56, 255));
+        if (scripts.GetComponent<Cell_info>().CanTravel("Station3", player_torn)) SetColor(25, new Color32(255, 241, 56, 255));
+        if (scripts.GetComponent<Cell_info>().CanTravel("Station4", player_torn)) SetColor(35, new Color32(255, 241, 56, 255));
     }
 
-    public void ShowTravelButton(bool station1, bool station2, bool station3, bool station4) {
+    public void ShowTravelButton() {
         if (already_traveled) already_traveled = false;
         else {
             already_traveled = true;
             travel.gameObject.SetActive(true);
-            s1 = station1;
-            s2 = station2;
-            s3 = station3;
-            s4 = station4;
         }
     }
 
 
     public void undoChanges()
     {
-        if (s1) SetColor(5, new Color32(255, 255, 255, 255));
-        if (s2) SetColor(15, new Color32(255, 255, 255, 255));
-        if (s3) SetColor(25, new Color32(255, 255, 255, 255));
-        if (s4) SetColor(35, new Color32(255, 255, 255, 255));
-        s1 = false;
-        s2 = false;
-        s3 = false;
-        s4 = false;
+        if (!scripts.GetComponent<Cell_info>().StationMortgaged(1)) SetColor(5, new Color32(255, 255, 255, 255));
+        if (!scripts.GetComponent<Cell_info>().StationMortgaged(2)) SetColor(15, new Color32(255, 255, 255, 255));
+        if (!scripts.GetComponent<Cell_info>().StationMortgaged(3)) SetColor(25, new Color32(255, 255, 255, 255));
+        if (!scripts.GetComponent<Cell_info>().StationMortgaged(4)) SetColor(35, new Color32(255, 255, 255, 255));
     }
 
 
