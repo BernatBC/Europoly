@@ -12,6 +12,10 @@ TagManager:
   - trade1
   - trade2
   - trade3
+  - Player1
+  - Player3
+  - Player4
+  - Player2
   layers:
   - Default
   - TransparentFX
