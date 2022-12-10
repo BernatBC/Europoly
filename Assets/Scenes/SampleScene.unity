@@ -5063,8 +5063,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 250, y: 50}
+  m_AnchoredPosition: {x: 0, y: 120}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &118780316
 MonoBehaviour:
@@ -14346,7 +14346,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Cost House
+  m_Text: House Cost
 --- !u!222 &337116240
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14853,7 +14853,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 200, y: -475}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &352124053
 MonoBehaviour:
@@ -20763,7 +20763,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &514760898
 MonoBehaviour:
@@ -28361,7 +28361,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -130, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &708211817
 MonoBehaviour:
@@ -35046,7 +35046,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -100, y: -475}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &857784614
 MonoBehaviour:
@@ -37251,6 +37251,7 @@ GameObject:
   - component: {fileID: 921770913}
   - component: {fileID: 921770914}
   - component: {fileID: 921770915}
+  - component: {fileID: 921770916}
   m_Layer: 0
   m_Name: GameHandler
   m_TagString: Untagged
@@ -37366,33 +37367,10 @@ MonoBehaviour:
   offer: {fileID: 1305492935}
   accept: {fileID: 118780316}
   reject: {fileID: 1769300218}
-  owner_mark1: {fileID: 6670623557262340564, guid: 660c33d81f5a2c54a84dc036f09c4529, type: 3}
-  owner_mark2: {fileID: 6684730073386088811, guid: 565d5d4ef642283489bdf693ea44091e, type: 3}
-  owner_mark3: {fileID: 6282146482220630021, guid: df0d4ee4df4ca62438f215d197164e4d, type: 3}
-  owner_mark4: {fileID: 5693366315531789839, guid: f7edf01ef75e07b41b19e5e9849b88d1, type: 3}
-  house: {fileID: 1770622311039951764, guid: b2db1f87e54590340974bfa3fc4103b8, type: 3}
-  hotel: {fileID: 155690250109492435, guid: 51343de1d26ee3849b326cff364cd416, type: 3}
-  tradePanel1: {fileID: 808790864}
-  tradePanel2: {fileID: 2124938641}
   CardUI: {fileID: 489555084}
-  card_title: {fileID: 1968058250}
-  card_cost: {fileID: 1967752815}
-  card_rent: {fileID: 1264854843}
-  card_rent1: {fileID: 2057081812}
-  card_rent2: {fileID: 1937495141}
-  card_rent3: {fileID: 978916431}
-  card_rent4: {fileID: 1251452401}
-  card_rentH: {fileID: 1620998475}
-  card_costHs: {fileID: 690131962}
-  card_costHt: {fileID: 305856736}
-  card_mortgage: {fileID: 1551324384}
-  top: {fileID: 354630461}
   rrcard: {fileID: 1978807847}
-  rr_title: {fileID: 276276057}
   chestcard: {fileID: 921890587}
-  chest_title: {fileID: 2143402581}
   chancecard: {fileID: 89446843}
-  chance_title: {fileID: 1168742771}
   electric_card: {fileID: 1797879480}
   water_card: {fileID: 1264629689}
   income_tax_card: {fileID: 591624770}
@@ -37400,6 +37378,15 @@ MonoBehaviour:
   TradingButton1: {fileID: 179885590}
   TradingButton2: {fileID: 442918004}
   TradingButton3: {fileID: 1251643127}
+  owner_mark:
+  - {fileID: 6670623557262340564, guid: 660c33d81f5a2c54a84dc036f09c4529, type: 3}
+  - {fileID: 6684730073386088811, guid: 565d5d4ef642283489bdf693ea44091e, type: 3}
+  - {fileID: 6282146482220630021, guid: df0d4ee4df4ca62438f215d197164e4d, type: 3}
+  - {fileID: 5693366315531789839, guid: f7edf01ef75e07b41b19e5e9849b88d1, type: 3}
+  house: {fileID: 1770622311039951764, guid: b2db1f87e54590340974bfa3fc4103b8, type: 3}
+  hotel: {fileID: 155690250109492435, guid: 51343de1d26ee3849b326cff364cd416, type: 3}
+  tradePanel1: {fileID: 808790864}
+  tradePanel2: {fileID: 2124938641}
 --- !u!114 &921770914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37431,6 +37418,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstPanel: {fileID: 808790864}
   secondPanel: {fileID: 2124938641}
+--- !u!114 &921770916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921770910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d426f3ddb9e7454b9058bc94c586c02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &921890587
 GameObject:
   m_ObjectHideFlags: 0
@@ -42293,7 +42292,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -400, y: -475}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1026344004
 MonoBehaviour:
@@ -51938,7 +51937,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -75}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1299414340
 MonoBehaviour:
@@ -52236,8 +52235,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 250, y: 50}
+  m_AnchoredPosition: {x: 0, y: 120}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1305492935
 MonoBehaviour:
@@ -60510,7 +60509,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 130, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1525447019
 MonoBehaviour:
@@ -65326,7 +65325,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 500, y: -475}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1667813547
 MonoBehaviour:
@@ -66009,7 +66008,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1679632321
 MonoBehaviour:
@@ -68653,7 +68652,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1769300218
 MonoBehaviour:
@@ -69916,7 +69915,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1802573302
 MonoBehaviour:
@@ -75490,7 +75489,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Cost Hotel
+  m_Text: Hotel Cost
 --- !u!222 &1956109019
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -82682,7 +82681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2105657511
 RectTransform:
   m_ObjectHideFlags: 0
@@ -82702,7 +82701,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2105657512
 MonoBehaviour:
