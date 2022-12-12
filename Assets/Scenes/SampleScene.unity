@@ -37317,14 +37317,14 @@ MonoBehaviour:
   - {fileID: 269461222}
   - {fileID: 991894153}
   - {fileID: 314678720}
-  panels:
+  playerPanel:
   - {fileID: 1240388419}
   - {fileID: 1885599702}
   - {fileID: 1179315181}
   - {fileID: 883006792}
-  roll_dice: {fileID: 2105657512}
-  end_torn: {fileID: 514760898}
-  roll_doubles: {fileID: 708211817}
+  rollDice: {fileID: 2105657512}
+  endTorn: {fileID: 514760898}
+  rollDoubles: {fileID: 708211817}
   pay50: {fileID: 1525447019}
   getOutForFree: {fileID: 1299414340}
   travel: {fileID: 1802573302}
@@ -37357,28 +37357,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16649f77603b6944ba7212a8da06a84a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buy_button: {fileID: 1023590850}
-  pass_button: {fileID: 811123603}
-  buy_house_button: {fileID: 857784614}
-  sell_house_button: {fileID: 352124053}
+  buyButton: {fileID: 1023590850}
+  passButton: {fileID: 811123603}
+  buyHouseButton: {fileID: 857784614}
+  sellHouseButton: {fileID: 352124053}
   mortgage: {fileID: 1667813547}
   trade: {fileID: 1026344004}
   cancel: {fileID: 1679632321}
   offer: {fileID: 1305492935}
   accept: {fileID: 118780316}
   reject: {fileID: 1769300218}
-  CardUI: {fileID: 489555084}
-  rrcard: {fileID: 1978807847}
-  chestcard: {fileID: 921890587}
-  chancecard: {fileID: 89446843}
-  electric_card: {fileID: 1797879480}
-  water_card: {fileID: 1264629689}
-  income_tax_card: {fileID: 591624770}
-  luxury_tax_card: {fileID: 1840811309}
-  TradingButton1: {fileID: 179885590}
-  TradingButton2: {fileID: 442918004}
-  TradingButton3: {fileID: 1251643127}
-  owner_mark:
+  propertyCard: {fileID: 489555084}
+  railroadCard: {fileID: 1978807847}
+  chestCard: {fileID: 921890587}
+  chanceCard: {fileID: 89446843}
+  electricCard: {fileID: 1797879480}
+  waterCard: {fileID: 1264629689}
+  incomeTaxCard: {fileID: 591624770}
+  luxuryTaxCard: {fileID: 1840811309}
+  tradingButton1: {fileID: 179885590}
+  tradingButton2: {fileID: 442918004}
+  tradingButton3: {fileID: 1251643127}
+  ownerMark:
   - {fileID: 6670623557262340564, guid: 660c33d81f5a2c54a84dc036f09c4529, type: 3}
   - {fileID: 6684730073386088811, guid: 565d5d4ef642283489bdf693ea44091e, type: 3}
   - {fileID: 6282146482220630021, guid: df0d4ee4df4ca62438f215d197164e4d, type: 3}
@@ -37399,11 +37399,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b322fab65bd86034a91e130d0e58ab37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cash1_text: {fileID: 1520680819}
-  cash2_text: {fileID: 1309032567}
-  cash3_text: {fileID: 39335607}
-  cash4_text: {fileID: 1336567620}
-  initial_cash: 2000
+  cashText:
+  - {fileID: 1520680819}
+  - {fileID: 1309032567}
+  - {fileID: 39335607}
+  - {fileID: 1336567620}
+  initialCash: 0
 --- !u!114 &921770915
 MonoBehaviour:
   m_ObjectHideFlags: 0
