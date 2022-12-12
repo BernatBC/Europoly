@@ -3,67 +3,92 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Class <c>Trade</c> contains various methods related to trading.
+/// </summary>
 public class Trade : MonoBehaviour
 {
-    GameObject scripts;
+    /// <summary>
+    /// GameObject <c>scripts</c> contains all scripts.
+    /// </summary>
+    private GameObject scripts;
+
+    /// <summary>
+    /// GameObject <c>firstPanel</c> trading panel number 1.
+    /// </summary>
     public GameObject firstPanel;
+
+    /// <summary>
+    /// GameObject <c>secondTravel</c> trading panel number 2.
+    /// </summary>
     public GameObject secondPanel;
 
-    void Start()
+    /// <summary>
+    /// Method <c>Start</c> initializes both trading panel
+    /// </summary>
+    private void Start()
     {
         scripts = GameObject.Find("GameHandler");
         for (int i = 0; i < 30; ++i) {
             int num = i;
             Button b = firstPanel.transform.Find("targeta" + i.ToString()).gameObject.AddComponent(typeof(Button)) as Button;
-            b.onClick.AddListener(delegate { scripts.GetComponent<Cell_info>().Toggle(1, num); });
+            b.onClick.AddListener(delegate { scripts.GetComponent<CellInfo>().ToggleTradingMiniCard(1, num); });
 
             b = secondPanel.transform.Find("targeta" + i.ToString()).gameObject.AddComponent(typeof(Button)) as Button;
-            b.onClick.AddListener(delegate { scripts.GetComponent<Cell_info>().Toggle(2, num); ; });
+            b.onClick.AddListener(delegate { scripts.GetComponent<CellInfo>().ToggleTradingMiniCard(2, num); ; });
         }
     }
 
-    public void ReadBox(string s)
+    /// <summary>
+    /// Method <c>ReadBox</c> reads the cash value from trading panel number 1.
+    /// </summary>
+    /// <param name="boxContent">Amount of cash indicated by the input field.</param>
+    public void ReadBox(string boxContent)
     {
-        int l;
-        if (int.TryParse(s, out l)) {
-            if (l < 0) {
-                scripts.GetComponent<Cell_info>().UpdateTradingCash(1, 0);
+        int cashOffered;
+        if (int.TryParse(boxContent, out cashOffered)) {
+            if (cashOffered < 0) {
+                scripts.GetComponent<CellInfo>().UpdateTradingCash(1, 0);
                 firstPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = "";
                 return;
             }
-            int max = scripts.GetComponent<Cash_management>().GetCash(scripts.GetComponent<Cell_info>().GetTradingPlayer(1));
-            if (l > max)
+            int max = scripts.GetComponent<CashManagement>().GetCash(scripts.GetComponent<CellInfo>().GetTradingPlayer(1));
+            if (cashOffered > max)
             {
-                scripts.GetComponent<Cell_info>().UpdateTradingCash(1, max);
+                scripts.GetComponent<CellInfo>().UpdateTradingCash(1, max);
                 firstPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max + "";
                 return;
             }
-            scripts.GetComponent<Cell_info>().UpdateTradingCash(1, l);
+            scripts.GetComponent<CellInfo>().UpdateTradingCash(1, cashOffered);
         }
-        else scripts.GetComponent<Cell_info>().UpdateTradingCash(1, 0);
+        else scripts.GetComponent<CellInfo>().UpdateTradingCash(1, 0);
     }
 
-    public void ReadBox2(string s)
+    /// <summary>
+    /// Method <c>ReadBox2</c> reads the cash value from trading panel number 2
+    /// </summary>
+    /// <param name="boxContent">Amount of cash indicated by the input field.</param>
+    public void ReadBox2(string boxContent)
     {
-        int l;
-        if (int.TryParse(s, out l))
+        int cashOffered;
+        if (int.TryParse(boxContent, out cashOffered))
         {
-            if (l < 0)
+            if (cashOffered < 0)
             {
-                scripts.GetComponent<Cell_info>().UpdateTradingCash(2, 0);
+                scripts.GetComponent<CellInfo>().UpdateTradingCash(2, 0);
                 secondPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = "";
                 return;
             }
-            int max = scripts.GetComponent<Cash_management>().GetCash(scripts.GetComponent<Cell_info>().GetTradingPlayer(2));
-            if (l > max)
+            int max = scripts.GetComponent<CashManagement>().GetCash(scripts.GetComponent<CellInfo>().GetTradingPlayer(2));
+            if (cashOffered > max)
             {
-                scripts.GetComponent<Cell_info>().UpdateTradingCash(2, max);
+                scripts.GetComponent<CellInfo>().UpdateTradingCash(2, max);
                 secondPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max + "";
                 return;
             }
-            scripts.GetComponent<Cell_info>().UpdateTradingCash(2, l);
+            scripts.GetComponent<CellInfo>().UpdateTradingCash(2, cashOffered);
         }
-        else scripts.GetComponent<Cell_info>().UpdateTradingCash(2, 0);
+        else scripts.GetComponent<CellInfo>().UpdateTradingCash(2, 0);
 
     }
 }
