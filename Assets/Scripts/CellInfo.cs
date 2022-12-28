@@ -297,7 +297,7 @@ public class CellInfo : MonoBehaviour
     /// <summary>
     /// Contains information about each property.
     /// </summary>
-    private struct Property {
+    public struct Property {
         /// <summary>
         /// Name of the property.
         /// </summary>
@@ -362,7 +362,7 @@ public class CellInfo : MonoBehaviour
     /// <summary>
     /// Contains information about each railroad station.
     /// </summary>
-    private struct RailRoad {
+    public struct RailRoad {
 
         /// <summary>
         /// Name of the railroad
@@ -383,7 +383,7 @@ public class CellInfo : MonoBehaviour
     /// <summary>
     /// Contains information about each utility.
     /// </summary>
-    private struct Utility
+    public struct Utility
     {
         /// <summary>
         /// Player who wons the utility.
@@ -1633,7 +1633,7 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     /// <param name="cellName">A cell name of the color block.</param>
     /// <returns><c>True</c> if the color block has at least one cell mortgaged, <c>False</c> otherwise.</returns>
-    private bool ColorMortgaged(string cellName)
+    public bool ColorMortgaged(string cellName)
     {
         if (cellName == "Brown" || cellName == "Brown2") return propertyInformation["Brown"].mortgaged || propertyInformation["Brown2"].mortgaged;
         if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") return propertyInformation["LightBlue"].mortgaged || propertyInformation["LightBlue2"].mortgaged || propertyInformation["LightBlue3"].mortgaged;
@@ -1651,7 +1651,7 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     /// <param name="cellName">A cell name of the color block.</param>
     /// <returns><c>True</c>if the current player is the owner of all cells of that color, <c>False</c> otherwise.</returns>
-    private bool PlayerHasAllColor(string cellName) {
+    public bool PlayerHasAllColor(string cellName) {
         if (cellName == "Brown" || cellName == "Brown2") return propertyInformation["Brown"].owner == propertyInformation["Brown2"].owner;
         if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") return propertyInformation["LightBlue"].owner == propertyInformation["LightBlue2"].owner && propertyInformation["LightBlue"].owner == propertyInformation["LightBlue3"].owner;
         if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") return propertyInformation["Purple"].owner == propertyInformation["Purple2"].owner && propertyInformation["Purple"].owner == propertyInformation["Purple3"].owner;
@@ -1834,28 +1834,14 @@ public class CellInfo : MonoBehaviour
     /// <param name="cellName">Cell name.</param>
     public void ShowCard(string cellName) {
         if (cellName == "Station" || cellName == "Station2" || cellName == "Station3" || cellName == "Station4") {
-            if (travelSelected && CanTravel(cellName, currentPlayer)) {
+            if (travelSelected && CanTravel(cellName, currentPlayer))
+            {
                 scripts.GetComponent<Movements>().MoveTo(actualCell, cellName);
                 travelSelected = false;
                 scripts.GetComponent<Movements>().UndoStationColor();
             }
             else if (!mortgageSelected) ShowRailroadCard(cellName);
-            else if (railroadInformation[cellName].owner == currentPlayer && !travelSelected) {
-                RailRoad railroad = railroadInformation[cellName];
-                railroadInformation.Remove(cellName);
-                railroad.mortgaged = !railroad.mortgaged;
-                railroadInformation.Add(cellName, railroad);
-                if (railroadInformation[cellName].mortgaged)
-                {
-                    scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 100, false, true);
-                    scripts.GetComponent<Movements>().Mortgage(cellName);
-                }
-                else {
-                    scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -110, false, true);
-                    scripts.GetComponent<Movements>().Unmortgage(cellName);
-                }
-                if ((actualCell == "Station" || actualCell == "Station2" || actualCell == "Station3" || actualCell == "Station4") && railroadInformation[actualCell].owner == currentPlayer) PossibilityToTravel();
-            }
+            else if (railroadInformation[cellName].owner == currentPlayer && !travelSelected) MortgageUnmortgageStation(currentPlayer, cellName);
         } 
         else if (cellName == "Water" || cellName == "Electric") {
             if (!mortgageSelected)
@@ -1864,28 +1850,7 @@ public class CellInfo : MonoBehaviour
                 return;
             }
 
-            bool mortgaged;
-            if (cellName == "Water")
-            {
-                water.mortgaged = !water.mortgaged;
-                mortgaged = water.mortgaged;
-            }
-            else
-            {
-                electrical.mortgaged = !electrical.mortgaged;
-                mortgaged = electrical.mortgaged;
-            }
-
-            if (mortgaged)
-            {
-                scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 75, false, true);
-                scripts.GetComponent<Movements>().Mortgage(cellName);
-            }
-            else
-            {
-                scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -83, false, true);
-                scripts.GetComponent<Movements>().Unmortgage(cellName);
-            }
+            MortgageUnmortgageUtility(currentPlayer, cellName);
         }
         else if (cellName == "Chest" || cellName == "Chest2" || cellName == "Chest3") Debug.Log("Chest Card in progress");
         else if (cellName == "Chance" || cellName == "Chance2" || cellName == "Chance3") Debug.Log("Chance Card in progress");
@@ -1895,49 +1860,121 @@ public class CellInfo : MonoBehaviour
         else if (cellName == "Parking") Debug.Log("Parking Card in progress");
         else if (cellName == "Start") Debug.Log("Start Card in progress");
         else {
-            int player_torn = scripts.GetComponent<Movements>().GetPlayerTorn();
-            if (buySelected && player_torn == propertyInformation[cellName].owner && PlayerHasAllColor(cellName) && propertyInformation[cellName].houses < 5 && !ColorMortgaged(cellName)) {
-                //Buy house
-                Property property = propertyInformation[cellName];
-                if (!scripts.GetComponent<CashManagement>().ModifyCash(player_torn, -propertyInformation[cellName].houseCost, false, false)) return;
-                propertyInformation.Remove(cellName);
-                ++property.houses;
-                AddHouse(cellName, property.houses);
-                propertyInformation.Add(cellName, property);
-            }
-            else if (sellSelected && player_torn == propertyInformation[cellName].owner && propertyInformation[cellName].houses > 0 && !propertyInformation[cellName].mortgaged) {
-                //Sell house
-                Property property = propertyInformation[cellName];
-                propertyInformation.Remove(cellName);
-                RemoveHouse(cellName, property.houses);
-                --property.houses;
-                propertyInformation.Add(cellName, property);
-                scripts.GetComponent<CashManagement>().ModifyCash(player_torn, propertyInformation[cellName].houseCost / 2, false, true);
-            }
-            else if (mortgageSelected && player_torn == propertyInformation[cellName].owner && !ColorHasHousing(cellName)) {
-                //Mortgage-Unmortgage
-                Property property = propertyInformation[cellName];
-                propertyInformation.Remove(cellName);
-                property.mortgaged = !property.mortgaged;
-                propertyInformation.Add(cellName, property);
-                if (property.mortgaged)
-                {
-                    scripts.GetComponent<CashManagement>().ModifyCash(player_torn, propertyInformation[cellName].cost / 2, false, true);
-                    scripts.GetComponent<Movements>().Mortgage(cellName);
-                    return;
-                }
-                if (!scripts.GetComponent<CashManagement>().ModifyCash(player_torn, (int)(-1.1f * (propertyInformation[cellName].cost / 2)), false, false))
-                {
-                    propertyInformation.Remove(cellName);
-                    property.mortgaged = !property.mortgaged;
-                    propertyInformation.Add(cellName, property);
-                    return;
-                }
-                scripts.GetComponent<Movements>().Unmortgage(cellName);
-            }
+            int playerTorn = scripts.GetComponent<Movements>().GetPlayerTorn();
+            if (buySelected && playerTorn == propertyInformation[cellName].owner && PlayerHasAllColor(cellName) && propertyInformation[cellName].houses < 5 && !ColorMortgaged(cellName)) BuyHouse(playerTorn, cellName);
+            else if (sellSelected && playerTorn == propertyInformation[cellName].owner && propertyInformation[cellName].houses > 0 && !propertyInformation[cellName].mortgaged) SellHouse(playerTorn, cellName);
+            else if (mortgageSelected && playerTorn == propertyInformation[cellName].owner && !ColorHasHousing(cellName)) MortgageUnmortgageProperty(playerTorn, cellName);
             else ShowRentCard(cellName);
         }
         
+    }
+
+    /// <summary>
+    /// Method <c>BuyHouse</c> buys a house.
+    /// </summary>
+    /// <param name="player">Player that buys the house.</param>
+    /// <param name="cellName">Cell where the house is bought.</param>
+    public void BuyHouse(int player, string cellName) {
+        Property property = propertyInformation[cellName];
+        if (!scripts.GetComponent<CashManagement>().ModifyCash(player, -propertyInformation[cellName].houseCost, false, false)) return;
+        propertyInformation.Remove(cellName);
+        ++property.houses;
+        AddHouse(cellName, property.houses);
+        propertyInformation.Add(cellName, property);
+    }
+
+    /// <summary>
+    /// Method <c>SellHouse</c> buys a house.
+    /// </summary>
+    /// <param name="player">Player that sells the house.</param>
+    /// <param name="cellName">Cell where the house is sold.</param>
+    public void SellHouse(int player, string cellName) {
+        Property property = propertyInformation[cellName];
+        propertyInformation.Remove(cellName);
+        RemoveHouse(cellName, property.houses);
+        --property.houses;
+        propertyInformation.Add(cellName, property);
+        scripts.GetComponent<CashManagement>().ModifyCash(player, propertyInformation[cellName].houseCost / 2, false, true);
+    }
+
+    /// <summary>
+    /// Method <c>MortgeageUnmortgageProperty</c> mortgages the cell if it isn't mortgaged, unmortgages is otherwise.
+    /// </summary>
+    /// <param name="player">Player that mortgages/unmortgages the cell.</param>
+    /// <param name="cellName">Cell name mortgaged/unmortgaged.</param>
+    public void MortgageUnmortgageProperty(int player, string cellName) {
+        Property property = propertyInformation[cellName];
+        propertyInformation.Remove(cellName);
+        property.mortgaged = !property.mortgaged;
+        propertyInformation.Add(cellName, property);
+        if (property.mortgaged)
+        {
+            scripts.GetComponent<CashManagement>().ModifyCash(player, propertyInformation[cellName].cost / 2, false, true);
+            scripts.GetComponent<Movements>().Mortgage(cellName);
+            return;
+        }
+        if (!scripts.GetComponent<CashManagement>().ModifyCash(player, (int)(-1.1f * (propertyInformation[cellName].cost / 2)), false, false))
+        {
+            propertyInformation.Remove(cellName);
+            property.mortgaged = !property.mortgaged;
+            propertyInformation.Add(cellName, property);
+            return;
+        }
+        scripts.GetComponent<Movements>().Unmortgage(cellName);
+    }
+
+    /// <summary>
+    /// Method <c>MortgeageUnmortgageStation</c> mortgages the station if it isn't mortgaged, unmortgages is otherwise.
+    /// </summary>
+    /// <param name="player">Player that mortgages/unmortgages the station.</param>
+    /// <param name="cellName">Station name mortgaged/unmortgaged.</param>
+    public void MortgageUnmortgageStation(int player, string cellName) {
+        RailRoad railroad = railroadInformation[cellName];
+        railroadInformation.Remove(cellName);
+        railroad.mortgaged = !railroad.mortgaged;
+        railroadInformation.Add(cellName, railroad);
+        if (railroadInformation[cellName].mortgaged)
+        {
+            scripts.GetComponent<CashManagement>().ModifyCash(player, 100, false, true);
+            scripts.GetComponent<Movements>().Mortgage(cellName);
+        }
+        else
+        {
+            scripts.GetComponent<CashManagement>().ModifyCash(player, -110, false, true);
+            scripts.GetComponent<Movements>().Unmortgage(cellName);
+        }
+        if ((actualCell == "Station" || actualCell == "Station2" || actualCell == "Station3" || actualCell == "Station4") && railroadInformation[actualCell].owner == player) PossibilityToTravel();
+    }
+
+    /// <summary>
+    /// Method <c>MortgeageUnmortgageUtility</c> mortgages the utility if it isn't mortgaged, unmortgages is otherwise.
+    /// </summary>
+    /// <param name="player">Player that mortgages/unmortgages the utility.</param>
+    /// <param name="cellName">Utility name mortgaged/unmortgaged.</param>
+    public void MortgageUnmortgageUtility(int player, string cellName)
+    {
+        bool mortgaged;
+        if (cellName == "Water")
+        {
+            water.mortgaged = !water.mortgaged;
+            mortgaged = water.mortgaged;
+        }
+        else
+        {
+            electrical.mortgaged = !electrical.mortgaged;
+            mortgaged = electrical.mortgaged;
+        }
+
+        if (mortgaged)
+        {
+            scripts.GetComponent<CashManagement>().ModifyCash(player, 75, false, true);
+            scripts.GetComponent<Movements>().Mortgage(cellName);
+        }
+        else
+        {
+            scripts.GetComponent<CashManagement>().ModifyCash(player, -83, false, true);
+            scripts.GetComponent<Movements>().Unmortgage(cellName);
+        }
     }
 
     /// <summary>
@@ -2348,6 +2385,38 @@ public class CellInfo : MonoBehaviour
         if (water.owner == -1) unowned++;
         if (electrical.owner == -1) unowned++;
         return unowned;
+    }
+
+    /// <summary>
+    ///  Dictionary<string, Property> function <c>GetPropertyInformation</c> returns the property dictionary.
+    /// </summary>
+    /// <returns>Property dictionary</returns>
+    public Dictionary<string, Property> GetPropertyInformation() {
+        return propertyInformation;
+    }
+
+    /// <summary>
+    /// Dictionary<string, RailRoad> function <c>GetRailroadInformation</c> returns the railroad dictionary.
+    /// </summary>
+    /// <returns>Railroad dictionary</returns>
+    public Dictionary<string, RailRoad> GetRailroadInformation() {
+        return railroadInformation;
+    }
+
+    /// <summary>
+    /// Utility function <c>GetWater</c> returns the water utility.
+    /// </summary>
+    /// <returns>Water utility.</returns>
+    public Utility GetWater() {
+        return water;
+    }
+
+    /// <summary>
+    /// Utility function <c>GetElectrical</c> returns the electrical utility.
+    /// </summary>
+    /// <returns>Electrical utility.</returns>
+    public Utility GetElectrical() {
+        return electrical;
     }
 
     /// <summary>

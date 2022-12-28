@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Class <c>CashManagement</c> contains the cash each player has and updates the UI.
@@ -12,6 +13,10 @@ public class CashManagement : MonoBehaviour
     /// Text[] <c>cashText</c> UI cash text from each player.
     /// </summary>
     public Text[] cashText;
+
+    public GameObject cashAnimationObject;
+
+    private Transform canvasParent;
 
     /// <summary>
     /// int <c>initialCash</c> initial cash.
@@ -38,10 +43,7 @@ public class CashManagement : MonoBehaviour
     /// </summary>
     /// <param name="player">Player to receive the cash.</param>
     public void RefundCash(int player) {
-        //Debug.Log("Player " + player + " " + tax_cash);
-        cash[player] += taxCash;
-        cashText[0].text = cash[player] + "";
-        taxCash = 0;
+        if (taxCash > 0) ModifyCash(player, taxCash, false, true);
     }
 
     /// <summary>
@@ -59,6 +61,16 @@ public class CashManagement : MonoBehaviour
         cash[player] += amount;
         cashText[player].text = cash[player] + "";
         if (taxes) taxCash -= amount;
+        Vector3 panelPosition = cashText[player].transform.position;
+
+        //Amount effect
+        GameObject amountEffect = Instantiate(cashAnimationObject, new Vector3(panelPosition.x - 1250, panelPosition.y - 540, 0), Quaternion.identity);
+        amountEffect.transform.SetParent(canvasParent, false);
+        amountEffect.GetComponent<TMP_Text>().text = amount + "";
+        if (amount < 0) amountEffect.GetComponent<TMP_Text>().color = new Color32(255, 0, 0, 255);
+        else amountEffect.GetComponent<TMP_Text>().color = new Color32(0, 255, 0, 255);
+        StartCoroutine(WaitAndDestroy(amountEffect, 2));
+
         return true;
     }
 
@@ -72,9 +84,7 @@ public class CashManagement : MonoBehaviour
     {
         //Debug.Log("Player " + player + " " + Mathf.RoundToInt(cash1 * amount));
         int am = Mathf.RoundToInt(cash[player] * percentage);
-        cash[player] += am;
-        cashText[player].text = cash[player] + "";
-        if (taxes) taxCash -= am;
+        ModifyCash(player, am, taxes, true);
     }
 
     /// <summary>
@@ -108,10 +118,23 @@ public class CashManagement : MonoBehaviour
     }
 
     /// <summary>
+    /// Method <c>WaitAndDestroy</c> wait some seconds, then destroy the gameobject.
+    /// </summary>
+    /// <param name="toDestroy">GameObject to destroy.</param>
+    /// <param name="timeInSeconds">Time to wait in seconds.</param>
+    /// <returns></returns>
+    private IEnumerator WaitAndDestroy(GameObject toDestroy, float timeInSeconds)
+    {
+        yield return new WaitForSecondsRealtime(timeInSeconds);
+        Destroy(toDestroy);
+    }
+
+    /// <summary>
     /// Method <c>Start</c> initializes cash values and texts.
     /// </summary>
     private void Start()
     {
+        canvasParent = GameObject.Find("Canvas").transform;
         cash = new int[4];
         initialCash = DataHolder.initialCash;
         numberOfPlayers = DataHolder.numberOfPlayers;

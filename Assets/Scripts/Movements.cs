@@ -477,6 +477,18 @@ public class Movements : MonoBehaviour
         //diceValue2 = 2;
         dice1.text = diceValue1 + "";
         dice2.text = diceValue2 + "";
+        StartCoroutine(WaitAndMove(1));
+    }
+
+    /// <summary>
+    /// Method <c>WaitAndMove</c> waits and sets the number of movements remaining to the dice value.
+    /// </summary>
+    /// <param name="timeInSeconds">Seconds to wait.</param>
+    /// <returns></returns>
+    private IEnumerator WaitAndMove(float timeInSeconds)
+    {
+        yield return new WaitForSecondsRealtime(timeInSeconds);
+
         movementsRemaining = diceValue1 + diceValue2;
         if (diceValue1 == diceValue2)
         {
@@ -550,7 +562,7 @@ public class Movements : MonoBehaviour
     /// Method <c>MakeEndTorn</c> Shows end torn button if the player is not the computer, sends the bot he can end the torn signal.
     /// </summary>
     private void MakeEndTorn() {
-        if (playerInfo[playerTorn].isBot) scripts.GetComponent<Bot>().BeforeEndTorn();
+        if (playerInfo[playerTorn].isBot) scripts.GetComponent<Bot>().BeforeEndTorn(playerTorn, scripts.GetComponent<CellInfo>().GetPropertyInformation(), scripts.GetComponent<CellInfo>().GetRailroadInformation(), scripts.GetComponent<CellInfo>().GetWater(), scripts.GetComponent<CellInfo>().GetElectrical());
         else endTorn.gameObject.SetActive(true);
     }
 

@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -89,9 +90,36 @@ public class Bot : MonoBehaviour
     /// <summary>
     /// Method <c>BeforeEndTorn</c> decides what to do before ending the torn; mortgaging/unmortgaging, buying/selling houses, trading,...
     /// </summary>
-    public void BeforeEndTorn() {
+    /// <param name="player">Player representing the bot</param>
+    /// <param name="propertyInformation">Dictionary of properties.</param>
+    /// <param name="railroadInformation">Dictionary of stations.</param>
+    /// <param name="water">Water utility.</param>
+    /// <param name="electrical">Electrical utility.</param>
+    public void BeforeEndTorn(int player, Dictionary<string, CellInfo.Property> propertyInformation, Dictionary<string, CellInfo.RailRoad> railroadInformation, CellInfo.Utility water, CellInfo.Utility electrical) {
         //Some Strategy
         Debug.Log("End Torn");
+
+        //Unmortgage if possible
+        foreach (var r in railroadInformation) {
+            if (r.Value.owner != player) continue;
+            if (r.Value.mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageStation(player, r.Key);
+        }
+
+        if (water.owner == player && water.mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageUtility(player, "Water");
+        if (electrical.owner == player && electrical.mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageUtility(player, "Electrical");
+
+        //Unmortgage and buy houses if possible
+        foreach (var p in propertyInformation) {
+            if (p.Value.owner != player) continue;
+            if (p.Value.mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageProperty(player, p.Key);
+            if (p.Value.houses == 5 || !scripts.GetComponent<CellInfo>().PlayerHasAllColor(p.Key) || !scripts.GetComponent<CellInfo>().PlayerHasAllColor(p.Key)) continue;
+            if (p.Value.houseCost <= scripts.GetComponent<CashManagement>().GetCash(player)) scripts.GetComponent<CellInfo>().BuyHouse(player, p.Key);
+        }
+
+        
+
+        // If color owner = me && cash > x ->  buy houses most expensive
+        // If negative money -> mortgage/sellhouses
         StartCoroutine(WaitAndEnd(1.5f));
     }
 

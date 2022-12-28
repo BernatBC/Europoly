@@ -37404,6 +37404,7 @@ MonoBehaviour:
   - {fileID: 1309032567}
   - {fileID: 39335607}
   - {fileID: 1336567620}
+  cashAnimationObject: {fileID: 1104805683998311358, guid: 4df0b225bdde1b249a565302416d33f5, type: 3}
   initialCash: 0
 --- !u!114 &921770915
 MonoBehaviour:
@@ -39458,7 +39459,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
