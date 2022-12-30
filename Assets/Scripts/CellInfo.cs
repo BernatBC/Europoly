@@ -2062,10 +2062,12 @@ public class CellInfo : MonoBehaviour
         minicard.transform.Find("inicial").gameObject.GetComponentInChildren<Text>().text = property.name[0].ToString();
         minicard.transform.Find("cash").gameObject.GetComponentInChildren<Text>().text = property.cost.ToString();
 
+        Debug.Log(minicard);
+
         minicard.transform.Find("Train").gameObject.SetActive(false);
         minicard.transform.Find("WaterTap").gameObject.SetActive(false);
         minicard.transform.Find("inicial2").gameObject.SetActive(false);
-        minicard.transform.Find("tradingCashPlayer2").gameObject.SetActive(false);
+        minicard.transform.Find("cash2").gameObject.SetActive(false);
         minicard.transform.Find("LightBulb").gameObject.SetActive(false);
 
         if (property.houses == 0 || property.houses == 5) {
@@ -2133,10 +2135,10 @@ public class CellInfo : MonoBehaviour
         minicard.transform.Find("Train").gameObject.SetActive(true);
         minicard.transform.Find("WaterTap").gameObject.SetActive(false);
         minicard.transform.Find("inicial2").gameObject.SetActive(true);
-        minicard.transform.Find("tradingCashPlayer2").gameObject.SetActive(true);
+        minicard.transform.Find("cash2").gameObject.SetActive(true);
         minicard.transform.Find("LightBulb").gameObject.SetActive(false);
 
-        minicard.transform.Find("tradingCashPlayer2").gameObject.GetComponentInChildren<Text>().text = "200";
+        minicard.transform.Find("cash2").gameObject.GetComponentInChildren<Text>().text = "200";
         minicard.transform.Find("inicial2").gameObject.GetComponentInChildren<Text>().text = railroadInformation[cellName].name[0].ToString();
 
         if (railroadInformation[cellName].mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);

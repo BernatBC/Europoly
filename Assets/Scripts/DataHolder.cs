@@ -15,7 +15,7 @@ public class DataHolder : MonoBehaviour
     /// <summary>
     /// int <c>numberOfPlayers</c> number of players.
     /// </summary>
-    public static int numberOfPlayers = 2;
+    public static int numberOfPlayers = 3;
 
     /// <summary>
     /// bool <c>botSelected1</c> indicates wether the player 1 is a computer player or not.
