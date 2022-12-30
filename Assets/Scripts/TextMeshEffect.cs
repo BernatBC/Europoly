@@ -27,6 +27,7 @@ public class TextMeshEffect : MonoBehaviour
     /// </summary>
     void Update()
     {
-        textMesh.color = new Color(textMesh.color.r, textMesh.color.g, textMesh.color.b, textMesh.color.a - 0.003f);
+        textMesh.color = new Color(textMesh.color.r, textMesh.color.g, textMesh.color.b, textMesh.color.a - 0.004f);
+        textMesh.transform.position = new Vector3(textMesh.transform.position.x, textMesh.transform.position.y + 0.3f, textMesh.transform.position.z);
     }
 }

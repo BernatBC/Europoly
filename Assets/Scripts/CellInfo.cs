@@ -2062,8 +2062,6 @@ public class CellInfo : MonoBehaviour
         minicard.transform.Find("inicial").gameObject.GetComponentInChildren<Text>().text = property.name[0].ToString();
         minicard.transform.Find("cash").gameObject.GetComponentInChildren<Text>().text = property.cost.ToString();
 
-        Debug.Log(minicard);
-
         minicard.transform.Find("Train").gameObject.SetActive(false);
         minicard.transform.Find("WaterTap").gameObject.SetActive(false);
         minicard.transform.Find("inicial2").gameObject.SetActive(false);
