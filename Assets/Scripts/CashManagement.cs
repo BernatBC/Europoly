@@ -14,9 +14,20 @@ public class CashManagement : MonoBehaviour
     /// </summary>
     public Text[] cashText;
 
+    /// <summary>
+    /// GameObject <c>cashAnimationObject</c> cash added/removed effect.
+    /// </summary>
     public GameObject cashAnimationObject;
 
+    /// <summary>
+    /// Transform <c>canvasParent</c> canvas transform to add prefabs into it.
+    /// </summary>
     private Transform canvasParent;
+
+    /// <summary>
+    /// AudioSource <c>cashSound</c> sound effect when cash is added/removed.
+    /// </summary>
+    public AudioSource cashSound;
 
     /// <summary>
     /// int <c>initialCash</c> initial cash.
@@ -69,8 +80,9 @@ public class CashManagement : MonoBehaviour
         amountEffect.GetComponent<TMP_Text>().text = amount + "";
         if (amount < 0) amountEffect.GetComponent<TMP_Text>().color = new Color32(255, 0, 0, 255);
         else amountEffect.GetComponent<TMP_Text>().color = new Color32(0, 255, 0, 255);
+        cashSound.Play();
         StartCoroutine(WaitAndDestroy(amountEffect, 2));
-
+      
         return true;
     }
 
@@ -94,7 +106,7 @@ public class CashManagement : MonoBehaviour
     /// <param name="amount">Amount substracted from each other player.</param>
     public void CollectFromEverybody(int player, int amount) {
         ModifyCash(player, (numberOfPlayers - 1) * amount, false, true);
-        for (int i = 0; i < 4; i++) if (i != player) ModifyCash(i, -amount, false, true);
+        for (int i = 0; i < numberOfPlayers; i++) if (i != player) ModifyCash(i, -amount, false, true);
     }
 
     /// <summary>
@@ -105,7 +117,7 @@ public class CashManagement : MonoBehaviour
     public void PayEverybody(int player, int amount)
     {
         ModifyCash(player, -(numberOfPlayers - 1) * amount, false, true);
-        for (int i = 0; i < 4; i++) if (i != player) ModifyCash(i, amount, false, true);
+        for (int i = 0; i < numberOfPlayers; i++) if (i != player) ModifyCash(i, amount, false, true);
     }
 
     /// <summary>

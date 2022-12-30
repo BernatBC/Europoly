@@ -64,6 +64,11 @@ public class Movements : MonoBehaviour
     public Text dice2;
 
     /// <summary>
+    /// AudioSource <c>diceSound</c> sound of a rolling dice.
+    /// </summary>
+    public AudioSource diceSound;
+
+    /// <summary>
     /// bool <c>moving</c> indicates if the selected player is moving or not.
     /// </summary>
     private bool moving = false;
@@ -403,6 +408,7 @@ public class Movements : MonoBehaviour
     /// </summary>
     public void RollDicesDoubles()
     {
+        diceSound.Play();
         rollDoubles.gameObject.SetActive(false);
         pay50.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
@@ -469,12 +475,14 @@ public class Movements : MonoBehaviour
     /// </summary>
     public void RollDice()
     {
+        scripts.GetComponent<CellInfo>().DisableCard();
         travel.gameObject.SetActive(false);
         rollDice.gameObject.SetActive(false);
+        diceSound.Play();
         diceValue1 = Random.Range(1, 7);
         diceValue2 = Random.Range(1, 7);
-        //diceValue1 = 3;
-        //diceValue2 = 2;
+        //diceValue1 = 4;
+        //diceValue2 = 3;
         dice1.text = diceValue1 + "";
         dice2.text = diceValue2 + "";
         StartCoroutine(WaitAndMove(1));

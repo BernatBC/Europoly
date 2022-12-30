@@ -872,7 +872,7 @@ public class CellInfo : MonoBehaviour
     /// <summary>
     /// Method <c>MakeTrade</c> confirms the trade and transfers assets.
     /// </summary>
-    private void MakeTrade() {
+    public void MakeTrade() {
         for (int i = 0; i < CellSelected1.Length; ++i) {
             if (CellSelected1[i]) NewOwner(tradingCells1[i], tradingPartner);
             if (CellSelected2[i]) NewOwner(tradingCells2[i], currentPlayer);
@@ -923,7 +923,7 @@ public class CellInfo : MonoBehaviour
     /// <summary>
     /// Method <c>FinishTrade</c> removes trading panels and sets the mode back to normal.
     /// </summary>
-    private void FinishTrade() {
+    public void FinishTrade() {
         tradingSelected = false;
         freezeTrading = false;
         tradePanel1.transform.Find("Cash").GetComponent<InputField>().readOnly = false;
@@ -944,10 +944,16 @@ public class CellInfo : MonoBehaviour
         freezeTrading = true;
         tradePanel1.transform.Find("Cash").GetComponent<InputField>().readOnly = true;
         tradePanel2.transform.Find("Cash").GetComponent<InputField>().readOnly = true;
-        accept.gameObject.SetActive(true);
-        reject.gameObject.SetActive(true);
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
+
+        if (scripts.GetComponent<Movements>().IsBot(currentPlayer))
+        {
+            scripts.GetComponent<Bot>().AcceptRejectTrade();
+            return;
+        }
+        accept.gameObject.SetActive(true);
+        reject.gameObject.SetActive(true);
 
     }
 
@@ -990,7 +996,7 @@ public class CellInfo : MonoBehaviour
     /// <returns><c>True</c> if the player doesn't have enough assets to be on the positives, <c>False</c> if the player hasn't lost yet.</returns>
     public bool EndgameForPlayer(int player) {
         //Sell houses + hotels while cash < 0
-        HashSet<string> toDelete = new HashSet<string>();
+        HashSet<string> toDelete = new();
         foreach (string cellName in propertyInformation.Keys) {
             Property property = propertyInformation[cellName];
             if (property.owner != player) continue;
@@ -1244,7 +1250,7 @@ public class CellInfo : MonoBehaviour
             scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 100, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
-        chestCard.gameObject.SetActive(true);
+        chestCard.SetActive(true);
         chestCardShown = true;
     }
 
@@ -1344,7 +1350,8 @@ public class CellInfo : MonoBehaviour
         else if (cardNumber == 12)
         {
             chanceCard.transform.Find("Name").GetComponent<Text>().text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -Repairs(25, 100), false, true);
+            int repairMoney = -Repairs(25, 100);
+            if (repairMoney < 0) scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, repairMoney, false, true);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 13)
@@ -2440,14 +2447,14 @@ public class CellInfo : MonoBehaviour
         mortgageSelected = false;
         if (tradePanel1On)
         {
-            tradePanel1.gameObject.SetActive(false);
+            tradePanel1.SetActive(false);
             tradePanel1On = false;
             tradingSelected = false;
         }
 
         if (tradePanel2On)
         {
-            tradePanel2.gameObject.SetActive(false);
+            tradePanel2.SetActive(false);
             tradePanel2On = false;
             tradingSelected = false;
         }
