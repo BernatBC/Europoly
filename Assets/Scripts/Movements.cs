@@ -55,14 +55,14 @@ public class Movements : MonoBehaviour
     public Button travel;
 
     /// <summary>
-    /// TMP_Text <c>dice1</c> dice 1 UI text.
+    /// GameObject <c>dice1</c> dice 1 UI image.
     /// </summary>
-    public TMP_Text dice1;
+    public GameObject dice1;
 
     /// <summary>
-    /// TMP_Text <c>dice2</c> dice 2 UI text.
+    /// GameObject <c>dice2</c> dice 2 UI image.
     /// </summary>
-    public TMP_Text dice2;
+    public GameObject dice2;
 
     /// <summary>
     /// AudioSource <c>diceSound</c> sound of a rolling dice.
@@ -107,12 +107,12 @@ public class Movements : MonoBehaviour
     /// <summary>
     /// int <c>diceValue1</c> indiactes the value of dice 1.
     /// </summary>
-    private int diceValue1;
+    private int diceValue1 = 6;
 
     /// <summary>
     /// int <c>diceValue2</c> indiactes the value of dice 2.
     /// </summary>
-    private int diceValue2;
+    private int diceValue2 = 6;
 
     /// <summary>
     /// Player[] <c>playerInfo</c> contains information from each player.
@@ -219,6 +219,15 @@ public class Movements : MonoBehaviour
         SetPanelColor(playerPanel[0], new Color32(243, 146, 55, 255));
 
         MakeRollDice();
+    }
+
+    private void RollDiceAndSetUI() {
+        dice1.transform.Find("Dice" + diceValue1.ToString()).gameObject.SetActive(false);
+        dice2.transform.Find("Dice" + diceValue2.ToString()).gameObject.SetActive(false);
+        diceValue1 = Random.Range(1, 7);
+        diceValue2 = Random.Range(1, 7);
+        dice1.transform.Find("Dice" + diceValue1.ToString()).gameObject.SetActive(true);
+        dice2.transform.Find("Dice" + diceValue2.ToString()).gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -413,10 +422,9 @@ public class Movements : MonoBehaviour
         rollDoubles.gameObject.SetActive(false);
         pay50.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
-        diceValue1 = Random.Range(1, 7);
-        diceValue2 = Random.Range(1, 7);
-        dice1.text = diceValue1 + "";
-        dice2.text = diceValue2 + "";
+
+        RollDiceAndSetUI();
+
         if (diceValue1 == diceValue2) {
             movementsRemaining = diceValue1 + diceValue2;
             playerInfo[playerTorn].penalizedTorns = 0;
@@ -480,12 +488,8 @@ public class Movements : MonoBehaviour
         travel.gameObject.SetActive(false);
         rollDice.gameObject.SetActive(false);
         diceSound.Play();
-        diceValue1 = Random.Range(1, 7);
-        diceValue2 = Random.Range(1, 7);
-        //diceValue1 = 4;
-        //diceValue2 = 3;
-        dice1.text = diceValue1 + "";
-        dice2.text = diceValue2 + "";
+
+        RollDiceAndSetUI();
         StartCoroutine(WaitAndMove(1));
     }
 
