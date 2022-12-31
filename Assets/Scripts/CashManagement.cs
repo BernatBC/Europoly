@@ -12,7 +12,7 @@ public class CashManagement : MonoBehaviour
     /// <summary>
     /// Text[] <c>cashText</c> UI cash text from each player.
     /// </summary>
-    public Text[] cashText;
+    public TMP_Text[] cashText;
 
     /// <summary>
     /// GameObject <c>cashAnimationObject</c> cash added/removed effect.
@@ -78,8 +78,8 @@ public class CashManagement : MonoBehaviour
         GameObject amountEffect = Instantiate(cashAnimationObject, new Vector3(panelPosition.x - 1250, panelPosition.y - 540, 0), Quaternion.identity);
         amountEffect.transform.SetParent(canvasParent, false);
         amountEffect.GetComponent<TMP_Text>().text = amount + "";
-        if (amount < 0) amountEffect.GetComponent<TMP_Text>().color = new Color32(255, 0, 0, 255);
-        else amountEffect.GetComponent<TMP_Text>().color = new Color32(0, 255, 0, 255);
+        if (amount < 0) amountEffect.GetComponent<TMP_Text>().color = new Color32(255, 66, 66, 255);
+        else amountEffect.GetComponent<TMP_Text>().color = new Color32(106, 181, 71, 255);
         cashSound.Play();
         StartCoroutine(WaitAndDestroy(amountEffect, 2));
       

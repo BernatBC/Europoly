@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Class <c>Menu</c> contains methods used with the main menu.
@@ -12,7 +13,7 @@ public class Menu : MonoBehaviour
     /// <summary>
     /// Text <c>numberOfPlayers</c> shows the number of players selected.
     /// </summary>
-    public Text numberOfPlayers;
+    public TMP_Text numberOfPlayers;
 
     /// <summary>
     /// Slider <c>slider</c> allows to select the number of players.

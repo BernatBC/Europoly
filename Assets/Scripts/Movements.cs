@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Class <c>Movements</c> functions and methods related to player movement.
@@ -54,14 +55,14 @@ public class Movements : MonoBehaviour
     public Button travel;
 
     /// <summary>
-    /// Text <c>dice1</c> dice 1 UI text.
+    /// TMP_Text <c>dice1</c> dice 1 UI text.
     /// </summary>
-    public Text dice1;
+    public TMP_Text dice1;
 
     /// <summary>
-    /// Text <c>dice2</c> dice 2 UI text.
+    /// TMP_Text <c>dice2</c> dice 2 UI text.
     /// </summary>
-    public Text dice2;
+    public TMP_Text dice2;
 
     /// <summary>
     /// AudioSource <c>diceSound</c> sound of a rolling dice.
@@ -215,7 +216,7 @@ public class Movements : MonoBehaviour
                 playerPanel[2].transform.position = new Vector3(playerPanel[2].transform.position.x, playerPanel[2].transform.position.y - 50, playerPanel[2].transform.position.z);
             }
         }
-        SetPanelColor(playerPanel[0], new Color32(255, 182, 65, 255));
+        SetPanelColor(playerPanel[0], new Color32(243, 146, 55, 255));
 
         MakeRollDice();
     }
@@ -304,14 +305,14 @@ public class Movements : MonoBehaviour
         endTorn.gameObject.SetActive(false);
         scripts.GetComponent<CellInfo>().DisableCard();
         if (scripts.GetComponent<CashManagement>().GetCash(playerTorn) < 0) EndGame();
-        if (playerInfo[playerTorn].isDead) SetPanelColor(playerPanel[playerTorn], new Color32(155, 155, 155, 255));
-        else SetPanelColor(playerPanel[playerTorn], new Color32(241, 241, 241, 255));
+        if (playerInfo[playerTorn].isDead) SetPanelColor(playerPanel[playerTorn], new Color32(131, 133, 140, 255));
+        else SetPanelColor(playerPanel[playerTorn], new Color32(237, 231, 217, 255));
 
         ++playerTorn;
         if (playerTorn == numberOfPlayers) playerTorn = 0;
         scripts.GetComponent<CellInfo>().SetPlayer(playerTorn);
         destination = players[playerTorn].transform.position;
-        SetPanelColor(playerPanel[playerTorn], new Color32(255, 182, 65, 255));
+        SetPanelColor(playerPanel[playerTorn], new Color32(243, 146, 55, 255));
         alreadyTraveled = false;
         if (playerInfo[playerTorn].isDead) NextTorn();
 
