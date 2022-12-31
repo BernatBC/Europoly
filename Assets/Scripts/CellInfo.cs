@@ -811,14 +811,14 @@ public class CellInfo : MonoBehaviour
     private void ShowRentCard(string cellName) {
         Image topBar = propertyCard.transform.Find("Top").GetComponent<Image>();
 
-        if (cellName == "Brown" || cellName == "Brown2") topBar.color = new Color32(112, 78, 46, 255);
-        else if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") topBar.color = new Color32(91, 133, 170, 255);
-        else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") topBar.color = new Color32(191, 19, 99, 255);
+        if (cellName == "Brown" || cellName == "Brown2") topBar.color = new Color32(142, 97, 64, 255);
+        else if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") topBar.color = new Color32(48, 190, 217, 255);
+        else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") topBar.color = new Color32(219, 24, 174, 255);
         else if (cellName == "Orange" || cellName == "Orange2" || cellName == "Orange3") topBar.color = new Color32(243, 146, 55, 255);
         else if (cellName == "Red" || cellName == "Red2" || cellName == "Red3") topBar.color = new Color32(255, 66, 66, 255);
-        else if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3") topBar.color = new Color32(242, 255, 73, 255);
+        else if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3") topBar.color = new Color32(255, 240, 0, 255);
         else if (cellName == "Green" || cellName == "Green2" || cellName == "Green3") topBar.color = new Color32(106, 181, 71, 255);
-        else if (cellName == "DarkBlue" || cellName == "DarkBlue2") topBar.color = new Color32(65, 71, 112, 255);
+        else if (cellName == "DarkBlue" || cellName == "DarkBlue2") topBar.color = new Color32(18, 88, 219, 255);
         else return;
 
         propertyCard.transform.Find("Name").GetComponent<TMP_Text>().text = propertyInformation[cellName].name;
@@ -1070,12 +1070,12 @@ public class CellInfo : MonoBehaviour
             if (currentPlayer == 0)
             {
                 tradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(14, 121, 178, 255);
-                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(242, 255, 73, 255);
+                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 240, 0, 255);
             }
             else if (currentPlayer == 1)
             {
                 tradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 66, 66, 255);
-                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(242, 255, 73, 255);
+                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 240, 0, 255);
             }
             else {
                 tradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 66, 66, 255);
@@ -1086,13 +1086,13 @@ public class CellInfo : MonoBehaviour
             if (currentPlayer == 0)
             {
                 tradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(14, 121, 178, 255);
-                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(242, 255, 73, 255);
+                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 240, 0, 255);
                 tradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(106, 181, 71, 255);
             }
             else if (currentPlayer == 1)
             {
                 tradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 66, 66, 255);
-                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(242, 255, 73, 255);
+                tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 240, 0, 255);
                 tradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(106, 181, 71, 255);
             }
             else if (currentPlayer == 2)
@@ -1104,7 +1104,7 @@ public class CellInfo : MonoBehaviour
             else {
                 tradingButton1.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 66, 66, 255);
                 tradingButton2.transform.Find("Circle").GetComponent<Image>().color = new Color32(14, 121, 178, 255);
-                tradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(242, 255, 73, 255);
+                tradingButton3.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 240, 0, 255);
             }
 
             tradingButton3.SetActive(true);
@@ -2050,14 +2050,14 @@ public class CellInfo : MonoBehaviour
         minicard.transform.Find("inicial").gameObject.SetActive(true);
         minicard.transform.Find("franja").gameObject.SetActive(true);
         minicard.transform.Find("cash").gameObject.SetActive(true);
-        if (cellName == "Brown" || cellName == "Brown2") franja.GetComponentInChildren<Image>().color = new Color32(112, 78, 46, 255);
-        else if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") franja.GetComponentInChildren<Image>().color = new Color32(91, 133, 170, 255);
-        else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") franja.GetComponentInChildren<Image>().color = new Color32(191, 19, 99, 255);
+        if (cellName == "Brown" || cellName == "Brown2") franja.GetComponentInChildren<Image>().color = new Color32(142, 97, 64, 255);
+        else if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") franja.GetComponentInChildren<Image>().color = new Color32(48, 190, 217, 255);
+        else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") franja.GetComponentInChildren<Image>().color = new Color32(219, 24, 174, 255);
         else if (cellName == "Orange" || cellName == "Orange2" || cellName == "Orange3") franja.GetComponentInChildren<Image>().color = new Color32(243, 146, 55, 255);
         else if (cellName == "Red" || cellName == "Red2" || cellName == "Red3") franja.GetComponentInChildren<Image>().color = new Color32(255, 66, 66, 255);
-        else if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3") franja.GetComponentInChildren<Image>().color = new Color32(242, 255, 73, 255);
+        else if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3") franja.GetComponentInChildren<Image>().color = new Color32(255, 240, 0, 255);
         else if (cellName == "Green" || cellName == "Green2" || cellName == "Green3") franja.GetComponentInChildren<Image>().color = new Color32(106, 181, 71, 255);
-        else if (cellName == "DarkBlue" || cellName == "DarkBlue2") franja.GetComponentInChildren<Image>().color = new Color32(65, 71, 112, 255);
+        else if (cellName == "DarkBlue" || cellName == "DarkBlue2") franja.GetComponentInChildren<Image>().color = new Color32(18, 88, 219, 255);
         else return;
 
         Property property = propertyInformation[cellName];
