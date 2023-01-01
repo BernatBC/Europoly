@@ -20,17 +20,17 @@ public class DataHolder : MonoBehaviour
     /// <summary>
     /// bool <c>botSelected1</c> indicates wether the player 1 is a computer player or not.
     /// </summary>
-    public static bool botSelected1 = true;
+    public static bool botSelected1 = false;
 
     /// <summary>
     /// bool <c>botSelected2</c> indicates wether the player 2 is a computer player or not.
     /// </summary>
-    public static bool botSelected2 = true;
+    public static bool botSelected2 = false;
 
     /// <summary>
     /// bool <c>botSelected3</c> indicates wether the player 3 is a computer player or not.
     /// </summary>
-    public static bool botSelected3 = true;
+    public static bool botSelected3 = false;
 
     /// <summary>
     /// bool <c>botSelected4</c> indicates wether the player 4 is a computer player or not.

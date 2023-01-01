@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Class <c>Panel</c> calls the right method after pressing a player panel.
@@ -23,14 +25,16 @@ public class Panel : MonoBehaviour
     /// <summary>
     /// Method <c>Show</c> shows information about the pressed player or trades with him.
     /// </summary>
-    public void Show()
+    /// <param name="name"></param>
+    public void Show(string name)
     {
-        if (CompareTag("panel1")) scripts.GetComponent<CellInfo>().ShowPlayerPanel(0, 1, true);
-        else if (CompareTag("panel2")) scripts.GetComponent<CellInfo>().ShowPlayerPanel(1, 1, true);
-        else if (CompareTag("panel3")) scripts.GetComponent<CellInfo>().ShowPlayerPanel(2, 1, true);
-        else if (CompareTag("panel4")) scripts.GetComponent<CellInfo>().ShowPlayerPanel(3, 1, true);
-        else if (CompareTag("trade1")) scripts.GetComponent<CellInfo>().TradingPartnerSelected(1);
-        else if (CompareTag("trade2")) scripts.GetComponent<CellInfo>().TradingPartnerSelected(2);
-        else if (CompareTag("trade3")) scripts.GetComponent<CellInfo>().TradingPartnerSelected(3);
+        Debug.Log("Show");
+        if (name == "panel1") scripts.GetComponent<CellInfo>().ShowPlayerPanel(0, 1, true);
+        else if (name == "panel2") scripts.GetComponent<CellInfo>().ShowPlayerPanel(1, 1, true);
+        else if (name == "panel3") scripts.GetComponent<CellInfo>().ShowPlayerPanel(2, 1, true);
+        else if (name == "panel4") scripts.GetComponent<CellInfo>().ShowPlayerPanel(3, 1, true);
+        else if (name == "trade1") scripts.GetComponent<CellInfo>().TradingPartnerSelected(1);
+        else if (name == "trade2") scripts.GetComponent<CellInfo>().TradingPartnerSelected(2);
+        else if (name == "trade3") scripts.GetComponent<CellInfo>().TradingPartnerSelected(3);
     }
 }

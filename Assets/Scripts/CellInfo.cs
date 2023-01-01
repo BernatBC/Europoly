@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEditor.UIElements;
 using TMPro;
 
 /// <summary>
@@ -928,8 +927,8 @@ public class CellInfo : MonoBehaviour
     public void FinishTrade() {
         tradingSelected = false;
         freezeTrading = false;
-        tradePanel1.transform.Find("Cash").GetComponent<InputField>().readOnly = false;
-        tradePanel2.transform.Find("Cash").GetComponent<InputField>().readOnly = false;
+        tradePanel1.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = false;
+        tradePanel2.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = false;
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
         tradePanel1.SetActive(false);
@@ -944,8 +943,8 @@ public class CellInfo : MonoBehaviour
     private void MakeOffer()
     {
         freezeTrading = true;
-        tradePanel1.transform.Find("Cash").GetComponent<InputField>().readOnly = true;
-        tradePanel2.transform.Find("Cash").GetComponent<InputField>().readOnly = true;
+        tradePanel1.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = true;
+        tradePanel2.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = true;
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
 
@@ -964,6 +963,7 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     /// <param name="tag">Relative number of player to trade with.</param>
     public void TradingPartnerSelected(int tag) {
+        Debug.Log("Show: " + tag.ToString());
         tradingButton1.SetActive(false);
         tradingButton2.SetActive(false);
         tradingButton3.SetActive(false);
@@ -2013,7 +2013,16 @@ public class CellInfo : MonoBehaviour
         else if (player == 2) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(242, 255, 73, 255);
         else tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(106, 181, 71, 255);
 
-        tradePanel.transform.Find("Cash").GetComponent<InputField>().text = "";
+        if (disableOnClick)
+        {
+            tradePanel.transform.Find("Cash").gameObject.SetActive(false);
+            tradePanel.transform.Find("Amount").gameObject.SetActive(false);
+        }
+        else {
+            tradePanel.transform.Find("Cash").GetComponent<TMP_InputField>().text = "";
+            tradePanel.transform.Find("Cash").gameObject.SetActive(true);
+            tradePanel.transform.Find("Amount").gameObject.SetActive(true);
+        }
 
         int i = 0;
         foreach (var property in propertyInformation) if (property.Value.owner == player) ShowMiniPropertyCard(property.Key, i++, tradePanel);
