@@ -963,7 +963,6 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     /// <param name="tag">Relative number of player to trade with.</param>
     public void TradingPartnerSelected(int tag) {
-        Debug.Log("Show: " + tag.ToString());
         tradingButton1.SetActive(false);
         tradingButton2.SetActive(false);
         tradingButton3.SetActive(false);
@@ -2458,6 +2457,7 @@ public class CellInfo : MonoBehaviour
         mortgageSelected = false;
         if (tradePanel1On)
         {
+            Debug.Log("Off1");
             tradePanel1.SetActive(false);
             tradePanel1On = false;
             tradingSelected = false;
@@ -2465,6 +2465,7 @@ public class CellInfo : MonoBehaviour
 
         if (tradePanel2On)
         {
+            Debug.Log("Off2");
             tradePanel2.SetActive(false);
             tradePanel2On = false;
             tradingSelected = false;

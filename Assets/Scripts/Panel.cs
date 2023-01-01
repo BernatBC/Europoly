@@ -28,7 +28,6 @@ public class Panel : MonoBehaviour
     /// <param name="name"></param>
     public void Show(string name)
     {
-        Debug.Log("Show");
         if (name == "panel1") scripts.GetComponent<CellInfo>().ShowPlayerPanel(0, 1, true);
         else if (name == "panel2") scripts.GetComponent<CellInfo>().ShowPlayerPanel(1, 1, true);
         else if (name == "panel3") scripts.GetComponent<CellInfo>().ShowPlayerPanel(2, 1, true);
