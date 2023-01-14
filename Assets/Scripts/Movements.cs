@@ -206,15 +206,9 @@ public class Movements : MonoBehaviour
             if (numberOfPlayers == 2)
             {
                 playerPanel[2].SetActive(false);
-                playerPanel[0].transform.position = new Vector3(playerPanel[0].transform.position.x, playerPanel[0].transform.position.y - 150, playerPanel[0].transform.position.z);
-                playerPanel[1].transform.position = new Vector3(playerPanel[1].transform.position.x, playerPanel[1].transform.position.y - 150, playerPanel[1].transform.position.z);
+                for (int i = 0; i <=1; ++i) playerPanel[i].transform.position = new Vector3(playerPanel[i].transform.position.x, playerPanel[i].transform.position.y - 150, playerPanel[i].transform.position.z);
             }
-            else
-            {
-                playerPanel[0].transform.position = new Vector3(playerPanel[0].transform.position.x, playerPanel[0].transform.position.y - 50, playerPanel[0].transform.position.z);
-                playerPanel[1].transform.position = new Vector3(playerPanel[1].transform.position.x, playerPanel[1].transform.position.y - 50, playerPanel[1].transform.position.z);
-                playerPanel[2].transform.position = new Vector3(playerPanel[2].transform.position.x, playerPanel[2].transform.position.y - 50, playerPanel[2].transform.position.z);
-            }
+            else for (int i = 0; i <= 2; ++i) playerPanel[i].transform.position = new Vector3(playerPanel[i].transform.position.x, playerPanel[i].transform.position.y - 50, playerPanel[i].transform.position.z);
         }
         SetPanelColor(playerPanel[0], new Color32(243, 146, 55, 255));
 

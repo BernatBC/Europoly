@@ -146,6 +146,11 @@ public class CellInfo : MonoBehaviour
     public GameObject tradePanel2;
 
     /// <summary>
+    /// Prefab of a trading panel minicard.
+    /// </summary>
+    public GameObject miniCardPrefab;
+
+    /// <summary>
     /// Raycast to detect which cell the player has selected.
     /// </summary>
     private RaycastHit hit;
@@ -948,11 +953,12 @@ public class CellInfo : MonoBehaviour
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
 
-        if (scripts.GetComponent<Movements>().IsBot(currentPlayer))
+        if (scripts.GetComponent<Movements>().IsBot(tradingPartner))
         {
             scripts.GetComponent<Bot>().AcceptRejectTrade();
             return;
         }
+
         accept.gameObject.SetActive(true);
         reject.gameObject.SetActive(true);
 
@@ -2052,6 +2058,7 @@ public class CellInfo : MonoBehaviour
         if (tradePanel == tradePanel1) tradingCells1[cardNumber] = cellName;
         else tradingCells2[cardNumber] = cellName;
 
+        //SPAWN CARD
         tradePanel.transform.Find("targeta" + cardNumber).gameObject.SetActive(true);
         GameObject minicard = tradePanel.transform.Find("targeta" + cardNumber).gameObject;
         GameObject franja = minicard.transform.Find("franja").gameObject;
@@ -2175,10 +2182,9 @@ public class CellInfo : MonoBehaviour
 
         minicard.transform.Find("Train").gameObject.SetActive(false);
         minicard.transform.Find("inicial2").gameObject.SetActive(false);
-        minicard.transform.Find("tradingCashPlayer2").gameObject.SetActive(true);
-       
+        minicard.transform.Find("cash2").gameObject.SetActive(true);
 
-        minicard.transform.Find("tradingCashPlayer2").gameObject.GetComponentInChildren<TMP_Text>().text = "150";
+        minicard.transform.Find("cash2").gameObject.GetComponentInChildren<TMP_Text>().text = "150";
 
         if (cellName == "Electric")
         {
@@ -2457,7 +2463,6 @@ public class CellInfo : MonoBehaviour
         mortgageSelected = false;
         if (tradePanel1On)
         {
-            Debug.Log("Off1");
             tradePanel1.SetActive(false);
             tradePanel1On = false;
             tradingSelected = false;
@@ -2465,7 +2470,6 @@ public class CellInfo : MonoBehaviour
 
         if (tradePanel2On)
         {
-            Debug.Log("Off2");
             tradePanel2.SetActive(false);
             tradePanel2On = false;
             tradingSelected = false;

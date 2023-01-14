@@ -36,7 +36,7 @@ public class Trade : MonoBehaviour
             b.onClick.AddListener(delegate { scripts.GetComponent<CellInfo>().ToggleTradingMiniCard(1, num); });
 
             b = secondPanel.transform.Find("targeta" + i.ToString()).gameObject.AddComponent(typeof(Button)) as Button;
-            b.onClick.AddListener(delegate { scripts.GetComponent<CellInfo>().ToggleTradingMiniCard(2, num); ; });
+            b.onClick.AddListener(delegate { scripts.GetComponent<CellInfo>().ToggleTradingMiniCard(2, num); });
         }
     }
 
