@@ -340,34 +340,9 @@ public class CellInfo : MonoBehaviour
         public int owner;
 
         /// <summary>
-        /// Amount of rent to pay without any houses built.
+        /// Amount of rent to pay, 0 houses, 1 house, ... 5 houses (hotel).
         /// </summary>
-        public int rent;
-
-        /// <summary>
-        /// Amount of rent to pay with one house built.
-        /// </summary>
-        public int rent1;
-
-        /// <summary>
-        /// Amount of rent to pay with two houses built.
-        /// </summary>
-        public int rent2;
-
-        /// <summary>
-        /// Amount of rent to pay with three houses built.
-        /// </summary>
-        public int rent3;
-
-        /// <summary>
-        /// Amount of rent to pay with four houses built.
-        /// </summary>
-        public int rent4;
-
-        /// <summary>
-        /// Amount of rent to pay with an hotel built.
-        /// </summary>
-        public int rentH;
+        public int[] rent;
 
         /// <summary>
         /// Boolean that indicates if the proprety is mortgaged.
@@ -462,245 +437,104 @@ public class CellInfo : MonoBehaviour
             houseCost = 50,
             houses = 0,
             owner = -1,
-            rent = 2,
-            rent1 = 10,
-            rent2 = 30,
-            rent3 = 90,
-            rent4 = 160,
-            rentH = 250,
+            rent = new int[] { 2, 10, 30, 90, 160, 250},
             mortgaged = false
         };
         propertyInformation.Add("Brown", property);
 
         property.name = "Whitechapel Rd";
-        property.cost = 60;
-        property.houseCost = 50;
-        property.rent = 4;
-        property.rent1 = 20;
-        property.rent2 = 60;
-        property.rent3 = 180;
-        property.rent4 = 320;
-        property.rentH = 450;
+        property.rent = new int[] { 4, 20, 60, 180, 320, 450 };
         propertyInformation.Add("Brown2", property);
 
         property.name = "The Angel, Islington";
         property.cost = 100;
-        property.houseCost = 50;
-        property.rent = 6;
-        property.rent1 = 30;
-        property.rent2 = 90;
-        property.rent3 = 270;
-        property.rent4 = 400;
-        property.rentH = 550;
+        property.rent = new int[] { 6, 30, 90, 270, 400, 550 };
         propertyInformation.Add("LightBlue", property);
 
         property.name = "Euston Rd";
-        property.cost = 100;
-        property.houseCost = 50;
-        property.rent = 6;
-        property.rent1 = 30;
-        property.rent2 = 90;
-        property.rent3 = 270;
-        property.rent4 = 400;
-        property.rentH = 550;
         propertyInformation.Add("LightBlue2", property);
 
         property.name = "Pentonville Rd";
         property.cost = 120;
-        property.houseCost = 50;
-        property.rent = 8;
-        property.rent1 = 40;
-        property.rent2 = 100;
-        property.rent3 = 300;
-        property.rent4 = 450;
-        property.rentH = 600;
+        property.rent = new int[] { 8, 40, 100, 300, 450, 600};
         propertyInformation.Add("LightBlue3", property);
 
         property.name = "Pall Mall";
         property.cost = 140;
         property.houseCost = 100;
-        property.rent = 10;
-        property.rent1 = 50;
-        property.rent2 = 150;
-        property.rent3 = 450;
-        property.rent4 = 625;
-        property.rentH = 750;
+        property.rent = new int[] { 10, 50, 150, 450, 625, 750};
         propertyInformation.Add("Purple", property);
 
         property.name = "Whitehall";
-        property.cost = 140;
-        property.houseCost = 100;
-        property.rent = 10;
-        property.rent1 = 50;
-        property.rent2 = 150;
-        property.rent3 = 450;
-        property.rent4 = 625;
-        property.rentH = 750;
         propertyInformation.Add("Purple2", property);
 
         property.name = "Northumberland Ave";
         property.cost = 160;
-        property.houseCost = 100;
-        property.rent = 12;
-        property.rent1 = 60;
-        property.rent2 = 180;
-        property.rent3 = 500;
-        property.rent4 = 700;
-        property.rentH = 900;
+        property.rent = new int[] { 12, 60, 180, 500, 700, 900};
         propertyInformation.Add("Purple3", property);
 
         property.name = "Bow St";
         property.cost = 180;
-        property.houseCost = 100;
-        property.rent = 14;
-        property.rent1 = 70;
-        property.rent2 = 200;
-        property.rent3 = 550;
-        property.rent4 = 750;
-        property.rentH = 950;
+        property.rent = new int[] { 14, 70, 200, 550, 750, 950};
         propertyInformation.Add("Orange", property);
 
         property.name = "Marlborough St";
-        property.cost = 180;
-        property.houseCost = 100;
-        property.rent = 14;
-        property.rent1 = 70;
-        property.rent2 = 200;
-        property.rent3 = 550;
-        property.rent4 = 750;
-        property.rentH = 950;
         propertyInformation.Add("Orange2", property);
 
         property.name = "Vine St";
         property.cost = 200;
-        property.houseCost = 100;
-        property.rent = 16;
-        property.rent1 = 80;
-        property.rent2 = 220;
-        property.rent3 = 600;
-        property.rent4 = 800;
-        property.rentH = 1000;
+        property.rent = new int[] {16, 80, 220, 600, 800, 1000 };
         propertyInformation.Add("Orange3", property);
 
         property.name = "Strand";
         property.cost = 220;
         property.houseCost = 150;
-        property.rent = 18;
-        property.rent1 = 90;
-        property.rent2 = 250;
-        property.rent3 = 700;
-        property.rent4 = 875;
-        property.rentH = 1050;
+        property.rent = new int[] { 18, 90, 250, 700, 875, 1050};
         propertyInformation.Add("Red", property);
 
         property.name = "Fleet St";
-        property.cost = 220;
-        property.houseCost = 150;
-        property.rent = 18;
-        property.rent1 = 90;
-        property.rent2 = 250;
-        property.rent3 = 700;
-        property.rent4 = 875;
-        property.rentH = 1050;
         propertyInformation.Add("Red2", property);
 
         property.name = "Trafalgar Sq";
         property.cost = 240;
-        property.houseCost = 150;
-        property.rent = 20;
-        property.rent1 = 100;
-        property.rent2 = 300;
-        property.rent3 = 750;
-        property.rent4 = 925;
-        property.rentH = 1100;
+        property.rent = new int[] { 20, 100, 300, 750, 925, 1100 };
         propertyInformation.Add("Red3", property);
 
         property.name = "Leicester St";
         property.cost = 260;
-        property.houseCost = 150;
-        property.rent = 22;
-        property.rent1 = 110;
-        property.rent2 = 330;
-        property.rent3 = 800;
-        property.rent4 = 975;
-        property.rentH = 1150;
+        property.rent = new int[] { 22, 110, 330, 800, 975, 1150 };
         propertyInformation.Add("Yellow", property);
 
         property.name = "Coventry St";
-        property.cost = 260;
-        property.houseCost = 150;
-        property.rent = 22;
-        property.rent1 = 110;
-        property.rent2 = 330;
-        property.rent3 = 800;
-        property.rent4 = 975;
-        property.rentH = 1150;
         propertyInformation.Add("Yellow2", property);
 
         property.name = "Piccadilly";
         property.cost = 280;
-        property.houseCost = 150;
-        property.rent = 24;
-        property.rent1 = 120;
-        property.rent2 = 360;
-        property.rent3 = 850;
-        property.rent4 = 1025;
-        property.rentH = 1200;
+        property.rent = new int[] { 24, 120, 360, 850, 1025, 1200 };
         propertyInformation.Add("Yellow3", property);
 
         property.name = "Regent St";
         property.cost = 300;
         property.houseCost = 200;
-        property.rent = 26;
-        property.rent1 = 130;
-        property.rent2 = 390;
-        property.rent3 = 900;
-        property.rent4 = 1100;
-        property.rentH = 1275;
+        property.rent = new int[] { 26, 130, 390, 900, 1100, 1275 };
         propertyInformation.Add("Green", property);
 
         property.name = "Oxford St";
-        property.cost = 300;
-        property.houseCost = 200;
-        property.rent = 26;
-        property.rent1 = 130;
-        property.rent2 = 390;
-        property.rent3 = 900;
-        property.rent4 = 1100;
-        property.rentH = 1275;
         propertyInformation.Add("Green2", property);
 
         property.name = "Bond St";
         property.cost = 320;
-        property.houseCost = 200;
-        property.rent = 28;
-        property.rent1 = 150;
-        property.rent2 = 450;
-        property.rent3 = 1000;
-        property.rent4 = 1200;
-        property.rentH = 1400;
+        property.rent = new int[] { 28, 150, 450, 1000, 1200, 1400 };
         propertyInformation.Add("Green3", property);
 
         property.name = "Park Lane";
         property.cost = 350;
-        property.houseCost = 200;
-        property.rent = 35;
-        property.rent1 = 175;
-        property.rent2 = 500;
-        property.rent3 = 1100;
-        property.rent4 = 1300;
-        property.rentH = 1500;
+        property.rent = new int[] { 35, 175, 500, 1100, 1300, 1500 };
         propertyInformation.Add("DarkBlue", property);
 
         property.name = "Mayfair";
         property.cost = 400;
-        property.houseCost = 200;
-        property.rent = 50;
-        property.rent1 = 200;
-        property.rent2 = 600;
-        property.rent3 = 1400;
-        property.rent4 = 1700;
-        property.rentH = 2000;
+        property.rent = new int[] { 50, 200, 600, 1400, 1700, 2000 };
         propertyInformation.Add("DarkBlue2", property);
     }
 
@@ -841,12 +675,12 @@ public class CellInfo : MonoBehaviour
 
         propertyCard.transform.Find("Name").GetComponent<TMP_Text>().text = propertyInformation[cellName].name;
         propertyCard.transform.Find("Cost_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].cost + "";
-        propertyCard.transform.Find("Rent_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent + "";
-        propertyCard.transform.Find("Rent1_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent1 + "";
-        propertyCard.transform.Find("Rent2_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent2 + "";
-        propertyCard.transform.Find("Rent3_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent3 + "";
-        propertyCard.transform.Find("Rent4_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent4 + "";
-        propertyCard.transform.Find("RentH_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rentH + "";
+        propertyCard.transform.Find("Rent_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[0] + "";
+        propertyCard.transform.Find("Rent1_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[1] + "";
+        propertyCard.transform.Find("Rent2_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[2] + "";
+        propertyCard.transform.Find("Rent3_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[3] + "";
+        propertyCard.transform.Find("Rent4_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[4] + "";
+        propertyCard.transform.Find("RentH_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[5] + "";
         propertyCard.transform.Find("CostHouse_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].houseCost + "";
         propertyCard.transform.Find("CostHotel_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].houseCost + "";
         propertyCard.transform.Find("Mortgage_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].cost / 2 + "";
@@ -1734,13 +1568,9 @@ public class CellInfo : MonoBehaviour
     /// <param name="cellName">Landed cell name</param>
     /// <returns>Amount of rent the current player has to pay.</returns>
     private int CalculateRent(string cellName) {
-        if (propertyInformation[cellName].houses == 1) return propertyInformation[cellName].rent1;
-        if (propertyInformation[cellName].houses == 2) return propertyInformation[cellName].rent2;
-        if (propertyInformation[cellName].houses == 3) return propertyInformation[cellName].rent3;
-        if (propertyInformation[cellName].houses == 4) return propertyInformation[cellName].rent4;
-        if (propertyInformation[cellName].houses == 5) return propertyInformation[cellName].rentH;
-        if (PlayerHasAllColor(cellName)) return propertyInformation[cellName].rent * 2;
-        return propertyInformation[cellName].rent;
+        if (propertyInformation[cellName].houses > 0) return propertyInformation[cellName].rent[propertyInformation[cellName].houses];
+        if (PlayerHasAllColor(cellName)) return propertyInformation[cellName].rent[0] * 2;
+        return propertyInformation[cellName].rent[0];
     }
 
     /// <summary>
