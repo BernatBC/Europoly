@@ -11,16 +11,29 @@ using UnityEngine.UIElements;
 public class Bot : MonoBehaviour
 {
     /// <summary>
-    /// GameObject <c>scripts</c> contains all scripts.
+    /// CellInfo class.
     /// </summary>
-    private GameObject scripts;
+    private CellInfo cellInfo;
+
+    /// <summary>
+    /// Movements class.
+    /// </summary>
+    private Movements movements;
+
+    /// <summary>
+    /// CashManagement class.
+    /// </summary>
+    private CashManagement cashManagement;
 
     /// <summary>
     /// Method <c>Start</c> initialize the scripts GameObject.
     /// </summary>
     private void Start()
     {
-        scripts = GameObject.Find("GameHandler");
+        GameObject scripts = GameObject.Find("GameHandler");
+        cellInfo = scripts.GetComponent<CellInfo>();
+        movements = scripts.GetComponent<Movements>();
+        cashManagement = scripts.GetComponent<CashManagement>();
     }
 
     /// <summary>
@@ -50,7 +63,7 @@ public class Bot : MonoBehaviour
     public void AcceptRejectTrade() {
         //Calculate value and accept if Vafter > Vbefore
         //At the moment it rejects the offers.
-        scripts.GetComponent<CellInfo>().FinishTrade();
+        cellInfo.FinishTrade();
         //scripts.GetComponent<CellInfo>().MakeTrade();
         Debug.Log("Choose accept/reject property");
     }
@@ -64,9 +77,9 @@ public class Bot : MonoBehaviour
         //else roll
         Debug.Log("Choose roll/pay");
 
-        if (scripts.GetComponent<CellInfo>().CountUnownedCells() <= 3) scripts.GetComponent<Movements>().RollDicesDoubles();
-        else if (hasFreeCard) scripts.GetComponent<Movements>().UseCard();
-        else scripts.GetComponent<Movements>().Pay();
+        if (cellInfo.CountUnownedCells() <= 3) movements.RollDicesDoubles();
+        else if (hasFreeCard) movements.UseCard();
+        else movements.Pay();
     }
 
     /// <summary>
@@ -87,7 +100,7 @@ public class Bot : MonoBehaviour
         else if (canTravelStation2 || currentStation == "Station2") travelingTo = "Station2";
         else if (canTravelStation1 || currentStation == "Station1") travelingTo = "Station1";
 
-        if (travelingTo != currentStation) scripts.GetComponent<Movements>().MoveTo(currentStation, travelingTo);   
+        if (travelingTo != currentStation) movements.MoveTo(currentStation, travelingTo);   
     }
 
     /// <summary>
@@ -106,19 +119,19 @@ public class Bot : MonoBehaviour
         List<string> stationNamames = new (railroadInformation.Keys);
         foreach (string railroad in stationNamames) {
             if (railroadInformation[railroad].owner != player) continue;
-            if (railroadInformation[railroad].mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageStation(player, railroad);
+            if (railroadInformation[railroad].mortgaged) cellInfo.MortgageUnmortgageStation(player, railroad);
         }
 
-        if (water.owner == player && water.mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageUtility(player, "Water");
-        if (electrical.owner == player && electrical.mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageUtility(player, "Electrical");
+        if (water.owner == player && water.mortgaged) cellInfo.MortgageUnmortgageUtility(player, "Water");
+        if (electrical.owner == player && electrical.mortgaged) cellInfo.MortgageUnmortgageUtility(player, "Electrical");
 
         //Unmortgage and buy houses if possible
         List<string> cellNames = new(propertyInformation.Keys);
         foreach (string cellName in cellNames) {
             if (propertyInformation[cellName].owner != player) continue;
-            if (propertyInformation[cellName].mortgaged) scripts.GetComponent<CellInfo>().MortgageUnmortgageProperty(player, cellName);
-            if (propertyInformation[cellName].houses == 5 || !scripts.GetComponent<CellInfo>().PlayerHasAllColor(cellName) || !scripts.GetComponent<CellInfo>().PlayerHasAllColor(cellName)) continue;
-            if (propertyInformation[cellName].houseCost <= scripts.GetComponent<CashManagement>().GetCash(player)) scripts.GetComponent<CellInfo>().BuyHouse(player, cellName);
+            if (propertyInformation[cellName].mortgaged) cellInfo.MortgageUnmortgageProperty(player, cellName);
+            if (propertyInformation[cellName].houses == 5 || !cellInfo.PlayerHasAllColor(cellName) || !cellInfo.PlayerHasAllColor(cellName)) continue;
+            if (propertyInformation[cellName].houseCost <= cashManagement.GetCash(player)) cellInfo.BuyHouse(player, cellName);
         }
 
         // If color owner = me && cash > x ->  buy houses most expensive
@@ -134,7 +147,7 @@ public class Bot : MonoBehaviour
     private IEnumerator WaitAndRoll(float timeInSeconds)
     {
         yield return new WaitForSecondsRealtime(timeInSeconds);
-        scripts.GetComponent<Movements>().RollDice();
+        movements.RollDice();
     }
 
     /// <summary>
@@ -145,7 +158,7 @@ public class Bot : MonoBehaviour
     private IEnumerator WaitAndEnd(float timeInSeconds)
     {
         yield return new WaitForSecondsRealtime(timeInSeconds);
-        scripts.GetComponent<Movements>().NextTorn();
+        movements.NextTorn();
     }
 
     /// <summary>
@@ -156,6 +169,6 @@ public class Bot : MonoBehaviour
     private IEnumerator WaitAndPay(float timeInSeconds)
     {
         yield return new WaitForSecondsRealtime(timeInSeconds);
-        scripts.GetComponent<CellInfo>().BuyCell();
+        cellInfo.BuyCell();
     }
 }

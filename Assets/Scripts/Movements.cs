@@ -160,16 +160,30 @@ public class Movements : MonoBehaviour
     private int numberOfPlayersAlive;
 
     /// <summary>
-    /// GameObject <c>scripts</c> contains all scripts.
+    /// CellInfo class.
     /// </summary>
-    private GameObject scripts;
+    private CellInfo cellInfo;
+
+    /// <summary>
+    /// CashManagement class.
+    /// </summary>
+    private CashManagement cashManagement;
+
+    /// <summary>
+    /// Bot class.
+    /// </summary>
+    private Bot bot;
 
     /// <summary>
     /// Method <c>Start</c> initializes buttons, panels and datastructures.
     /// </summary>
     private void Start()
     {
-        scripts = GameObject.Find("GameHandler");
+        GameObject scripts = GameObject.Find("GameHandler");
+        cellInfo = scripts.GetComponent<CellInfo>();
+        cashManagement = scripts.GetComponent<CashManagement>();
+        bot = scripts.GetComponent<Bot>();
+
         rollDice.onClick.AddListener(RollDice);
         endTorn.onClick.AddListener(NextTorn);
         rollDoubles.onClick.AddListener(RollDicesDoubles);
@@ -229,11 +243,11 @@ public class Movements : MonoBehaviour
     /// </summary>
     private void ShowAvailableTrainStations() {
         travel.gameObject.SetActive(false);
-        scripts.GetComponent<CellInfo>().TravelSelected();
-        if (scripts.GetComponent<CellInfo>().CanTravel("Station", playerTorn)) SetCellColor(5, new Color32(255, 241, 56, 255));
-        if (scripts.GetComponent<CellInfo>().CanTravel("Station2", playerTorn)) SetCellColor(15, new Color32(255, 241, 56, 255));
-        if (scripts.GetComponent<CellInfo>().CanTravel("Station3", playerTorn)) SetCellColor(25, new Color32(255, 241, 56, 255));
-        if (scripts.GetComponent<CellInfo>().CanTravel("Station4", playerTorn)) SetCellColor(35, new Color32(255, 241, 56, 255));
+        cellInfo.TravelSelected();
+        if (cellInfo.CanTravel("Station", playerTorn)) SetCellColor(5, new Color32(255, 241, 56, 255));
+        if (cellInfo.CanTravel("Station2", playerTorn)) SetCellColor(15, new Color32(255, 241, 56, 255));
+        if (cellInfo.CanTravel("Station3", playerTorn)) SetCellColor(25, new Color32(255, 241, 56, 255));
+        if (cellInfo.CanTravel("Station4", playerTorn)) SetCellColor(35, new Color32(255, 241, 56, 255));
     }
 
     /// <summary>
@@ -243,7 +257,7 @@ public class Movements : MonoBehaviour
         if (alreadyTraveled) alreadyTraveled = false;
         else {
             alreadyTraveled = true;
-            if (playerInfo[playerTorn].isBot) scripts.GetComponent<Bot>().Travel(cells[playerInfo[playerTorn].position].name, scripts.GetComponent<CellInfo>().CanTravel("Station", playerTorn), scripts.GetComponent<CellInfo>().CanTravel("Station2", playerTorn), scripts.GetComponent<CellInfo>().CanTravel("Station3", playerTorn), scripts.GetComponent<CellInfo>().CanTravel("Station4", playerTorn));
+            if (playerInfo[playerTorn].isBot) bot.Travel(cells[playerInfo[playerTorn].position].name, cellInfo.CanTravel("Station", playerTorn), cellInfo.CanTravel("Station2", playerTorn), cellInfo.CanTravel("Station3", playerTorn), cellInfo.CanTravel("Station4", playerTorn));
             else travel.gameObject.SetActive(true);
         }
     }
@@ -253,10 +267,10 @@ public class Movements : MonoBehaviour
     /// </summary>
     public void UndoStationColor()
     {
-        if (!scripts.GetComponent<CellInfo>().StationMortgaged(1)) SetCellColor(5, new Color32(255, 255, 255, 255));
-        if (!scripts.GetComponent<CellInfo>().StationMortgaged(2)) SetCellColor(15, new Color32(255, 255, 255, 255));
-        if (!scripts.GetComponent<CellInfo>().StationMortgaged(3)) SetCellColor(25, new Color32(255, 255, 255, 255));
-        if (!scripts.GetComponent<CellInfo>().StationMortgaged(4)) SetCellColor(35, new Color32(255, 255, 255, 255));
+        if (!cellInfo.StationMortgaged(1)) SetCellColor(5, new Color32(255, 255, 255, 255));
+        if (!cellInfo.StationMortgaged(2)) SetCellColor(15, new Color32(255, 255, 255, 255));
+        if (!cellInfo.StationMortgaged(3)) SetCellColor(25, new Color32(255, 255, 255, 255));
+        if (!cellInfo.StationMortgaged(4)) SetCellColor(35, new Color32(255, 255, 255, 255));
     }
 
     /// <summary>
@@ -293,7 +307,7 @@ public class Movements : MonoBehaviour
     /// </summary>
     private void EndGame() {
         Debug.Log("Endgame for player " + playerTorn);
-        if (!scripts.GetComponent<CellInfo>().EndgameForPlayer(playerTorn)) return;
+        if (!cellInfo.EndgameForPlayer(playerTorn)) return;
         Debug.Log(playerTorn + " dead");
         playerInfo[playerTorn].isDead = true;
         //If only one player remaining -> endGame screen
@@ -306,14 +320,14 @@ public class Movements : MonoBehaviour
     {
         travel.gameObject.SetActive(false);
         endTorn.gameObject.SetActive(false);
-        scripts.GetComponent<CellInfo>().DisableCard();
-        if (scripts.GetComponent<CashManagement>().GetCash(playerTorn) < 0) EndGame();
+        cellInfo.DisableCard();
+        if (cashManagement.GetCash(playerTorn) < 0) EndGame();
         if (playerInfo[playerTorn].isDead) SetPanelColor(playerPanel[playerTorn], new Color32(131, 133, 140, 255));
         else SetPanelColor(playerPanel[playerTorn], new Color32(237, 231, 217, 255));
 
         ++playerTorn;
         if (playerTorn == numberOfPlayers) playerTorn = 0;
-        scripts.GetComponent<CellInfo>().SetPlayer(playerTorn);
+        cellInfo.SetPlayer(playerTorn);
         destination = players[playerTorn].transform.position;
         SetPanelColor(playerPanel[playerTorn], new Color32(243, 146, 55, 255));
         alreadyTraveled = false;
@@ -324,7 +338,7 @@ public class Movements : MonoBehaviour
             return;
         }
 
-        if (playerInfo[playerTorn].isBot) scripts.GetComponent<Bot>().LeaveJail(playerInfo[playerTorn].numberOutOfJailCards > 0);
+        if (playerInfo[playerTorn].isBot) bot.LeaveJail(playerInfo[playerTorn].numberOutOfJailCards > 0);
         else {
             rollDoubles.gameObject.SetActive(true);
             pay50.gameObject.SetActive(true);
@@ -336,7 +350,7 @@ public class Movements : MonoBehaviour
     /// Method <c>Pay</c> the player decides to pay to leave jail.
     /// </summary>
     public void Pay() {
-        if (!scripts.GetComponent<CashManagement>().ModifyCash(playerTorn, -100, false, false)) return;
+        if (!cashManagement.ModifyCash(playerTorn, -100, false, false)) return;
         rollDoubles.gameObject.SetActive(false);
         pay50.gameObject.SetActive(false);
         getOutForFree.gameObject.SetActive(false);
@@ -478,7 +492,7 @@ public class Movements : MonoBehaviour
     /// </summary>
     public void RollDice()
     {
-        scripts.GetComponent<CellInfo>().DisableCard();
+        cellInfo.DisableCard();
         travel.gameObject.SetActive(false);
         rollDice.gameObject.SetActive(false);
         diceSound.Play();
@@ -542,7 +556,7 @@ public class Movements : MonoBehaviour
             if (playerInfo[playerTorn].position == cells.Length)
             {
                 playerInfo[playerTorn].position = 0;
-                scripts.GetComponent<CashManagement>().ModifyCash(playerTorn, 200, false, true);
+                cashManagement.ModifyCash(playerTorn, 200, false, true);
             }
 
             destination = new Vector3(cells[playerInfo[playerTorn].position].transform.position.x, cells[playerInfo[playerTorn].position].transform.position.y + 1, cells[playerInfo[playerTorn].position].transform.position.z);
@@ -561,7 +575,7 @@ public class Movements : MonoBehaviour
     /// Method <c>MakeRollDice</c> Shows roll dice button if the player is not the computer, sends the bot he can roll the dice signal.
     /// </summary>
     private void MakeRollDice() {
-        if (playerInfo[playerTorn].isBot) scripts.GetComponent<Bot>().RollDice();
+        if (playerInfo[playerTorn].isBot) bot.RollDice();
         else rollDice.gameObject.SetActive(true);
     }
 
@@ -569,7 +583,7 @@ public class Movements : MonoBehaviour
     /// Method <c>MakeEndTorn</c> Shows end torn button if the player is not the computer, sends the bot he can end the torn signal.
     /// </summary>
     private void MakeEndTorn() {
-        if (playerInfo[playerTorn].isBot) scripts.GetComponent<Bot>().BeforeEndTorn(playerTorn, scripts.GetComponent<CellInfo>().GetPropertyInformation(), scripts.GetComponent<CellInfo>().GetRailroadInformation(), scripts.GetComponent<CellInfo>().GetWater(), scripts.GetComponent<CellInfo>().GetElectrical());
+        if (playerInfo[playerTorn].isBot) bot.BeforeEndTorn(playerTorn, cellInfo.GetPropertyInformation(), cellInfo.GetRailroadInformation(), cellInfo.GetWater(), cellInfo.GetElectrical());
         else endTorn.gameObject.SetActive(true);
     }
 
@@ -587,7 +601,7 @@ public class Movements : MonoBehaviour
         carryOnMoving = false;
         Debug.Log("Player" + playerTorn + " rolled (" + diceValue1 + ", " + diceValue2 + ") Landed on " + cell_name);
         if (cell_name == "GoToJail") GoToJail();
-        else if (cell_name != "Start") scripts.GetComponent<CellInfo>().LandedOn(cell_name, playerTorn, diceValue1 + diceValue2);
+        else if (cell_name != "Start") cellInfo.LandedOn(cell_name, playerTorn, diceValue1 + diceValue2);
 
         if (carryOnMoving)
         {

@@ -296,9 +296,19 @@ public class CellInfo : MonoBehaviour
     private bool freezeTrading = false;
 
     /// <summary>
-    /// GameObject <c>scripts</c> contains all scripts.
+    /// Movements class.
     /// </summary>
-    private GameObject scripts;
+    private Movements movements;
+
+    /// <summary>
+    /// CashManagement class.
+    /// </summary>
+    private CashManagement cashManagement;
+
+    /// <summary>
+    /// Bot class.
+    /// </summary>
+    private Bot bot;
 
     /// <summary>
     /// Contains information about each property.
@@ -749,7 +759,11 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        scripts = GameObject.Find("GameHandler");
+        GameObject scripts = GameObject.Find("GameHandler");
+        movements = scripts.GetComponent<Movements>();
+        cashManagement = scripts.GetComponent<CashManagement>();
+        bot = scripts.GetComponent<Bot>();
+
         InitializePropertyDictionary();
         InitializeRailroadDictionary();
         InitializePrefabDictionary();
@@ -883,8 +897,8 @@ public class CellInfo : MonoBehaviour
             if (CellSelected1[i]) NewOwner(tradingCells1[i], tradingPartner);
             if (CellSelected2[i]) NewOwner(tradingCells2[i], currentPlayer);
         }
-        scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, tradingCashPlayer2 - tradingCashPlayer1, false, false);
-        scripts.GetComponent<CashManagement>().ModifyCash(tradingPartner, tradingCashPlayer1 - tradingCashPlayer2, false, false);
+        cashManagement.ModifyCash(currentPlayer, tradingCashPlayer2 - tradingCashPlayer1, false, false);
+        cashManagement.ModifyCash(tradingPartner, tradingCashPlayer1 - tradingCashPlayer2, false, false);
         if ((actualCell == "Station" || actualCell == "Station2" || actualCell == "Station3" || actualCell == "Station4") && railroadInformation[actualCell].owner == currentPlayer) PossibilityToTravel();
         FinishTrade();
     }
@@ -953,9 +967,9 @@ public class CellInfo : MonoBehaviour
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
 
-        if (scripts.GetComponent<Movements>().IsBot(tradingPartner))
+        if (movements.IsBot(tradingPartner))
         {
-            scripts.GetComponent<Bot>().AcceptRejectTrade();
+            bot.AcceptRejectTrade();
             return;
         }
 
@@ -1014,8 +1028,8 @@ public class CellInfo : MonoBehaviour
                 RemoveHouse(cellName, propertyModify.houses);
                 --propertyModify.houses;
                 propertyInformation.Add(cellName, propertyModify);
-                scripts.GetComponent<CashManagement>().ModifyCash(player, propertyModify.houseCost / 2, false, true);
-                if (scripts.GetComponent<CashManagement>().GetCash(player) >= 0) return false; 
+                cashManagement.ModifyCash(player, propertyModify.houseCost / 2, false, true);
+                if (cashManagement.GetCash(player) >= 0) return false; 
             }
         }
         //Mortgage
@@ -1026,9 +1040,9 @@ public class CellInfo : MonoBehaviour
             RemoveHouse(cellName, property.houses);
             property.mortgaged = true;
             propertyInformation.Add(cellName, property);
-            scripts.GetComponent<CashManagement>().ModifyCash(player, property.cost / 2, false, true);
-            scripts.GetComponent<Movements>().Mortgage(cellName);
-            if (scripts.GetComponent<CashManagement>().GetCash(player) >= 0) return false;
+            cashManagement.ModifyCash(player, property.cost / 2, false, true);
+            movements.Mortgage(cellName);
+            if (cashManagement.GetCash(player) >= 0) return false;
         }
         foreach (string cellName in railroadInformation.Keys)
         {
@@ -1037,22 +1051,22 @@ public class CellInfo : MonoBehaviour
             railroadInformation.Remove(cellName);
             railroad.mortgaged = true;
             railroadInformation.Add(cellName, railroad);
-            scripts.GetComponent<CashManagement>().ModifyCash(player, 200 / 2, false, true);
-            scripts.GetComponent<Movements>().Mortgage(cellName);
-            if (scripts.GetComponent<CashManagement>().GetCash(player) >= 0) return false;
+            cashManagement.ModifyCash(player, 200 / 2, false, true);
+            movements.Mortgage(cellName);
+            if (cashManagement.GetCash(player) >= 0) return false;
         }
         if (water.owner == player && !water.mortgaged) {
             water.mortgaged = true;
-            scripts.GetComponent<CashManagement>().ModifyCash(player, 200 / 2, false, true);
-            scripts.GetComponent<Movements>().Mortgage("Water");
-            if (scripts.GetComponent<CashManagement>().GetCash(player) >= 0) return false;
+            cashManagement.ModifyCash(player, 200 / 2, false, true);
+            movements.Mortgage("Water");
+            if (cashManagement.GetCash(player) >= 0) return false;
         }
         if (electrical.owner == player && !electrical.mortgaged)
         {
             electrical.mortgaged = true;
-            scripts.GetComponent<CashManagement>().ModifyCash(player, 200 / 2, false, true);
-            scripts.GetComponent<Movements>().Mortgage("Electric");
-            if (scripts.GetComponent<CashManagement>().GetCash(player) >= 0) return false;
+            cashManagement.ModifyCash(player, 200 / 2, false, true);
+            movements.Mortgage("Electric");
+            if (cashManagement.GetCash(player) >= 0) return false;
         }
         //Remove propertries, player has lost
         foreach (string cellName in toDelete) {
@@ -1124,7 +1138,7 @@ public class CellInfo : MonoBehaviour
     private void Trading() {
         if (freezeTrading) return;
         tradingSelected = true;
-        int numberOfPlayers = scripts.GetComponent<Movements>().GetNumberOfPlayers();
+        int numberOfPlayers = movements.GetNumberOfPlayers();
         if (numberOfPlayers > 2) {
             EnableTradingButtons(numberOfPlayers);
             return;
@@ -1165,96 +1179,96 @@ public class CellInfo : MonoBehaviour
     private void ChestCard(int cardNumber) {
         if (cardNumber == 1) {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Go (Collect 200)";
-            scripts.GetComponent<Movements>().MoveTo(actualCell, "Start");
+            movements.MoveTo(actualCell, "Start");
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 2) {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Bank error in your favour. Collect 200";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 200, false, true);
+            cashManagement.ModifyCash(currentPlayer, 200, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 3)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Doctor’s fee. Pay 50";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -50, false, true);
+            cashManagement.ModifyCash(currentPlayer, -50, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 4)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "From sale of stock you get 50";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 50, false, true);
+            cashManagement.ModifyCash(currentPlayer, 50, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 5)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Get Out of Jail Free";
-            scripts.GetComponent<Movements>().IncrementByOneOutOfJailCards(currentPlayer);
+            movements.IncrementByOneOutOfJailCards(currentPlayer);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 6)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Go directly to jail, do not pass Go, do not collect 200";
-            scripts.GetComponent<Movements>().GoToJail();
+            movements.GoToJail();
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 7)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Holiday fund matures. Receive 100";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 100, false, true);
+            cashManagement.ModifyCash(currentPlayer, 100, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 8)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Income tax refund. Collect 20";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 20, false, true);
+            cashManagement.ModifyCash(currentPlayer, 20, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 9)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "It is your birthday. Collect 10 from every player";
-            scripts.GetComponent<CashManagement>().CollectFromEverybody(currentPlayer, 10);
+            cashManagement.CollectFromEverybody(currentPlayer, 10);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 10)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Life insurance matures. Collect 100";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 100, false, true);
+            cashManagement.ModifyCash(currentPlayer, 100, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 11)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Pay hospital fees of 100";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -100, false, true);
+            cashManagement.ModifyCash(currentPlayer, -100, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 12)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Pay school fees of 50";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -50, false, true);
+            cashManagement.ModifyCash(currentPlayer, -50, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 13)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Receive 25 consultancy fee";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 25, false, true);
+            cashManagement.ModifyCash(currentPlayer, 25, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 14)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You are assessed for street repairs. 40 per house. 115 per hotel";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -Repairs(40, 115), false, true);
+            cashManagement.ModifyCash(currentPlayer, -Repairs(40, 115), false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 15)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You have won second prize in a beauty contest. Collect 10";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 10, false, true);
+            cashManagement.ModifyCash(currentPlayer, 10, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 16)
         {
             chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You inherit 100";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 100, false, true);
+            cashManagement.ModifyCash(currentPlayer, 100, false, true);
             StartCoroutine(WaitAndDisableChestCard());
         }
         chestCard.SetActive(true);
@@ -1292,97 +1306,97 @@ public class CellInfo : MonoBehaviour
         if (cardNumber == 1)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Go (Collect 200)";
-            scripts.GetComponent<Movements>().MoveTo(actualCell, "Start");
+            movements.MoveTo(actualCell, "Start");
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 2)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Trafalgar Square. If you pass Go, collect 200";
-            scripts.GetComponent<Movements>().MoveTo(actualCell, "Red3");
+            movements.MoveTo(actualCell, "Red3");
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 3)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Mayfair";
-            scripts.GetComponent<Movements>().MoveTo(actualCell, "DarkBlue2");
+            movements.MoveTo(actualCell, "DarkBlue2");
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 4)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Pall Mall. If you pass Go, collect 200";
-            scripts.GetComponent<Movements>().MoveTo(actualCell, "Purple");
+            movements.MoveTo(actualCell, "Purple");
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 5 || cardNumber == 6)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to the nearest Station. If unowned, you may buy it from the Bank. If owned, pay wonder twice the rental to which they are otherwise entitled";
-            if (actualCell == "Chance") scripts.GetComponent<Movements>().MoveTo(actualCell, "Station2");
-            else if (actualCell == "Chance2") scripts.GetComponent<Movements>().MoveTo(actualCell, "Station3");
-            else scripts.GetComponent<Movements>().MoveTo(actualCell, "Station");
+            if (actualCell == "Chance") movements.MoveTo(actualCell, "Station2");
+            else if (actualCell == "Chance2") movements.MoveTo(actualCell, "Station3");
+            else movements.MoveTo(actualCell, "Station");
             multiplier = 2;
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 7)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, pay owner a total ten times amount thrown.";
-            if (actualCell == "Chance2") scripts.GetComponent<Movements>().MoveTo(actualCell, "Water");
-            else scripts.GetComponent<Movements>().MoveTo(actualCell, "Electric");
+            if (actualCell == "Chance2") movements.MoveTo(actualCell, "Water");
+            else movements.MoveTo(actualCell, "Electric");
             multiplier = 10;
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 8)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Bank pays you dividend of 50";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 50, false, true);
+            cashManagement.ModifyCash(currentPlayer, 50, false, true);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 9)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Get Out of Jail Free";
-            scripts.GetComponent<Movements>().IncrementByOneOutOfJailCards(currentPlayer);
+            movements.IncrementByOneOutOfJailCards(currentPlayer);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 10)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Go Back 3 Spaces";
-            scripts.GetComponent<Movements>().MoveNumberOfCells(-3);
+            movements.MoveNumberOfCells(-3);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 11)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Go directly to Jail, do not pass Go, do not collect 200";
-            scripts.GetComponent<Movements>().GoToJail();
+            movements.GoToJail();
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 12)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
             int repairMoney = -Repairs(25, 100);
-            if (repairMoney < 0) scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, repairMoney, false, true);
+            if (repairMoney < 0) cashManagement.ModifyCash(currentPlayer, repairMoney, false, true);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 13)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Speeding fine 15";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -15, false, true);
+            cashManagement.ModifyCash(currentPlayer, -15, false, true);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 14)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Take a trip to Kings Cross Station. If you pass Go, collect 200";
-            scripts.GetComponent<Movements>().MoveTo(actualCell, "Station");
+            movements.MoveTo(actualCell, "Station");
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 15)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You have been elected Chairman of the Board. Pay each player 50";
-            scripts.GetComponent<CashManagement>().PayEverybody(currentPlayer, 50);
+            cashManagement.PayEverybody(currentPlayer, 50);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 16)
         {
             chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Your building loan matures. Collect 150";
-            scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, 150, false, true);
+            cashManagement.ModifyCash(currentPlayer, 150, false, true);
             StartCoroutine(WaitAndDisableChanceCard());
         }
         chanceCard.SetActive(true);
@@ -1412,7 +1426,7 @@ public class CellInfo : MonoBehaviour
     /// <param name="cellName">Cell name to place the marker.</param>
     /// <param name="player">Player marker.</param>
     private void AddOwnerMarker(string cellName, int player) {
-        Vector3 position = scripts.GetComponent<Movements>().CellPosition(cellName);
+        Vector3 position = movements.CellPosition(cellName);
         if (cellName == "Brown" || cellName == "Brown2" || cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3" || cellName == "Station") position.z += 1.5f;
         else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3" || cellName == "Electric" || cellName == "Orange" || cellName == "Station2" || cellName == "Orange2" || cellName == "Orange3") position.x += 1.5f;
         else if (cellName == "Red" || cellName == "Red2" || cellName == "Red3" || cellName == "Station3" || cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3" || cellName == "Water") position.z -= 1.5f;
@@ -1428,7 +1442,7 @@ public class CellInfo : MonoBehaviour
     /// <param name="cellName">Cell name to create the house/hotel.</param>
     /// <param name="houseNumber">Number of house to create.</param>
     private void AddHouse(string cellName, int houseNumber) {
-        Vector3 position = scripts.GetComponent<Movements>().CellPosition(cellName);
+        Vector3 position = movements.CellPosition(cellName);
         if (cellName == "Brown" || cellName == "Brown2" || cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3")
         {
             position.z -= 1.9f;
@@ -1570,7 +1584,7 @@ public class CellInfo : MonoBehaviour
     public void BuyCell() {
         if (actualCell == "Station" || actualCell == "Station2" || actualCell == "Station3" || actualCell == "Station4")
         {
-            if (!scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -200, false, false)) return;
+            if (!cashManagement.ModifyCash(currentPlayer, -200, false, false)) return;
             RailRoad railroad = railroadInformation[actualCell];
             railroadInformation.Remove(actualCell);
             railroad.owner = currentPlayer;
@@ -1579,17 +1593,17 @@ public class CellInfo : MonoBehaviour
         }
         else if (actualCell == "Electric")
         {
-            if (!scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -150, false, false)) return;
+            if (!cashManagement.ModifyCash(currentPlayer, -150, false, false)) return;
             electrical.owner = currentPlayer;
         }
         else if (actualCell == "Water")
         {
-            if (!scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -150, false, false)) return;
+            if (!cashManagement.ModifyCash(currentPlayer, -150, false, false)) return;
             water.owner = currentPlayer;
         }
         else {
             Property property = propertyInformation[actualCell];
-            if (!scripts.GetComponent<CashManagement>().ModifyCash(currentPlayer, -property.cost, false, false)) return;
+            if (!cashManagement.ModifyCash(currentPlayer, -property.cost, false, false)) return;
             propertyInformation.Remove(actualCell);
             property.owner = currentPlayer;
             propertyInformation.Add(actualCell, property);
@@ -1711,7 +1725,7 @@ public class CellInfo : MonoBehaviour
     /// Method <c>PossibiityToTravel</c> shows the traveling button if the current plyer can travel.
     /// </summary>
     private void PossibilityToTravel() {
-        if (CountStations(currentPlayer) >= 2) scripts.GetComponent<Movements>().ShowTravelButton();
+        if (CountStations(currentPlayer) >= 2) movements.ShowTravelButton();
     }
 
     /// <summary>
@@ -1736,7 +1750,7 @@ public class CellInfo : MonoBehaviour
     /// <param name="player">Player to buy the cell.</param>
     private void BuyPassButtons(string cellName, int player) {
         justButtons = true;
-        if (scripts.GetComponent<Movements>().IsBot(player)) scripts.GetComponent<Bot>().BuyPropertyDecision(cellName);
+        if (movements.IsBot(player)) bot.BuyPropertyDecision(cellName);
         else
         {
             buyButton.gameObject.SetActive(true);
@@ -1765,8 +1779,8 @@ public class CellInfo : MonoBehaviour
                 else if (numberOfStations == 2) rentToPay = 100 * multiplier;
                 else if (numberOfStations == 3) rentToPay = 200 * multiplier;
                 else if (numberOfStations == 4) rentToPay = 400 * multiplier;
-                scripts.GetComponent<CashManagement>().ModifyCash(player, -rentToPay, false, true);
-                scripts.GetComponent<CashManagement>().ModifyCash(railroadInformation[cellName].owner, rentToPay, false, true);
+                cashManagement.ModifyCash(player, -rentToPay, false, true);
+                cashManagement.ModifyCash(railroadInformation[cellName].owner, rentToPay, false, true);
             }
             ShowRailroadCard(cellName);
             multiplier = 1;
@@ -1779,13 +1793,13 @@ public class CellInfo : MonoBehaviour
             {
                 if (water.owner == electrical.owner || multiplier != 1)
                 {
-                    scripts.GetComponent<CashManagement>().ModifyCash(player, -10 * dices, false, true);
-                    scripts.GetComponent<CashManagement>().ModifyCash(water.owner, 10 * dices, false, true);
+                    cashManagement.ModifyCash(player, -10 * dices, false, true);
+                    cashManagement.ModifyCash(water.owner, 10 * dices, false, true);
                 }
                 else
                 {
-                    scripts.GetComponent<CashManagement>().ModifyCash(player, -4 * dices, false, true);
-                    scripts.GetComponent<CashManagement>().ModifyCash(water.owner, 4 * dices, false, true);
+                    cashManagement.ModifyCash(player, -4 * dices, false, true);
+                    cashManagement.ModifyCash(water.owner, 4 * dices, false, true);
                 }
             }
             multiplier = 1;
@@ -1798,13 +1812,13 @@ public class CellInfo : MonoBehaviour
             {
                 if (water.owner == electrical.owner || multiplier != 1)
                 {
-                    scripts.GetComponent<CashManagement>().ModifyCash(player, -10 * dices, false, true);
-                    scripts.GetComponent<CashManagement>().ModifyCash(electrical.owner, 10 * dices, false, true);
+                    cashManagement.ModifyCash(player, -10 * dices, false, true);
+                    cashManagement.ModifyCash(electrical.owner, 10 * dices, false, true);
                 }
                 else
                 {
-                    scripts.GetComponent<CashManagement>().ModifyCash(player, -4 * dices, false, true);
-                    scripts.GetComponent<CashManagement>().ModifyCash(electrical.owner, 4 * dices, false, true);
+                    cashManagement.ModifyCash(player, -4 * dices, false, true);
+                    cashManagement.ModifyCash(electrical.owner, 4 * dices, false, true);
                 }
                 multiplier = 1;
             }
@@ -1814,19 +1828,19 @@ public class CellInfo : MonoBehaviour
         else if (cellName == "Tax")
         {
             ShowTaxCard(cellName);
-            scripts.GetComponent<CashManagement>().ModifyCashPercent(player, -0.1f, true);
+            cashManagement.ModifyCashPercent(player, -0.1f, true);
         }
         else if (cellName == "Tax2")
         {
             ShowTaxCard(cellName);
-            scripts.GetComponent<CashManagement>().ModifyCash(player, -100, true, true);
+            cashManagement.ModifyCash(player, -100, true, true);
         }
         else if (cellName == "Jail") Debug.Log("Jail Card in progress");
         else if (cellName == "GoToJail") Debug.Log("GoToJail Card in progress");
         else if (cellName == "Parking")
         {
             Debug.Log("Parking Card in progress");
-            scripts.GetComponent<CashManagement>().RefundCash(player);
+            cashManagement.RefundCash(player);
         }
         else if (cellName == "Start") Debug.Log("Start Card in progress");
         else
@@ -1836,8 +1850,8 @@ public class CellInfo : MonoBehaviour
             else if (player != propertyInformation[cellName].owner && !propertyInformation[cellName].mortgaged)
             {
                 int rentToPay = CalculateRent(cellName);
-                scripts.GetComponent<CashManagement>().ModifyCash(player, -rentToPay, false, true);
-                scripts.GetComponent<CashManagement>().ModifyCash(propertyInformation[cellName].owner, rentToPay, false, true);
+                cashManagement.ModifyCash(player, -rentToPay, false, true);
+                cashManagement.ModifyCash(propertyInformation[cellName].owner, rentToPay, false, true);
             }
         }
     }
@@ -1850,9 +1864,9 @@ public class CellInfo : MonoBehaviour
         if (cellName == "Station" || cellName == "Station2" || cellName == "Station3" || cellName == "Station4") {
             if (travelSelected && CanTravel(cellName, currentPlayer))
             {
-                scripts.GetComponent<Movements>().MoveTo(actualCell, cellName);
+                movements.MoveTo(actualCell, cellName);
                 travelSelected = false;
-                scripts.GetComponent<Movements>().UndoStationColor();
+                movements.UndoStationColor();
             }
             else if (!mortgageSelected) ShowRailroadCard(cellName);
             else if (railroadInformation[cellName].owner == currentPlayer && !travelSelected) MortgageUnmortgageStation(currentPlayer, cellName);
@@ -1874,7 +1888,7 @@ public class CellInfo : MonoBehaviour
         else if (cellName == "Parking") Debug.Log("Parking Card in progress");
         else if (cellName == "Start") Debug.Log("Start Card in progress");
         else {
-            int playerTorn = scripts.GetComponent<Movements>().GetPlayerTorn();
+            int playerTorn = movements.GetPlayerTorn();
             if (buySelected && playerTorn == propertyInformation[cellName].owner && PlayerHasAllColor(cellName) && propertyInformation[cellName].houses < 5 && !ColorMortgaged(cellName)) BuyHouse(playerTorn, cellName);
             else if (sellSelected && playerTorn == propertyInformation[cellName].owner && propertyInformation[cellName].houses > 0 && !propertyInformation[cellName].mortgaged) SellHouse(playerTorn, cellName);
             else if (mortgageSelected && playerTorn == propertyInformation[cellName].owner && !ColorHasHousing(cellName)) MortgageUnmortgageProperty(playerTorn, cellName);
@@ -1890,7 +1904,7 @@ public class CellInfo : MonoBehaviour
     /// <param name="cellName">Cell where the house is bought.</param>
     public void BuyHouse(int player, string cellName) {
         Property property = propertyInformation[cellName];
-        if (!scripts.GetComponent<CashManagement>().ModifyCash(player, -propertyInformation[cellName].houseCost, false, false)) return;
+        if (!cashManagement.ModifyCash(player, -propertyInformation[cellName].houseCost, false, false)) return;
         propertyInformation.Remove(cellName);
         ++property.houses;
         AddHouse(cellName, property.houses);
@@ -1908,7 +1922,7 @@ public class CellInfo : MonoBehaviour
         RemoveHouse(cellName, property.houses);
         --property.houses;
         propertyInformation.Add(cellName, property);
-        scripts.GetComponent<CashManagement>().ModifyCash(player, propertyInformation[cellName].houseCost / 2, false, true);
+        cashManagement.ModifyCash(player, propertyInformation[cellName].houseCost / 2, false, true);
     }
 
     /// <summary>
@@ -1923,18 +1937,18 @@ public class CellInfo : MonoBehaviour
         propertyInformation.Add(cellName, property);
         if (property.mortgaged)
         {
-            scripts.GetComponent<CashManagement>().ModifyCash(player, propertyInformation[cellName].cost / 2, false, true);
-            scripts.GetComponent<Movements>().Mortgage(cellName);
+            cashManagement.ModifyCash(player, propertyInformation[cellName].cost / 2, false, true);
+            movements.Mortgage(cellName);
             return;
         }
-        if (!scripts.GetComponent<CashManagement>().ModifyCash(player, (int)(-1.1f * (propertyInformation[cellName].cost / 2)), false, false))
+        if (!cashManagement.ModifyCash(player, (int)(-1.1f * (propertyInformation[cellName].cost / 2)), false, false))
         {
             propertyInformation.Remove(cellName);
             property.mortgaged = !property.mortgaged;
             propertyInformation.Add(cellName, property);
             return;
         }
-        scripts.GetComponent<Movements>().Unmortgage(cellName);
+        movements.Unmortgage(cellName);
     }
 
     /// <summary>
@@ -1949,13 +1963,13 @@ public class CellInfo : MonoBehaviour
         railroadInformation.Add(cellName, railroad);
         if (railroadInformation[cellName].mortgaged)
         {
-            scripts.GetComponent<CashManagement>().ModifyCash(player, 100, false, true);
-            scripts.GetComponent<Movements>().Mortgage(cellName);
+            cashManagement.ModifyCash(player, 100, false, true);
+            movements.Mortgage(cellName);
         }
         else
         {
-            scripts.GetComponent<CashManagement>().ModifyCash(player, -110, false, true);
-            scripts.GetComponent<Movements>().Unmortgage(cellName);
+            cashManagement.ModifyCash(player, -110, false, true);
+            movements.Unmortgage(cellName);
         }
         if ((actualCell == "Station" || actualCell == "Station2" || actualCell == "Station3" || actualCell == "Station4") && railroadInformation[actualCell].owner == player) PossibilityToTravel();
     }
@@ -1981,13 +1995,13 @@ public class CellInfo : MonoBehaviour
 
         if (mortgaged)
         {
-            scripts.GetComponent<CashManagement>().ModifyCash(player, 75, false, true);
-            scripts.GetComponent<Movements>().Mortgage(cellName);
+            cashManagement.ModifyCash(player, 75, false, true);
+            movements.Mortgage(cellName);
         }
         else
         {
-            scripts.GetComponent<CashManagement>().ModifyCash(player, -83, false, true);
-            scripts.GetComponent<Movements>().Unmortgage(cellName);
+            cashManagement.ModifyCash(player, -83, false, true);
+            movements.Unmortgage(cellName);
         }
     }
 
@@ -1998,7 +2012,7 @@ public class CellInfo : MonoBehaviour
     /// <param name="panel">Panel to show. <c>1</c> left panel, <c>2</c> right panel.</param>
     /// <param name="disableOnClick">Indicates if the panel can be disabled on click. (Useful to indicate the panel is for trading or just information).</param>
     public void ShowPlayerPanel(int player, int panel, bool disableOnClick) {
-        int outofjail = scripts.GetComponent<Movements>().GetOutOfJail(player);
+        int outofjail = movements.GetOutOfJail(player);
         GameObject tradePanel;
         if (panel == 1) {
             tradePanel = tradePanel1;

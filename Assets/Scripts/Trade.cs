@@ -10,11 +10,6 @@ using TMPro;
 public class Trade : MonoBehaviour
 {
     /// <summary>
-    /// GameObject <c>scripts</c> contains all scripts.
-    /// </summary>
-    private GameObject scripts;
-
-    /// <summary>
     /// GameObject <c>firstPanel</c> trading panel number 1.
     /// </summary>
     public GameObject firstPanel;
@@ -25,18 +20,31 @@ public class Trade : MonoBehaviour
     public GameObject secondPanel;
 
     /// <summary>
+    /// CellInfo class.
+    /// </summary>
+    private CellInfo cellInfo;
+
+    /// <summary>
+    /// CashManagement class.
+    /// </summary>
+    private CashManagement cashManagement;
+
+    /// <summary>
     /// Method <c>Start</c> initializes both trading panel
     /// </summary>
     private void Start()
     {
-        scripts = GameObject.Find("GameHandler");
+        GameObject scripts = GameObject.Find("GameHandler");
+        cellInfo = scripts.GetComponent<CellInfo>();
+        cashManagement = scripts.GetComponent<CashManagement>();
+
         for (int i = 0; i < 30; ++i) {
             int num = i;
             Button b = firstPanel.transform.Find("targeta" + i.ToString()).gameObject.AddComponent(typeof(Button)) as Button;
-            b.onClick.AddListener(delegate { scripts.GetComponent<CellInfo>().ToggleTradingMiniCard(1, num); });
+            b.onClick.AddListener(delegate { cellInfo.ToggleTradingMiniCard(1, num); });
 
             b = secondPanel.transform.Find("targeta" + i.ToString()).gameObject.AddComponent(typeof(Button)) as Button;
-            b.onClick.AddListener(delegate { scripts.GetComponent<CellInfo>().ToggleTradingMiniCard(2, num); });
+            b.onClick.AddListener(delegate { cellInfo.ToggleTradingMiniCard(2, num); });
         }
     }
 
@@ -49,20 +57,20 @@ public class Trade : MonoBehaviour
         int cashOffered;
         if (int.TryParse(boxContent, out cashOffered)) {
             if (cashOffered < 0) {
-                scripts.GetComponent<CellInfo>().UpdateTradingCash(1, 0);
+                cellInfo.UpdateTradingCash(1, 0);
                 firstPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = "";
                 return;
             }
-            int max = scripts.GetComponent<CashManagement>().GetCash(scripts.GetComponent<CellInfo>().GetTradingPlayer(1));
+            int max = cashManagement.GetCash(cellInfo.GetTradingPlayer(1));
             if (cashOffered > max)
             {
-                scripts.GetComponent<CellInfo>().UpdateTradingCash(1, max);
+                cellInfo.UpdateTradingCash(1, max);
                 firstPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max + "";
                 return;
             }
-            scripts.GetComponent<CellInfo>().UpdateTradingCash(1, cashOffered);
+            cellInfo.UpdateTradingCash(1, cashOffered);
         }
-        else scripts.GetComponent<CellInfo>().UpdateTradingCash(1, 0);
+        else cellInfo.UpdateTradingCash(1, 0);
     }
 
     /// <summary>
@@ -76,20 +84,20 @@ public class Trade : MonoBehaviour
         {
             if (cashOffered < 0)
             {
-                scripts.GetComponent<CellInfo>().UpdateTradingCash(2, 0);
+                cellInfo.UpdateTradingCash(2, 0);
                 secondPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = "";
                 return;
             }
-            int max = scripts.GetComponent<CashManagement>().GetCash(scripts.GetComponent<CellInfo>().GetTradingPlayer(2));
+            int max = cashManagement.GetCash(cellInfo.GetTradingPlayer(2));
             if (cashOffered > max)
             {
-                scripts.GetComponent<CellInfo>().UpdateTradingCash(2, max);
+                cellInfo.UpdateTradingCash(2, max);
                 secondPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max + "";
                 return;
             }
-            scripts.GetComponent<CellInfo>().UpdateTradingCash(2, cashOffered);
+            cellInfo.UpdateTradingCash(2, cashOffered);
         }
-        else scripts.GetComponent<CellInfo>().UpdateTradingCash(2, 0);
+        else cellInfo.UpdateTradingCash(2, 0);
 
     }
 }

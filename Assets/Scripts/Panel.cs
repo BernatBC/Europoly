@@ -10,16 +10,17 @@ using UnityEngine.UI;
 public class Panel : MonoBehaviour
 {
     /// <summary>
-    /// GameObject <c>scripts</c> contains all scripts.
+    /// CellInfo class.
     /// </summary>
-    private GameObject scripts;
+    private CellInfo cellInfo;
 
     /// <summary>
     /// Method <c>Start</c> initialize the scripts GameObject.
     /// </summary>
     private void Start()
     {
-        scripts = GameObject.Find("GameHandler");
+        GameObject scripts = GameObject.Find("GameHandler");
+        cellInfo = scripts.GetComponent<CellInfo>();
     }
 
     /// <summary>
@@ -28,12 +29,12 @@ public class Panel : MonoBehaviour
     /// <param name="name"></param>
     public void Show(string name)
     {
-        if (name == "panel1") scripts.GetComponent<CellInfo>().ShowPlayerPanel(0, 1, true);
-        else if (name == "panel2") scripts.GetComponent<CellInfo>().ShowPlayerPanel(1, 1, true);
-        else if (name == "panel3") scripts.GetComponent<CellInfo>().ShowPlayerPanel(2, 1, true);
-        else if (name == "panel4") scripts.GetComponent<CellInfo>().ShowPlayerPanel(3, 1, true);
-        else if (name == "trade1") scripts.GetComponent<CellInfo>().TradingPartnerSelected(1);
-        else if (name == "trade2") scripts.GetComponent<CellInfo>().TradingPartnerSelected(2);
-        else if (name == "trade3") scripts.GetComponent<CellInfo>().TradingPartnerSelected(3);
+        if (name == "panel1") cellInfo.ShowPlayerPanel(0, 1, true);
+        else if (name == "panel2") cellInfo.ShowPlayerPanel(1, 1, true);
+        else if (name == "panel3") cellInfo.ShowPlayerPanel(2, 1, true);
+        else if (name == "panel4") cellInfo.ShowPlayerPanel(3, 1, true);
+        else if (name == "trade1") cellInfo.TradingPartnerSelected(1);
+        else if (name == "trade2") cellInfo.TradingPartnerSelected(2);
+        else if (name == "trade3") cellInfo.TradingPartnerSelected(3);
     }
 }
