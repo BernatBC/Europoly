@@ -50,7 +50,7 @@ public class Menu : MonoBehaviour
         slider.onValueChanged.AddListener((value) =>
         {
             numberOfPlayersSelected = Mathf.RoundToInt(value);
-            numberOfPlayers.text = numberOfPlayersSelected + "";
+            numberOfPlayers.text = numberOfPlayersSelected.ToString();
             SetPlayerPanels();
         });
     }

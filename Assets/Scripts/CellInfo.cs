@@ -674,16 +674,16 @@ public class CellInfo : MonoBehaviour
         else return;
 
         propertyCard.transform.Find("Name").GetComponent<TMP_Text>().text = propertyInformation[cellName].name;
-        propertyCard.transform.Find("Cost_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].cost + "";
-        propertyCard.transform.Find("Rent_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[0] + "";
-        propertyCard.transform.Find("Rent1_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[1] + "";
-        propertyCard.transform.Find("Rent2_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[2] + "";
-        propertyCard.transform.Find("Rent3_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[3] + "";
-        propertyCard.transform.Find("Rent4_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[4] + "";
-        propertyCard.transform.Find("RentH_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[5] + "";
-        propertyCard.transform.Find("CostHouse_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].houseCost + "";
-        propertyCard.transform.Find("CostHotel_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].houseCost + "";
-        propertyCard.transform.Find("Mortgage_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].cost / 2 + "";
+        propertyCard.transform.Find("Cost_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].cost.ToString();
+        propertyCard.transform.Find("Rent_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[0].ToString();
+        propertyCard.transform.Find("Rent1_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[1].ToString();
+        propertyCard.transform.Find("Rent2_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[2].ToString();
+        propertyCard.transform.Find("Rent3_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[3].ToString();
+        propertyCard.transform.Find("Rent4_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[4].ToString();
+        propertyCard.transform.Find("RentH_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].rent[5].ToString();
+        propertyCard.transform.Find("CostHouse_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].houseCost.ToString();
+        propertyCard.transform.Find("CostHotel_value").GetComponent<TMP_Text>().text = propertyInformation[cellName].houseCost.ToString();
+        propertyCard.transform.Find("Mortgage_value").GetComponent<TMP_Text>().text = (propertyInformation[cellName].cost / 2).ToString();
 
         if (propertyInformation[cellName].mortgaged) propertyCard.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(131, 133, 140, 255);
         else propertyCard.transform.Find("Body").GetComponentInChildren<Image>().color = new Color32(237, 231, 217, 255);

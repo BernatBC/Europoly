@@ -65,7 +65,7 @@ public class Trade : MonoBehaviour
             if (cashOffered > max)
             {
                 cellInfo.UpdateTradingCash(1, max);
-                firstPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max + "";
+                firstPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max.ToString();
                 return;
             }
             cellInfo.UpdateTradingCash(1, cashOffered);
@@ -92,7 +92,7 @@ public class Trade : MonoBehaviour
             if (cashOffered > max)
             {
                 cellInfo.UpdateTradingCash(2, max);
-                secondPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max + "";
+                secondPanel.transform.Find("Cash").gameObject.GetComponent<InputField>().text = max.ToString();
                 return;
             }
             cellInfo.UpdateTradingCash(2, cashOffered);

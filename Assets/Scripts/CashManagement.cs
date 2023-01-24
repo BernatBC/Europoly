@@ -70,14 +70,14 @@ public class CashManagement : MonoBehaviour
         if (!mustPay && cash[player] + amount < 0 && amount < 0) return false;
 
         cash[player] += amount;
-        cashText[player].text = cash[player] + "";
+        cashText[player].text = cash[player].ToString();
         if (taxes) taxCash -= amount;
         Vector3 panelPosition = cashText[player].transform.position;
 
         //Amount effect
         GameObject amountEffect = Instantiate(cashAnimationObject, new Vector3(panelPosition.x - 1250, panelPosition.y - 540, 0), Quaternion.identity);
         amountEffect.transform.SetParent(canvasParent, false);
-        amountEffect.GetComponent<TMP_Text>().text = amount + "";
+        amountEffect.GetComponent<TMP_Text>().text = amount.ToString();
         if (amount < 0) amountEffect.GetComponent<TMP_Text>().color = new Color32(255, 66, 66, 255);
         else amountEffect.GetComponent<TMP_Text>().color = new Color32(106, 181, 71, 255);
         cashSound.Play();
@@ -152,7 +152,7 @@ public class CashManagement : MonoBehaviour
         numberOfPlayers = DataHolder.numberOfPlayers;
         for (int i = 0; i < 4; i++) {
             cash[i] = initialCash;
-            cashText[i].text = cash[i] + "";
+            cashText[i].text = cash[i].ToString();
         }
     }
 }
