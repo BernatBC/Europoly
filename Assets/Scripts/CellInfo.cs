@@ -1011,100 +1011,86 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     /// <param name="cardNumber">Chest card number.</param>
     private void ChestCard(int cardNumber) {
+        TMP_Text tmp_Text = chestCard.transform.Find("Name").GetComponent<TMP_Text>();
         if (cardNumber == 1) {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Go (Collect 200)";
+            tmp_Text.text = "Advance to Go (Collect 200)";
             movements.MoveTo(actualCell, "Start");
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 2) {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Bank error in your favour. Collect 200";
+            tmp_Text.text = "Bank error in your favour. Collect 200";
             cashManagement.ModifyCash(currentPlayer, 200, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 3)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Doctor’s fee. Pay 50";
+            tmp_Text.text = "Doctor’s fee. Pay 50";
             cashManagement.ModifyCash(currentPlayer, -50, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 4)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "From sale of stock you get 50";
+            tmp_Text.text = "From sale of stock you get 50";
             cashManagement.ModifyCash(currentPlayer, 50, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 5)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Get Out of Jail Free";
+            tmp_Text.text = "Get Out of Jail Free";
             movements.IncrementByOneOutOfJailCards(currentPlayer);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 6)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Go directly to jail, do not pass Go, do not collect 200";
+            tmp_Text.text = "Go directly to jail, do not pass Go, do not collect 200";
             movements.GoToJail();
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 7)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Holiday fund matures. Receive 100";
+            tmp_Text.text = "Holiday fund matures. Receive 100";
             cashManagement.ModifyCash(currentPlayer, 100, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 8)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Income tax refund. Collect 20";
+            tmp_Text.text = "Income tax refund. Collect 20";
             cashManagement.ModifyCash(currentPlayer, 20, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 9)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "It is your birthday. Collect 10 from every player";
+            tmp_Text.text = "It is your birthday. Collect 10 from every player";
             cashManagement.CollectFromEverybody(currentPlayer, 10);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 10)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Life insurance matures. Collect 100";
+            tmp_Text.text = "Life insurance matures. Collect 100";
             cashManagement.ModifyCash(currentPlayer, 100, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 11)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Pay hospital fees of 100";
+            tmp_Text.text = "Pay hospital fees of 100";
             cashManagement.ModifyCash(currentPlayer, -100, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 12)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Pay school fees of 50";
+            tmp_Text.text = "Pay school fees of 50";
             cashManagement.ModifyCash(currentPlayer, -50, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 13)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Receive 25 consultancy fee";
+            tmp_Text.text = "Receive 25 consultancy fee";
             cashManagement.ModifyCash(currentPlayer, 25, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 14)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You are assessed for street repairs. 40 per house. 115 per hotel";
+            tmp_Text.text = "You are assessed for street repairs. 40 per house. 115 per hotel";
             cashManagement.ModifyCash(currentPlayer, -Repairs(40, 115), false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 15)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You have won second prize in a beauty contest. Collect 10";
+            tmp_Text.text = "You have won second prize in a beauty contest. Collect 10";
             cashManagement.ModifyCash(currentPlayer, 10, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
         else if (cardNumber == 16)
         {
-            chestCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You inherit 100";
+            tmp_Text.text = "You inherit 100";
             cashManagement.ModifyCash(currentPlayer, 100, false, true);
-            StartCoroutine(WaitAndDisableChestCard());
         }
+        StartCoroutine(WaitAndDisableChestCard());
         chestCard.SetActive(true);
         chestCardShown = true;
     }
@@ -1137,102 +1123,89 @@ public class CellInfo : MonoBehaviour
     /// <param name="cardNumber">Chance card number.</param>
     private void ChanceCard(int cardNumber)
     {
+        TMP_Text tmp_Text = chanceCard.transform.Find("Name").GetComponent<TMP_Text>();
         if (cardNumber == 1)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Go (Collect 200)";
+            tmp_Text.text = "Advance to Go (Collect 200)";
             movements.MoveTo(actualCell, "Start");
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 2)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Trafalgar Square. If you pass Go, collect 200";
+            tmp_Text.text = "Advance to Trafalgar Square. If you pass Go, collect 200";
             movements.MoveTo(actualCell, "Red3");
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 3)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Mayfair";
+            tmp_Text.text = "Advance to Mayfair";
             movements.MoveTo(actualCell, "DarkBlue2");
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 4)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to Pall Mall. If you pass Go, collect 200";
+            tmp_Text.text = "Advance to Pall Mall. If you pass Go, collect 200";
             movements.MoveTo(actualCell, "Purple");
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 5 || cardNumber == 6)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance to the nearest Station. If unowned, you may buy it from the Bank. If owned, pay wonder twice the rental to which they are otherwise entitled";
+            tmp_Text.text = "Advance to the nearest Station. If unowned, you may buy it from the Bank. If owned, pay wonder twice the rental to which they are otherwise entitled";
             if (actualCell == "Chance") movements.MoveTo(actualCell, "Station2");
             else if (actualCell == "Chance2") movements.MoveTo(actualCell, "Station3");
             else movements.MoveTo(actualCell, "Station");
             multiplier = 2;
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 7)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, pay owner a total ten times amount thrown.";
+            tmp_Text.text = "Advance token to nearest Utility. If unowned, you may buy it from the Bank. If owned, pay owner a total ten times amount thrown.";
             if (actualCell == "Chance2") movements.MoveTo(actualCell, "Water");
             else movements.MoveTo(actualCell, "Electric");
             multiplier = 10;
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 8)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Bank pays you dividend of 50";
+            tmp_Text.text = "Bank pays you dividend of 50";
             cashManagement.ModifyCash(currentPlayer, 50, false, true);
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 9)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Get Out of Jail Free";
+            tmp_Text.text = "Get Out of Jail Free";
             movements.IncrementByOneOutOfJailCards(currentPlayer);
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 10)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Go Back 3 Spaces";
+            tmp_Text.text = "Go Back 3 Spaces";
             movements.MoveNumberOfCells(-3);
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 11)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Go directly to Jail, do not pass Go, do not collect 200";
+            tmp_Text.text = "Go directly to Jail, do not pass Go, do not collect 200";
             movements.GoToJail();
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 12)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
+            tmp_Text.text = "Make general repairs on all your property. For each house pay 25. For each hotel pay 100";
             int repairMoney = -Repairs(25, 100);
             if (repairMoney < 0) cashManagement.ModifyCash(currentPlayer, repairMoney, false, true);
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 13)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Speeding fine 15";
+            tmp_Text.text = "Speeding fine 15";
             cashManagement.ModifyCash(currentPlayer, -15, false, true);
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 14)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Take a trip to Kings Cross Station. If you pass Go, collect 200";
+            tmp_Text.text = "Take a trip to Kings Cross Station. If you pass Go, collect 200";
             movements.MoveTo(actualCell, "Station");
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 15)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "You have been elected Chairman of the Board. Pay each player 50";
+            tmp_Text.text = "You have been elected Chairman of the Board. Pay each player 50";
             cashManagement.PayEverybody(currentPlayer, 50);
-            StartCoroutine(WaitAndDisableChanceCard());
         }
         else if (cardNumber == 16)
         {
-            chanceCard.transform.Find("Name").GetComponent<TMP_Text>().text = "Your building loan matures. Collect 150";
+            tmp_Text.text = "Your building loan matures. Collect 150";
             cashManagement.ModifyCash(currentPlayer, 150, false, true);
-            StartCoroutine(WaitAndDisableChanceCard());
         }
+        StartCoroutine(WaitAndDisableChanceCard());
         chanceCard.SetActive(true);
         chanceCardShown = true;
     }
@@ -1878,18 +1851,9 @@ public class CellInfo : MonoBehaviour
         foreach (var railroad in railroadInformation) if (railroad.Value.owner == player) ShowMiniRailroadCard(railroad.Key, i++, tradePanel);
         if (electrical.owner == player) ShowMiniUtilityCard("Electric", i++, tradePanel);
         if (water.owner == player) ShowMiniUtilityCard("Water", i++, tradePanel);
-        for (int j = i; j < 30; ++j) DisableMiniCard(j, tradePanel);
+        for (int j = i; j < 30; ++j) tradePanel.transform.Find("targeta" + j).gameObject.SetActive(false);
 
         tradePanel.SetActive(true);
-    }
-
-    /// <summary>
-    /// Method <c>DisableMiniCard</c> hides a card from the player panel.
-    /// </summary>
-    /// <param name="cardNumber">Position number of the card.</param>
-    /// <param name="tradePanel">GameObject panel to modify.</param>
-    private void DisableMiniCard(int cardNumber, GameObject tradePanel) {
-        tradePanel.transform.Find("targeta" + cardNumber).gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -1905,18 +1869,18 @@ public class CellInfo : MonoBehaviour
         //SPAWN CARD
         tradePanel.transform.Find("targeta" + cardNumber).gameObject.SetActive(true);
         GameObject minicard = tradePanel.transform.Find("targeta" + cardNumber).gameObject;
-        GameObject franja = minicard.transform.Find("franja").gameObject;
+        Image franja = minicard.transform.Find("franja").gameObject.GetComponentInChildren<Image>();
         minicard.transform.Find("inicial").gameObject.SetActive(true);
         minicard.transform.Find("franja").gameObject.SetActive(true);
         minicard.transform.Find("cash").gameObject.SetActive(true);
-        if (cellName == "Brown" || cellName == "Brown2") franja.GetComponentInChildren<Image>().color = new Color32(142, 97, 64, 255);
-        else if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") franja.GetComponentInChildren<Image>().color = new Color32(48, 190, 217, 255);
-        else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") franja.GetComponentInChildren<Image>().color = new Color32(219, 24, 174, 255);
-        else if (cellName == "Orange" || cellName == "Orange2" || cellName == "Orange3") franja.GetComponentInChildren<Image>().color = new Color32(243, 146, 55, 255);
-        else if (cellName == "Red" || cellName == "Red2" || cellName == "Red3") franja.GetComponentInChildren<Image>().color = new Color32(255, 66, 66, 255);
-        else if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3") franja.GetComponentInChildren<Image>().color = new Color32(255, 240, 0, 255);
-        else if (cellName == "Green" || cellName == "Green2" || cellName == "Green3") franja.GetComponentInChildren<Image>().color = new Color32(106, 181, 71, 255);
-        else if (cellName == "DarkBlue" || cellName == "DarkBlue2") franja.GetComponentInChildren<Image>().color = new Color32(18, 88, 219, 255);
+        if (cellName == "Brown" || cellName == "Brown2") franja.color = new Color32(142, 97, 64, 255);
+        else if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") franja.color = new Color32(48, 190, 217, 255);
+        else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") franja.color = new Color32(219, 24, 174, 255);
+        else if (cellName == "Orange" || cellName == "Orange2" || cellName == "Orange3") franja.color = new Color32(243, 146, 55, 255);
+        else if (cellName == "Red" || cellName == "Red2" || cellName == "Red3") franja.color = new Color32(255, 66, 66, 255);
+        else if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3") franja.color = new Color32(255, 240, 0, 255);
+        else if (cellName == "Green" || cellName == "Green2" || cellName == "Green3") franja.color = new Color32(106, 181, 71, 255);
+        else if (cellName == "DarkBlue" || cellName == "DarkBlue2") franja.color = new Color32(18, 88, 219, 255);
         else return;
 
         Property property = propertyInformation[cellName];
