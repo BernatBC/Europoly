@@ -595,7 +595,7 @@ public class Movements : MonoBehaviour
         if (Vector3.Distance(players[playerTorn].transform.position, destination) > 0.001f) return;
 
         moving = false;
-        if (movementsRemaining > 0) return;
+        if (movementsRemaining != 0) return;
 
         string cell_name = cells[playerInfo[playerTorn].position].name;
         carryOnMoving = false;
