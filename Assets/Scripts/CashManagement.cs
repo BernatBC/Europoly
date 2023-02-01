@@ -22,7 +22,7 @@ public class CashManagement : MonoBehaviour
     /// <summary>
     /// Transform <c>canvasParent</c> canvas transform to add prefabs into it.
     /// </summary>
-    private Transform canvasParent;
+    public Transform canvasParent;
 
     /// <summary>
     /// AudioSource <c>cashSound</c> sound effect when cash is added/removed.
@@ -146,7 +146,6 @@ public class CashManagement : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        canvasParent = GameObject.Find("Canvas").transform;
         cash = new int[4];
         initialCash = DataHolder.initialCash;
         numberOfPlayers = DataHolder.numberOfPlayers;

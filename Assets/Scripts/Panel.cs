@@ -19,8 +19,7 @@ public class Panel : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        GameObject scripts = GameObject.Find("GameHandler");
-        cellInfo = scripts.GetComponent<CellInfo>();
+        cellInfo = GetComponent<CellInfo>();
     }
 
     /// <summary>
@@ -29,6 +28,7 @@ public class Panel : MonoBehaviour
     /// <param name="name"></param>
     public void Show(string name)
     {
+        Debug.Log($"Pressed {name}");
         if (name == "panel1") cellInfo.ShowPlayerPanel(0, 1, true);
         else if (name == "panel2") cellInfo.ShowPlayerPanel(1, 1, true);
         else if (name == "panel3") cellInfo.ShowPlayerPanel(2, 1, true);

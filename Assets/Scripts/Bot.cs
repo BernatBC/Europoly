@@ -13,27 +13,26 @@ public class Bot : MonoBehaviour
     /// <summary>
     /// CellInfo class.
     /// </summary>
-    private CellInfo cellInfo;
+    CellInfo cellInfo;
 
     /// <summary>
     /// Movements class.
     /// </summary>
-    private Movements movements;
+    Movements movements;
 
     /// <summary>
     /// CashManagement class.
     /// </summary>
-    private CashManagement cashManagement;
+    CashManagement cashManagement;
 
     /// <summary>
     /// Method <c>Start</c> initialize the scripts GameObject.
     /// </summary>
     private void Start()
     {
-        GameObject scripts = GameObject.Find("GameHandler");
-        cellInfo = scripts.GetComponent<CellInfo>();
-        movements = scripts.GetComponent<Movements>();
-        cashManagement = scripts.GetComponent<CashManagement>();
+        cellInfo = GetComponent<CellInfo>();
+        movements = GetComponent<Movements>();
+        cashManagement = GetComponent<CashManagement>();
     }
 
     /// <summary>

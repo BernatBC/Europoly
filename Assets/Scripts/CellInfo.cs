@@ -256,36 +256,6 @@ public class CellInfo : MonoBehaviour
     private int multiplier = 1;
 
     /// <summary>
-    /// Name of the cells the current player can trade.
-    /// </summary>
-    private string[] tradingCells1 = new string[30];
-
-    /// <summary>
-    /// Name of the cells the trading partner player can trade.
-    /// </summary>
-    private string[] tradingCells2 = new string[30];
-
-    /// <summary>
-    /// Boolean that indicates if the current player cell is selected to trade.
-    /// </summary>
-    private bool[] CellSelected1 = new bool[30];
-
-    /// <summary>
-    /// Boolean that indicates if the trading partner player cell is selected to trade.
-    /// </summary>
-    private bool[] CellSelected2 = new bool[30];
-
-    /// <summary>
-    /// Amount of cash the current player will pay for trading.
-    /// </summary>
-    private int tradingCashPlayer1 = 0;
-
-    /// <summary>
-    /// Amount of cash the trading partner player will pay for trading.
-    /// </summary>
-    private int tradingCashPlayer2 = 0;
-
-    /// <summary>
     /// Indicates which player is the trading partner.
     /// </summary>
     private int tradingPartner = 0;
@@ -593,10 +563,9 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        GameObject scripts = GameObject.Find("GameHandler");
-        movements = scripts.GetComponent<Movements>();
-        cashManagement = scripts.GetComponent<CashManagement>();
-        bot = scripts.GetComponent<Bot>();
+        movements = GetComponent<Movements>();
+        cashManagement = GetComponent<CashManagement>();
+        bot = GetComponent<Bot>();
 
         InitializePropertyDictionary();
         InitializeRailroadDictionary();
@@ -727,10 +696,12 @@ public class CellInfo : MonoBehaviour
     /// Method <c>MakeTrade</c> confirms the trade and transfers assets.
     /// </summary>
     public void MakeTrade() {
-        for (int i = 0; i < CellSelected1.Length; ++i) {
-            if (CellSelected1[i]) NewOwner(tradingCells1[i], tradingPartner);
-            if (CellSelected2[i]) NewOwner(tradingCells2[i], currentPlayer);
+        for (int i = 0; i < 30; ++i) {
+            if (tradePanel1.GetComponent<TradingPanel>().IsSelected(i)) NewOwner(tradePanel1.GetComponent<TradingPanel>().GetCellName(i), tradingPartner);
+            if (tradePanel2.GetComponent<TradingPanel>().IsSelected(i)) NewOwner(tradePanel2.GetComponent<TradingPanel>().GetCellName(i), currentPlayer);
         }
+        int tradingCashPlayer1 = tradePanel1.GetComponent<TradingPanel>().GetCash();
+        int tradingCashPlayer2 = tradePanel2.GetComponent<TradingPanel>().GetCash();
         cashManagement.ModifyCash(currentPlayer, tradingCashPlayer2 - tradingCashPlayer1, false, false);
         cashManagement.ModifyCash(tradingPartner, tradingCashPlayer1 - tradingCashPlayer2, false, false);
         if ((actualCell == "Station" || actualCell == "Station2" || actualCell == "Station3" || actualCell == "Station4") && railroadInformation[actualCell].owner == currentPlayer) PossibilityToTravel();
@@ -780,8 +751,8 @@ public class CellInfo : MonoBehaviour
     public void FinishTrade() {
         tradingSelected = false;
         freezeTrading = false;
-        tradePanel1.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = false;
-        tradePanel2.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = false;
+        tradePanel1.GetComponent<TradingPanel>().SetInputFieldReadOnly(false);
+        tradePanel2.GetComponent<TradingPanel>().SetInputFieldReadOnly(false);
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
         tradePanel1.SetActive(false);
@@ -796,8 +767,8 @@ public class CellInfo : MonoBehaviour
     private void MakeOffer()
     {
         freezeTrading = true;
-        tradePanel1.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = true;
-        tradePanel2.transform.Find("Cash").GetComponent<TMP_InputField>().readOnly = true;
+        tradePanel1.GetComponent<TradingPanel>().SetInputFieldReadOnly(true);
+        tradePanel2.GetComponent<TradingPanel>().SetInputFieldReadOnly(true);
         cancel.gameObject.SetActive(false);
         offer.gameObject.SetActive(false);
 
@@ -1820,370 +1791,26 @@ public class CellInfo : MonoBehaviour
         if (panel == 1) {
             tradePanel = tradePanel1;
             if (disableOnClick) tradePanel1On = true;
-            for (int k = 0; k < CellSelected1.Length; ++k) CellSelected1[k] = false;
-            tradingCashPlayer1 = 0;
         } 
         else {
             tradePanel = tradePanel2;
             if (disableOnClick) tradePanel2On = true;
-            for (int k = 0; k < CellSelected2.Length; ++k) CellSelected2[k] = false;
-            tradingCashPlayer2 = 0;
         }
 
-        if (player == 0) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(255, 66, 66, 255);
-        else if (player == 1) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(14, 121, 178, 255);
-        else if (player == 2) tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(242, 255, 73, 255);
-        else tradePanel.transform.Find("Panel1").gameObject.transform.Find("Circle").GetComponent<Image>().color = new Color32(106, 181, 71, 255);
-
-        if (disableOnClick)
-        {
-            tradePanel.transform.Find("Cash").gameObject.SetActive(false);
-            tradePanel.transform.Find("Amount").gameObject.SetActive(false);
-        }
-        else {
-            tradePanel.transform.Find("Cash").GetComponent<TMP_InputField>().text = "";
-            tradePanel.transform.Find("Cash").gameObject.SetActive(true);
-            tradePanel.transform.Find("Amount").gameObject.SetActive(true);
-        }
-
-        int i = 0;
-        foreach (var property in propertyInformation) if (property.Value.owner == player) ShowMiniPropertyCard(property.Key, i++, tradePanel);
-        foreach (var railroad in railroadInformation) if (railroad.Value.owner == player) ShowMiniRailroadCard(railroad.Key, i++, tradePanel);
-        if (electrical.owner == player) ShowMiniUtilityCard("Electric", i++, tradePanel);
-        if (water.owner == player) ShowMiniUtilityCard("Water", i++, tradePanel);
-        for (int j = i; j < 30; ++j) tradePanel.transform.Find("targeta" + j).gameObject.SetActive(false);
-
-        tradePanel.SetActive(true);
+        tradePanel.GetComponent<TradingPanel>().ShowPlayerPanel(player, disableOnClick, propertyInformation, railroadInformation, water, electrical);
     }
 
-    /// <summary>
-    /// Method <c>ShowsMiniProppertyCard</c> shows a property card to the player panel.
-    /// </summary>
-    /// <param name="cardNumber">Position number of the card.</param>
-    /// <param name="tradePanel">GameObject panel to modify.</param>
-    private void ShowMiniPropertyCard(string cellName, int cardNumber, GameObject tradePanel)
-    {
-        if (tradePanel == tradePanel1) tradingCells1[cardNumber] = cellName;
-        else tradingCells2[cardNumber] = cellName;
-
-        //SPAWN CARD
-        tradePanel.transform.Find("targeta" + cardNumber).gameObject.SetActive(true);
-        GameObject minicard = tradePanel.transform.Find("targeta" + cardNumber).gameObject;
-        Image franja = minicard.transform.Find("franja").gameObject.GetComponentInChildren<Image>();
-        minicard.transform.Find("inicial").gameObject.SetActive(true);
-        minicard.transform.Find("franja").gameObject.SetActive(true);
-        minicard.transform.Find("cash").gameObject.SetActive(true);
-        if (cellName == "Brown" || cellName == "Brown2") franja.color = new Color32(142, 97, 64, 255);
-        else if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") franja.color = new Color32(48, 190, 217, 255);
-        else if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3") franja.color = new Color32(219, 24, 174, 255);
-        else if (cellName == "Orange" || cellName == "Orange2" || cellName == "Orange3") franja.color = new Color32(243, 146, 55, 255);
-        else if (cellName == "Red" || cellName == "Red2" || cellName == "Red3") franja.color = new Color32(255, 66, 66, 255);
-        else if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3") franja.color = new Color32(255, 240, 0, 255);
-        else if (cellName == "Green" || cellName == "Green2" || cellName == "Green3") franja.color = new Color32(106, 181, 71, 255);
-        else if (cellName == "DarkBlue" || cellName == "DarkBlue2") franja.color = new Color32(18, 88, 219, 255);
-        else return;
-
-        Property property = propertyInformation[cellName];
-        minicard.transform.Find("inicial").gameObject.GetComponentInChildren<TMP_Text>().text = property.name[0].ToString();
-        minicard.transform.Find("cash").gameObject.GetComponentInChildren<TMP_Text>().text = property.cost.ToString();
-
-        minicard.transform.Find("Train").gameObject.SetActive(false);
-        minicard.transform.Find("WaterTap").gameObject.SetActive(false);
-        minicard.transform.Find("inicial2").gameObject.SetActive(false);
-        minicard.transform.Find("cash2").gameObject.SetActive(false);
-        minicard.transform.Find("LightBulb").gameObject.SetActive(false);
-
-        if (property.houses == 0 || property.houses == 5) {
-            minicard.transform.Find("casa1").gameObject.SetActive(false);
-            minicard.transform.Find("casa2").gameObject.SetActive(false);
-            minicard.transform.Find("casa3").gameObject.SetActive(false);
-            minicard.transform.Find("casa4").gameObject.SetActive(false);
-            if (property.houses == 5) {
-                minicard.transform.Find("inicial").gameObject.GetComponentInChildren<TMP_Text>().text = "H";
-            }
-        }
-        else if (property.houses == 1)
-        {
-            minicard.transform.Find("casa1").gameObject.SetActive(true);
-            minicard.transform.Find("casa2").gameObject.SetActive(false);
-            minicard.transform.Find("casa3").gameObject.SetActive(false);
-            minicard.transform.Find("casa4").gameObject.SetActive(false);
-        }
-        else if (property.houses == 2)
-        {
-            minicard.transform.Find("casa1").gameObject.SetActive(true);
-            minicard.transform.Find("casa2").gameObject.SetActive(true);
-            minicard.transform.Find("casa3").gameObject.SetActive(false);
-            minicard.transform.Find("casa4").gameObject.SetActive(false);
-        }
-        else if (property.houses == 3)
-        {
-            minicard.transform.Find("casa1").gameObject.SetActive(true);
-            minicard.transform.Find("casa2").gameObject.SetActive(true);
-            minicard.transform.Find("casa3").gameObject.SetActive(true);
-            minicard.transform.Find("casa4").gameObject.SetActive(false);
-        }
-        else if (property.houses == 4)
-        {
-            minicard.transform.Find("casa1").gameObject.SetActive(true);
-            minicard.transform.Find("casa2").gameObject.SetActive(true);
-            minicard.transform.Find("casa3").gameObject.SetActive(true);
-            minicard.transform.Find("casa4").gameObject.SetActive(true);
-        }
-
-        if (property.mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(131, 133, 140, 255);
-        else minicard.GetComponentInChildren<Image>().color = new Color32(242, 242, 242, 255);
-    }
-
-    /// <summary>
-    /// Method <c>ShowsMiniRailroadCard</c> shows a railroad station card to the player panel.
-    /// </summary>
-    /// <param name="cardNumber">Position number of the card.</param>
-    /// <param name="tradePanel">GameObject panel to modify.</param>
-    private void ShowMiniRailroadCard(string cellName, int cardNumber, GameObject tradePanel)
-    {
-        if (tradePanel == tradePanel1) tradingCells1[cardNumber] = cellName;
-        else tradingCells2[cardNumber] = cellName;
-
-        tradePanel.transform.Find("targeta" + cardNumber).gameObject.SetActive(true);
-        GameObject minicard = tradePanel.transform.Find("targeta" + cardNumber).gameObject;
-        minicard.transform.Find("inicial").gameObject.SetActive(false);
-        minicard.transform.Find("franja").gameObject.SetActive(false);
-        minicard.transform.Find("cash").gameObject.SetActive(false);
-        minicard.transform.Find("casa1").gameObject.SetActive(false);
-        minicard.transform.Find("casa2").gameObject.SetActive(false);
-        minicard.transform.Find("casa3").gameObject.SetActive(false);
-        minicard.transform.Find("casa4").gameObject.SetActive(false);
-
-        minicard.transform.Find("Train").gameObject.SetActive(true);
-        minicard.transform.Find("WaterTap").gameObject.SetActive(false);
-        minicard.transform.Find("inicial2").gameObject.SetActive(true);
-        minicard.transform.Find("cash2").gameObject.SetActive(true);
-        minicard.transform.Find("LightBulb").gameObject.SetActive(false);
-
-        minicard.transform.Find("cash2").gameObject.GetComponentInChildren<TMP_Text>().text = "200";
-        minicard.transform.Find("inicial2").gameObject.GetComponentInChildren<TMP_Text>().text = railroadInformation[cellName].name[0].ToString();
-
-        if (railroadInformation[cellName].mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(131, 133, 140, 255);
-        else minicard.GetComponentInChildren<Image>().color = new Color32(242, 242, 242, 255);
-    }
-
-    /// <summary>
-    /// Method <c>ShowsMiniUtilityCard</c> shows a railroad station card to the player panel.
-    /// </summary>
-    /// <param name="cardNumber">Position number of the card.</param>
-    /// <param name="tradePanel">GameObject panel to modify.</param>
-    private void ShowMiniUtilityCard(string cellName, int cardNumber, GameObject tradePanel)
-    {
-        if (tradePanel == tradePanel1) tradingCells1[cardNumber] = cellName;
-        else tradingCells2[cardNumber] = cellName;
-
-        tradePanel.transform.Find("targeta" + cardNumber).gameObject.SetActive(true);
-        GameObject minicard = tradePanel.transform.Find("targeta" + cardNumber).gameObject;
-        minicard.transform.Find("inicial").gameObject.SetActive(false);
-        minicard.transform.Find("franja").gameObject.SetActive(false);
-        minicard.transform.Find("cash").gameObject.SetActive(false);
-        minicard.transform.Find("casa1").gameObject.SetActive(false);
-        minicard.transform.Find("casa2").gameObject.SetActive(false);
-        minicard.transform.Find("casa3").gameObject.SetActive(false);
-        minicard.transform.Find("casa4").gameObject.SetActive(false);
-
-        minicard.transform.Find("Train").gameObject.SetActive(false);
-        minicard.transform.Find("inicial2").gameObject.SetActive(false);
-        minicard.transform.Find("cash2").gameObject.SetActive(true);
-
-        minicard.transform.Find("cash2").gameObject.GetComponentInChildren<TMP_Text>().text = "150";
-
-        if (cellName == "Electric")
-        {
-            minicard.transform.Find("WaterTap").gameObject.SetActive(false);
-            minicard.transform.Find("LightBulb").gameObject.SetActive(true);
-
-            if (electrical.mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
-            else minicard.GetComponentInChildren<Image>().color = new Color32(255, 255, 255, 255);
-        }
-        else {
-            minicard.transform.Find("WaterTap").gameObject.SetActive(true);
-            minicard.transform.Find("LightBulb").gameObject.SetActive(false);
-
-            if (water.mortgaged) minicard.GetComponentInChildren<Image>().color = new Color32(120, 120, 120, 255);
-            else minicard.GetComponentInChildren<Image>().color = new Color32(255, 255, 255, 255);
-        }
-    }
-
-    /// <summary>
-    /// function int <c>CellNameToMiniCardNumber</c> returns the panel position where the cell card is.
-    /// </summary>
-    /// <param name="cellName">Cell name of the mini card.</param>
-    /// <param name="panel">Trading panel to check for the cell card.</param>
-    /// <returns>Panel position</returns>
-    private int CellNameToMiniCardNumber(string cellName, int panel) {
-        if (panel == 1) for (int i = 0; i < tradingCells1.Length; ++i) if (tradingCells1[i] == cellName) return i;
-        if (panel == 2) for (int i = 0; i < tradingCells2.Length; ++i) if (tradingCells2[i] == cellName) return i;
-        return -1;
-    }
-
-    /// <summary>
-    /// Method <c>ToggleColor</c> changes color to selected/unselected when trading.
-    /// </summary>
-    /// <param name="panel">Trading panel where the card is.</param>
-    /// <param name="cell">Cell position of the card.</param>
-    /// <param name="cellName">Cell name position of the card.</param>
-    private void ToggleColor(int panel, int cell, string cellName) {
-        if (cellName == "Brown" || cellName == "Brown2") {
-            if (propertyInformation["Brown"].houses > 0 || propertyInformation["Brown2"].houses > 0)
-            {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Brown", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Brown2", panel));
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-
-        if (cellName == "LightBlue" || cellName == "LightBlue2" || cellName == "LightBlue3") {
-            if (propertyInformation["LightBlue"].houses > 0 || propertyInformation["LightBlue2"].houses > 0 || propertyInformation["LightBlue3"].houses > 0) {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("LightBlue", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("LightBlue2", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("LightBlue3", panel));
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-
-        if (cellName == "Purple" || cellName == "Purple2" || cellName == "Purple3")
-        {
-            if (propertyInformation["Purple"].houses > 0 || propertyInformation["Purple2"].houses > 0 || propertyInformation["Purple3"].houses > 0)
-            {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Purple", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Purple2", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Purple3", panel));
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-
-        if (cellName == "Orange" || cellName == "Orange2" || cellName == "Orange3")
-        {
-            if (propertyInformation["Orange"].houses > 0 || propertyInformation["Orange2"].houses > 0 || propertyInformation["Orange3"].houses > 0)
-            {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Orange", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Orange2", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Orange3", panel));
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-
-        if (cellName == "Red" || cellName == "Red2" || cellName == "Red3")
-        {
-            if (propertyInformation["Red"].houses > 0 || propertyInformation["Red2"].houses > 0 || propertyInformation["Red3"].houses > 0)
-            {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Red", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Red2", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Red3", panel));
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-
-        if (cellName == "Yellow" || cellName == "Yellow2" || cellName == "Yellow3")
-        {
-            if (propertyInformation["Yellow"].houses > 0 || propertyInformation["Yellow2"].houses > 0 || propertyInformation["Yellow3"].houses > 0)
-            {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Yellow", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Yellow2", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Yellow3", panel));
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-
-        if (cellName == "Green" || cellName == "Green2" || cellName == "Green3")
-        {
-            if (propertyInformation["Green"].houses > 0 || propertyInformation["Green2"].houses > 0 || propertyInformation["Green3"].houses > 0)
-            {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Green", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Green2", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("Green3", panel));
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-
-        if (cellName == "DarkBlue" || cellName == "DarkBlue2")
-        {
-            if (propertyInformation["DarkBlue"].houses > 0 || propertyInformation["DarkBlue2"].houses > 0)
-            {
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("DarkBlue", panel));
-                ToggleMiniCard(panel, CellNameToMiniCardNumber("DarkBlue2", panel));
-
-            }
-            else ToggleMiniCard(panel, cell);
-            return;
-        }
-    }
-
-    /// <summary>
-    /// Method <c>ToggleTradingMiniCard</c> selects/unselects a trading mini card.
-    /// </summary>
-    /// <param name="panel">Trading panel where the card is.</param>
-    /// <param name="cell">Cell position of the card.</param>
-    public void ToggleTradingMiniCard(int panel, int cell) {
-        if (freezeTrading) return;
-
-        string cellName;
-        if (panel == 1) cellName = tradingCells1[cell];
-        else cellName = tradingCells2[cell];
-
-        if (cellName == "Station" || cellName == "Station2" || cellName == "Station3" || cellName == "Station4" || cellName == "Electric" || cellName == "Water")
-        {
-            ToggleMiniCard(panel, cell);
-            return;
-        }
-        ToggleColor(panel, cell, cellName);
-    }
 
     /// <summary>
     /// bool function <c>CellMortgaged</c> indicates if the cell is mortgaged or not.
     /// </summary>
     /// <param name="cellName">Cell name.</param>
     /// <returns><c>True</c> if the cell is mortgaged, <c>False</c> otherwise.</returns>
-    private bool CellMortgaged(string cellName) {
+    public bool CellMortgaged(string cellName) {
         if (cellName == "Electric") return electrical.mortgaged;
         if (cellName == "Water") return water.mortgaged;
         if (cellName == "Station" || cellName == "Station2" || cellName == "Station3" || cellName == "Station4") return railroadInformation[cellName].mortgaged;
         return propertyInformation[cellName].mortgaged; ;
-    }
-
-    /// <summary>
-    /// Method <c>ToggleMiniCard</c> selects/unselects a card for trading.
-    /// </summary>
-    /// <param name="panel">Trading panel where the card is.</param>
-    /// <param name="cell">Cell position of the card.</param>
-    private void ToggleMiniCard(int panel, int cell) {
-        if (panel == 1)
-        {
-            CellSelected1[cell] = !CellSelected1[cell];
-            if (CellSelected1[cell]) tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color =  new Color32(243, 146, 55, 255);
-            else if (CellMortgaged(tradingCells1[cell])) tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(131, 133, 140, 255);
-            else tradePanel1.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(242, 242, 242, 255);
-        }
-        else if (panel == 2) {
-            CellSelected2[cell] = !CellSelected2[cell];
-            if (CellSelected2[cell]) tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(243, 146, 55, 255);
-            else if (CellMortgaged(tradingCells2[cell])) tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponentInChildren<Image>().color = new Color32(131, 133, 140, 255);
-            else tradePanel2.transform.Find("targeta" + cell).gameObject.GetComponent<Image>().color = new Color32(242, 242, 242, 255);
-        }
-    }
-
-    /// <summary>
-    /// Method <c>UpdateTradingCash</c> assigns the amount of cash a player is willing to pay for a trade.
-    /// </summary>
-    /// <param name="panel">>Trading panel of the player.</param>
-    /// <param name="amount">Amount of cash.</param>
-    public void UpdateTradingCash(int panel, int amount) {
-        if (panel == 1) tradingCashPlayer1 = amount;
-        else tradingCashPlayer2 = amount;
     }
 
     /// <summary>

@@ -889,6 +889,7 @@ GameObject:
   - component: {fileID: 2735071996851021503}
   - component: {fileID: 2735071996851021501}
   - component: {fileID: 2735071996851021500}
+  - component: {fileID: 9089949535641697366}
   m_Layer: 5
   m_Name: minicard
   m_TagString: Untagged
@@ -966,6 +967,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9089949535641697366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2735071996851021502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fc9c7a70738bb74ab61bf2ac991e3c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorStripe: {fileID: 2735071995438870235}
+  house:
+  - {fileID: 2735071996484134491}
+  - {fileID: 2735071995689356610}
+  - {fileID: 2735071995728663897}
+  - {fileID: 2735071996251611725}
+  trainImage: {fileID: 2735071996570520833}
+  waterImage: {fileID: 2735071996401722571}
+  electricalImage: {fileID: 2735071995959110675}
+  letter1: {fileID: 2735071996129716996}
+  letter2: {fileID: 8018959675001258519}
+  cash1: {fileID: 2735071995829550723}
+  cash2: {fileID: 7412590919600422155}
+  body: {fileID: 2735071996851021500}
 --- !u!1 &7412590919600422155
 GameObject:
   m_ObjectHideFlags: 0

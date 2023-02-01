@@ -57,12 +57,12 @@ public class Movements : MonoBehaviour
     /// <summary>
     /// GameObject <c>dice1</c> dice 1 UI image.
     /// </summary>
-    public GameObject dice1;
+    public ChangeDiceUI dice1;
 
     /// <summary>
     /// GameObject <c>dice2</c> dice 2 UI image.
     /// </summary>
-    public GameObject dice2;
+    public ChangeDiceUI dice2;
 
     /// <summary>
     /// AudioSource <c>diceSound</c> sound of a rolling dice.
@@ -179,10 +179,9 @@ public class Movements : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        GameObject scripts = GameObject.Find("GameHandler");
-        cellInfo = scripts.GetComponent<CellInfo>();
-        cashManagement = scripts.GetComponent<CashManagement>();
-        bot = scripts.GetComponent<Bot>();
+        cellInfo = GetComponent<CellInfo>();
+        cashManagement = GetComponent<CashManagement>();
+        bot = GetComponent<Bot>();
 
         rollDice.onClick.AddListener(RollDice);
         endTorn.onClick.AddListener(NextTorn);
@@ -230,12 +229,8 @@ public class Movements : MonoBehaviour
     }
 
     private void RollDiceAndSetUI() {
-        dice1.transform.Find("Dice" + diceValue1.ToString()).gameObject.SetActive(false);
-        dice2.transform.Find("Dice" + diceValue2.ToString()).gameObject.SetActive(false);
-        diceValue1 = Random.Range(1, 7);
-        diceValue2 = Random.Range(1, 7);
-        dice1.transform.Find("Dice" + diceValue1.ToString()).gameObject.SetActive(true);
-        dice2.transform.Find("Dice" + diceValue2.ToString()).gameObject.SetActive(true);
+        diceValue1 = dice1.Roll();
+        diceValue2 = dice2.Roll();
     }
 
     /// <summary>
