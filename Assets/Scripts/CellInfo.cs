@@ -146,11 +146,6 @@ public class CellInfo : MonoBehaviour
     public GameObject tradePanel2;
 
     /// <summary>
-    /// Prefab of a trading panel minicard.
-    /// </summary>
-    public GameObject miniCardPrefab;
-
-    /// <summary>
     /// Raycast to detect which cell the player has selected.
     /// </summary>
     private RaycastHit hit;
@@ -713,7 +708,7 @@ public class CellInfo : MonoBehaviour
     /// </summary>
     /// <param name="cellName">Cell name to transfer.</param>
     /// <param name="player">New owner player of the cell.</param>
-    private void NewOwner(string cellName, int player)
+    public void NewOwner(string cellName, int player)
     {
         if (cellName == "Station" || cellName == "Station2" || cellName == "Station3" || cellName == "Station4")
         {

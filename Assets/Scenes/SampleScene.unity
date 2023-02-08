@@ -12065,7 +12065,6 @@ MonoBehaviour:
   hotel: {fileID: 155690250109492435, guid: 51343de1d26ee3849b326cff364cd416, type: 3}
   tradePanel1: {fileID: 808790864}
   tradePanel2: {fileID: 326769881}
-  miniCardPrefab: {fileID: 2735071996851021502, guid: 33520dcd84e256b4a957cb6181d67ace, type: 3}
 --- !u!114 &921770914
 MonoBehaviour:
   m_ObjectHideFlags: 0
