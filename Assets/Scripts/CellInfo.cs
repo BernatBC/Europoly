@@ -1880,20 +1880,29 @@ public class CellInfo : MonoBehaviour
     public int GetTraddingDifference(bool playerPartner) {
         int player1_value = 0;
         int player2_value = 0;
-        // Afegir bonus si jugador té color, multiples estacions, o 2 utilities
         for (int i = 0; i < 30; ++i)
         {
             if (tradePanel1.GetComponent<TradingPanel>().IsSelected(i)) {
                 string cell_name = tradePanel1.GetComponent<TradingPanel>().GetCellName(i);
-                if (propertyInformation.ContainsKey(cell_name)) player1_value += propertyInformation[cell_name].cost;
+                if (propertyInformation.ContainsKey(cell_name))
+                {
+                    player1_value += propertyInformation[cell_name].cost;
+                    if (PlayerHasAllColor(cell_name)) player1_value += propertyInformation[cell_name].cost;
+                }
                 else if (railroadInformation.ContainsKey(cell_name)) player1_value += 200;
                 else if (cell_name == "Electric") player1_value += 150;
                 else if (cell_name == "Water") player1_value += 150;
+
+
             }
 
             if (tradePanel2.GetComponent<TradingPanel>().IsSelected(i)) {
                 string cell_name = tradePanel2.GetComponent<TradingPanel>().GetCellName(i);
-                if (propertyInformation.ContainsKey(cell_name)) player2_value += propertyInformation[cell_name].cost;
+                if (propertyInformation.ContainsKey(cell_name))
+                {
+                    player2_value += propertyInformation[cell_name].cost;
+                    if (PlayerHasAllColor(cell_name)) player2_value += propertyInformation[cell_name].cost;
+                }
                 else if (railroadInformation.ContainsKey(cell_name)) player2_value += 200;
                 else if (cell_name == "Electric") player2_value += 150;
                 else if (cell_name == "Water") player2_value += 150;
