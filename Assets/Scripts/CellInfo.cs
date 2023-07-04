@@ -1886,22 +1886,22 @@ public class CellInfo : MonoBehaviour
                 string cell_name = tradePanel1.GetComponent<TradingPanel>().GetCellName(i);
                 if (propertyInformation.ContainsKey(cell_name))
                 {
-                    player1_value += propertyInformation[cell_name].cost;
-                    if (PlayerHasAllColor(cell_name)) player1_value += propertyInformation[cell_name].cost;
+                    Property property = propertyInformation[cell_name];
+                    player1_value += property.cost + property.houseCost*property.houses;
+                    if (PlayerHasAllColor(cell_name)) player1_value += property.cost;
                 }
                 else if (railroadInformation.ContainsKey(cell_name)) player1_value += 200;
                 else if (cell_name == "Electric") player1_value += 150;
                 else if (cell_name == "Water") player1_value += 150;
-
-
             }
 
             if (tradePanel2.GetComponent<TradingPanel>().IsSelected(i)) {
                 string cell_name = tradePanel2.GetComponent<TradingPanel>().GetCellName(i);
                 if (propertyInformation.ContainsKey(cell_name))
                 {
-                    player2_value += propertyInformation[cell_name].cost;
-                    if (PlayerHasAllColor(cell_name)) player2_value += propertyInformation[cell_name].cost;
+                    Property property = propertyInformation[cell_name];
+                    player2_value += property.cost + property.houseCost * property.houses;
+                    if (PlayerHasAllColor(cell_name)) player2_value += property.cost;
                 }
                 else if (railroadInformation.ContainsKey(cell_name)) player2_value += 200;
                 else if (cell_name == "Electric") player2_value += 150;
