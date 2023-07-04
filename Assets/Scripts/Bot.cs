@@ -60,10 +60,10 @@ public class Bot : MonoBehaviour
     /// </summary>
     public void AcceptRejectTrade() {
         //Calculate value and accept if Vafter > Vbefore
-        //At the moment it rejects the offers.
-        cellInfo.FinishTrade();
-        //scripts.GetComponent<CellInfo>().MakeTrade();
         Debug.Log("Choose accept/reject property");
+        Debug.Log("Trading Difference: " + cellInfo.GetTraddingDifference(true).ToString());
+        if (cellInfo.GetTraddingDifference(true) > 0) cellInfo.MakeTrade();
+        else cellInfo.FinishTrade();
     }
 
     /// <summary>
