@@ -223,7 +223,10 @@ public class Movements : MonoBehaviour
             }
             else for (int i = 0; i <= 2; ++i) playerPanel[i].transform.position = new Vector3(playerPanel[i].transform.position.x, playerPanel[i].transform.position.y - 50, playerPanel[i].transform.position.z);
         }
-        SetPanelColor(playerPanel[0], new Color32(243, 146, 55, 255));
+
+        playerTorn = Random.Range(0, numberOfPlayers);
+
+        SetPanelColor(playerPanel[playerTorn], new Color32(243, 146, 55, 255));
 
         MakeRollDice();
     }
