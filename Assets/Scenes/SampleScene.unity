@@ -12305,7 +12305,7 @@ MonoBehaviour:
   - {fileID: 6282146482220630021, guid: df0d4ee4df4ca62438f215d197164e4d, type: 3}
   - {fileID: 5693366315531789839, guid: f7edf01ef75e07b41b19e5e9849b88d1, type: 3}
   house: {fileID: 1770622311039951764, guid: b2db1f87e54590340974bfa3fc4103b8, type: 3}
-  hotel: {fileID: 155690250109492435, guid: 51343de1d26ee3849b326cff364cd416, type: 3}
+  hotel: {fileID: 7922117419277890059, guid: 51343de1d26ee3849b326cff364cd416, type: 3}
   tradePanel1: {fileID: 808790864}
   tradePanel2: {fileID: 326769881}
 --- !u!114 &921770914
