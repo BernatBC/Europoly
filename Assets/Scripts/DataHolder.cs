@@ -23,9 +23,19 @@ public class DataHolder : MonoBehaviour
     public static bool botSelected1 = false;
 
     /// <summary>
+    /// int <c>botDifficulty1</c> indicates bot difficulty, values: 0 -> Easy, 1 -> Medium, 2 -> Hard
+    /// </summary>
+    public static int botDifficulty1 = 1;
+
+    /// <summary>
     /// bool <c>botSelected2</c> indicates wether the player 2 is a computer player or not.
     /// </summary>
     public static bool botSelected2 = true;
+
+    /// <summary>
+    /// int <c>botDifficulty1</c> indicates bot difficulty, values: 0 -> Easy, 1 -> Medium, 2 -> Hard
+    /// </summary>
+    public static int botDifficulty2 = 1;
 
     /// <summary>
     /// bool <c>botSelected3</c> indicates wether the player 3 is a computer player or not.
@@ -33,7 +43,17 @@ public class DataHolder : MonoBehaviour
     public static bool botSelected3 = true;
 
     /// <summary>
+    /// int <c>botDifficulty1</c> indicates bot difficulty, values: 0 -> Easy, 1 -> Medium, 2 -> Hard
+    /// </summary>
+    public static int botDifficulty3 = 1;
+
+    /// <summary>
     /// bool <c>botSelected4</c> indicates wether the player 4 is a computer player or not.
     /// </summary>
     public static bool botSelected4 = false;
+
+    /// <summary>
+    /// int <c>botDifficulty1</c> indicates bot difficulty, values: 0 -> Easy, 1 -> Medium, 2 -> Hard
+    /// </summary>
+    public static int botDifficulty4 = 1;
 }

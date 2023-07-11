@@ -147,6 +147,11 @@ public class Movements : MonoBehaviour
         /// bool <c>isBot</c> indicates if the player is the computer or not.
         /// </summary>
         public bool isBot;
+
+        /// <summary>
+        /// Bot class
+        /// </summary>
+        public Bot bot;
     };
 
     /// <summary>
@@ -170,18 +175,12 @@ public class Movements : MonoBehaviour
     private CashManagement cashManagement;
 
     /// <summary>
-    /// Bot class.
-    /// </summary>
-    private Bot bot;
-
-    /// <summary>
     /// Method <c>Start</c> initializes buttons, panels and datastructures.
     /// </summary>
     private void Start()
     {
         cellInfo = GetComponent<CellInfo>();
         cashManagement = GetComponent<CashManagement>();
-        bot = GetComponent<Bot>();
 
         rollDice.onClick.AddListener(RollDice);
         endTorn.onClick.AddListener(NextTorn);
@@ -199,6 +198,9 @@ public class Movements : MonoBehaviour
         numberOfPlayers = DataHolder.numberOfPlayers;
         numberOfPlayersAlive = numberOfPlayers;
         playerInfo = new Player[numberOfPlayers];
+        Bot easyBot = GetComponent<EasyBot>();
+        Bot mediumBot = GetComponent<MediumBot>();
+
         for (int i = 0; i < numberOfPlayers; ++i)
         {
             players[i].transform.position = new Vector3(cells[0].transform.position.x, cells[0].transform.position.y + 1, cells[0].transform.position.z);
@@ -207,10 +209,30 @@ public class Movements : MonoBehaviour
             playerInfo[i].penalizedTorns = 0;
             playerInfo[i].numberOutOfJailCards = 0;
             playerInfo[i].isDead = false;
-            if (i == 0) playerInfo[i].isBot = DataHolder.botSelected1;
-            else if (i == 1) playerInfo[i].isBot = DataHolder.botSelected2;
-            else if (i == 2) playerInfo[i].isBot = DataHolder.botSelected3;
-            else if (i == 3) playerInfo[i].isBot = DataHolder.botSelected4;
+
+            if (i == 0) {
+                playerInfo[i].isBot = DataHolder.botSelected1;
+                if (DataHolder.botDifficulty1 == 0) playerInfo[i].bot = easyBot;
+                else playerInfo[i].bot = mediumBot;
+            }
+            else if (i == 1)
+            {
+                playerInfo[i].isBot = DataHolder.botSelected2;
+                if (DataHolder.botDifficulty2 == 0) playerInfo[i].bot = easyBot;
+                else playerInfo[i].bot = mediumBot;
+            }
+            else if (i == 2)
+            {
+                playerInfo[i].isBot = DataHolder.botSelected3;
+                if (DataHolder.botDifficulty3 == 0) playerInfo[i].bot = easyBot;
+                else playerInfo[i].bot = mediumBot;
+            }
+            else if (i == 3)
+            {
+                playerInfo[i].isBot = DataHolder.botSelected4;
+                if (DataHolder.botDifficulty4 == 0) playerInfo[i].bot = easyBot;
+                else playerInfo[i].bot = mediumBot;
+            }
         }
 
         if (numberOfPlayers <= 3)
@@ -255,7 +277,7 @@ public class Movements : MonoBehaviour
         if (alreadyTraveled) alreadyTraveled = false;
         else {
             alreadyTraveled = true;
-            if (playerInfo[playerTorn].isBot) bot.Travel(cells[playerInfo[playerTorn].position].name, cellInfo.CanTravel("Station", playerTorn), cellInfo.CanTravel("Station2", playerTorn), cellInfo.CanTravel("Station3", playerTorn), cellInfo.CanTravel("Station4", playerTorn));
+            if (playerInfo[playerTorn].isBot) playerInfo[playerTorn].bot.Travel(cells[playerInfo[playerTorn].position].name, cellInfo.CanTravel("Station", playerTorn), cellInfo.CanTravel("Station2", playerTorn), cellInfo.CanTravel("Station3", playerTorn), cellInfo.CanTravel("Station4", playerTorn));
             else travel.gameObject.SetActive(true);
         }
     }
@@ -336,7 +358,7 @@ public class Movements : MonoBehaviour
             return;
         }
 
-        if (playerInfo[playerTorn].isBot) bot.LeaveJail(playerInfo[playerTorn].numberOutOfJailCards > 0);
+        if (playerInfo[playerTorn].isBot) playerInfo[playerTorn].bot.LeaveJail(playerInfo[playerTorn].numberOutOfJailCards > 0);
         else {
             rollDoubles.gameObject.SetActive(true);
             pay50.gameObject.SetActive(true);
@@ -573,7 +595,7 @@ public class Movements : MonoBehaviour
     /// Method <c>MakeRollDice</c> Shows roll dice button if the player is not the computer, sends the bot he can roll the dice signal.
     /// </summary>
     private void MakeRollDice() {
-        if (playerInfo[playerTorn].isBot) bot.RollDice();
+        if (playerInfo[playerTorn].isBot) playerInfo[playerTorn].bot.RollDice();
         else rollDice.gameObject.SetActive(true);
     }
 
@@ -581,7 +603,7 @@ public class Movements : MonoBehaviour
     /// Method <c>MakeEndTorn</c> Shows end torn button if the player is not the computer, sends the bot he can end the torn signal.
     /// </summary>
     private void MakeEndTorn() {
-        if (playerInfo[playerTorn].isBot) bot.BeforeEndTorn(playerTorn, cellInfo.GetPropertyInformation(), cellInfo.GetRailroadInformation(), cellInfo.GetWater(), cellInfo.GetElectrical());
+        if (playerInfo[playerTorn].isBot) playerInfo[playerTorn].bot.BeforeEndTorn(playerTorn, cellInfo.GetPropertyInformation(), cellInfo.GetRailroadInformation(), cellInfo.GetWater(), cellInfo.GetElectrical());
         else endTorn.gameObject.SetActive(true);
     }
 

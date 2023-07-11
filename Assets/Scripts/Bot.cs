@@ -7,27 +7,27 @@ using UnityEngine.UIElements;
 /// <summary>
 /// Class <c>Bot</c> contains the decision-making algorithms for the computer player.
 /// </summary>
-public class Bot : MonoBehaviour
+public abstract class Bot : MonoBehaviour
 {
     /// <summary>
     /// CellInfo class.
     /// </summary>
-    CellInfo cellInfo;
+    protected CellInfo cellInfo;
 
     /// <summary>
     /// Movements class.
     /// </summary>
-    Movements movements;
+    protected Movements movements;
 
     /// <summary>
     /// CashManagement class.
     /// </summary>
-    CashManagement cashManagement;
+    protected CashManagement cashManagement;
 
     /// <summary>
     /// Method <c>Start</c> initialize the scripts GameObject.
     /// </summary>
-    private void Start()
+    protected void Start()
     {
         cellInfo = GetComponent<CellInfo>();
         movements = GetComponent<Movements>();
@@ -37,7 +37,7 @@ public class Bot : MonoBehaviour
     /// <summary>
     /// Method <c>RollDice</c> calls RollDice method.
     /// </summary>
-    public void RollDice() {
+    public virtual void RollDice() {
         //Always Roll
         Debug.Log("RollDice");
 
@@ -48,7 +48,7 @@ public class Bot : MonoBehaviour
     /// Method <c>BuyPropertyDecision</c> decides wether to buy a property or to pass.
     /// </summary>
     /// <param name="cellName">The cell which you can buy.</param>
-    public void BuyPropertyDecision(string cellName) {
+    public virtual void BuyPropertyDecision(string cellName) {
         //Always buy if possible
         Debug.Log("Choose buy/pass property " + cellName);
 
@@ -58,7 +58,7 @@ public class Bot : MonoBehaviour
     /// <summary>
     /// Method <c>AcceptRejectTrade</c> decides whther is better to accept a trading offer or not.
     /// </summary>
-    public void AcceptRejectTrade() {
+    public virtual void AcceptRejectTrade() {
         //Calculate value and accept if Vafter > Vbefore
         Debug.Log("Choose accept/reject property");
         Debug.Log("Trading Difference: " + cellInfo.GetTraddingDifference(true).ToString());
@@ -70,7 +70,7 @@ public class Bot : MonoBehaviour
     /// Method <c>LeaveJail</c> decides if it's better to roll doubles, pay fine or play the card.
     /// </summary>
     /// <param name="hasFreeCard">Indicates if the bot has a card to leave jail.</param>
-    public void LeaveJail(bool hasFreeCard) {
+    public virtual void LeaveJail(bool hasFreeCard) {
         //if cellsUnowned > K -> Pay (Use card if possible)
         //else roll
         Debug.Log("Choose roll/pay");
@@ -88,7 +88,7 @@ public class Bot : MonoBehaviour
     /// <param name="canTravelStation2">Indicates if the player can travel to Station2</param>
     /// <param name="canTravelStation3">Indicates if the player can travel to Station3</param>
     /// <param name="canTravelStation4">Indicates if the player can travel to Station4</param>
-    public void Travel(string currentStation, bool canTravelStation1, bool canTravelStation2, bool canTravelStation3, bool canTravelStation4) {
+    public virtual void Travel(string currentStation, bool canTravelStation1, bool canTravelStation2, bool canTravelStation3, bool canTravelStation4) {
         //Travel to furthest station
         Debug.Log("Choose station to move/stay");
 
@@ -109,7 +109,7 @@ public class Bot : MonoBehaviour
     /// <param name="railroadInformation">Dictionary of stations.</param>
     /// <param name="water">Water utility.</param>
     /// <param name="electrical">Electrical utility.</param>
-    public void BeforeEndTorn(int player, Dictionary<string, CellInfo.Property> propertyInformation, Dictionary<string, CellInfo.RailRoad> railroadInformation, CellInfo.Utility water, CellInfo.Utility electrical) {
+    public virtual void BeforeEndTorn(int player, Dictionary<string, CellInfo.Property> propertyInformation, Dictionary<string, CellInfo.RailRoad> railroadInformation, CellInfo.Utility water, CellInfo.Utility electrical) {
         //Some Strategy
         Debug.Log("End Torn");
 
@@ -142,7 +142,7 @@ public class Bot : MonoBehaviour
     /// </summary>
     /// <param name="timeInSeconds">Seconds to wait.</param>
     /// <returns></returns>
-    private IEnumerator WaitAndRoll(float timeInSeconds)
+    protected IEnumerator WaitAndRoll(float timeInSeconds)
     {
         yield return new WaitForSecondsRealtime(timeInSeconds);
         movements.RollDice();
@@ -153,7 +153,7 @@ public class Bot : MonoBehaviour
     /// </summary>
     /// <param name="timeInSeconds">Seconds to wait.</param>
     /// <returns></returns>
-    private IEnumerator WaitAndEnd(float timeInSeconds)
+    protected IEnumerator WaitAndEnd(float timeInSeconds)
     {
         yield return new WaitForSecondsRealtime(timeInSeconds);
         movements.NextTorn();
@@ -164,7 +164,7 @@ public class Bot : MonoBehaviour
     /// </summary>
     /// <param name="timeInSeconds">Seconds to wait.</param>
     /// <returns></returns>
-    private IEnumerator WaitAndPay(float timeInSeconds)
+    protected IEnumerator WaitAndPay(float timeInSeconds)
     {
         yield return new WaitForSecondsRealtime(timeInSeconds);
         cellInfo.BuyCell();

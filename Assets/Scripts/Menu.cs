@@ -40,13 +40,21 @@ public class Menu : MonoBehaviour
     /// </summary>
     private bool[] botSelected;
 
+    private int[] botDifficulty;
+
     /// <summary>
     /// Method <c>Start</c> initializes the slider and botSelected values.
     /// </summary>
     private void Start()
     {
         botSelected = new bool[4];
-        for (int i = 0; i < 4; ++i) botSelected[i] = false;
+        botDifficulty = new int[4];
+        for (int i = 0; i < 4; ++i)
+        {
+            botSelected[i] = false;
+            botDifficulty[i] = 1;
+        }
+
         slider.onValueChanged.AddListener((value) =>
         {
             numberOfPlayersSelected = Mathf.RoundToInt(value);
@@ -71,6 +79,10 @@ public class Menu : MonoBehaviour
         DataHolder.botSelected2 = botSelected[1];
         DataHolder.botSelected3 = botSelected[2];
         DataHolder.botSelected4 = botSelected[3];
+        DataHolder.botDifficulty1 = botDifficulty[0];
+        DataHolder.botDifficulty2 = botDifficulty[1];
+        DataHolder.botDifficulty3 = botDifficulty[2];
+        DataHolder.botDifficulty4 = botDifficulty[3];
         SceneManager.LoadScene("SampleScene");
     }
 
@@ -117,5 +129,40 @@ public class Menu : MonoBehaviour
     /// <param name="boxContent">Content of the initial cash input field.</param>
     public void ReadBox(string boxContent) {
         initialCash = boxContent;
+    }
+
+    /// <summary>
+    /// Method <c>SetBotDifficulty1</c> sets the bot difficulty for bot 1.
+    /// </summary>
+    /// <param name="difficulty">Difficulty selected in the dropdown.</param>
+    public void SetBotDifficulty1(int difficulty) {
+        botDifficulty[0] = difficulty;
+    }
+
+    /// <summary>
+    /// Method <c>SetBotDifficulty1</c> sets the bot difficulty for bot 2.
+    /// </summary>
+    /// <param name="difficulty">Difficulty selected in the dropdown.</param>
+    public void SetBotDifficulty2(int difficulty)
+    {
+        botDifficulty[1] = difficulty;
+    }
+
+    /// <summary>
+    /// Method <c>SetBotDifficulty1</c> sets the bot difficulty for bot 3.
+    /// </summary>
+    /// <param name="difficulty">Difficulty selected in the dropdown.</param>
+    public void SetBotDifficulty3(int difficulty)
+    {
+        botDifficulty[2] = difficulty;
+    }
+
+    /// <summary>
+    /// Method <c>SetBotDifficulty1</c> sets the bot difficulty for bot 4.
+    /// </summary>
+    /// <param name="difficulty">Difficulty selected in the dropdown.</param>
+    public void SetBotDifficulty4(int difficulty)
+    {
+        botDifficulty[3] = difficulty;
     }
 }
