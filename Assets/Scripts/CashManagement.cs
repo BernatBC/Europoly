@@ -67,6 +67,8 @@ public class CashManagement : MonoBehaviour
     /// <returns><c>true</c> if cash has been modified, <c>false</c> otherwise.</returns>
     public bool ModifyCash(int player, int amount, bool taxes, bool mustPay) {
         //Debug.Log("Player " + player + " " + amount);
+        if (amount == 0) return true;
+
         if (!mustPay && cash[player] + amount < 0 && amount < 0) return false;
 
         cash[player] += amount;
