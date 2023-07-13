@@ -397,7 +397,7 @@ public class CellInfo : MonoBehaviour
         propertyInformation = new Dictionary<string, Property>();
         Property property = new()
         {
-            name = "Old Kent Rd",
+            name = "Ljubljana",
             cost = 60,
             houseCost = 50,
             houses = 0,
@@ -407,97 +407,97 @@ public class CellInfo : MonoBehaviour
         };
         propertyInformation.Add("Brown", property);
 
-        property.name = "Whitechapel Rd";
+        property.name = "Zagreb";
         property.rent = new int[] { 4, 20, 60, 180, 320, 450 };
         propertyInformation.Add("Brown2", property);
 
-        property.name = "The Angel, Islington";
+        property.name = "Nicosia";
         property.cost = 100;
         property.rent = new int[] { 6, 30, 90, 270, 400, 550 };
         propertyInformation.Add("LightBlue", property);
 
-        property.name = "Euston Rd";
+        property.name = "Athens";
         propertyInformation.Add("LightBlue2", property);
 
-        property.name = "Pentonville Rd";
+        property.name = "Istanbul";
         property.cost = 120;
         property.rent = new int[] { 8, 40, 100, 300, 450, 600};
         propertyInformation.Add("LightBlue3", property);
 
-        property.name = "Pall Mall";
+        property.name = "Vilnius";
         property.cost = 140;
         property.houseCost = 100;
         property.rent = new int[] { 10, 50, 150, 450, 625, 750};
         propertyInformation.Add("Purple", property);
 
-        property.name = "Whitehall";
+        property.name = "Riga";
         propertyInformation.Add("Purple2", property);
 
-        property.name = "Northumberland Ave";
+        property.name = "Tallin";
         property.cost = 160;
         property.rent = new int[] { 12, 60, 180, 500, 700, 900};
         propertyInformation.Add("Purple3", property);
 
-        property.name = "Bow St";
+        property.name = "Lisbon";
         property.cost = 180;
         property.rent = new int[] { 14, 70, 200, 550, 750, 950};
         propertyInformation.Add("Orange", property);
 
-        property.name = "Marlborough St";
+        property.name = "Madrid";
         propertyInformation.Add("Orange2", property);
 
-        property.name = "Vine St";
+        property.name = "Rome";
         property.cost = 200;
         property.rent = new int[] {16, 80, 220, 600, 800, 1000 };
         propertyInformation.Add("Orange3", property);
 
-        property.name = "Strand";
+        property.name = "Brussels";
         property.cost = 220;
         property.houseCost = 150;
         property.rent = new int[] { 18, 90, 250, 700, 875, 1050};
         propertyInformation.Add("Red", property);
 
-        property.name = "Fleet St";
+        property.name = "Amsterdam";
         propertyInformation.Add("Red2", property);
 
-        property.name = "Trafalgar Sq";
+        property.name = "Luxembourg";
         property.cost = 240;
         property.rent = new int[] { 20, 100, 300, 750, 925, 1100 };
         propertyInformation.Add("Red3", property);
 
-        property.name = "Leicester St";
+        property.name = "Berlin";
         property.cost = 260;
         property.rent = new int[] { 22, 110, 330, 800, 975, 1150 };
         propertyInformation.Add("Yellow", property);
 
-        property.name = "Coventry St";
+        property.name = "Paris";
         propertyInformation.Add("Yellow2", property);
 
-        property.name = "Piccadilly";
+        property.name = "London";
         property.cost = 280;
         property.rent = new int[] { 24, 120, 360, 850, 1025, 1200 };
         propertyInformation.Add("Yellow3", property);
 
-        property.name = "Regent St";
+        property.name = "Helsinki";
         property.cost = 300;
         property.houseCost = 200;
         property.rent = new int[] { 26, 130, 390, 900, 1100, 1275 };
         propertyInformation.Add("Green", property);
 
-        property.name = "Oxford St";
+        property.name = "Stockholm";
         propertyInformation.Add("Green2", property);
 
-        property.name = "Bond St";
+        property.name = "Oslo";
         property.cost = 320;
         property.rent = new int[] { 28, 150, 450, 1000, 1200, 1400 };
         propertyInformation.Add("Green3", property);
 
-        property.name = "Park Lane";
+        property.name = "Vienna";
         property.cost = 350;
         property.rent = new int[] { 35, 175, 500, 1100, 1300, 1500 };
         propertyInformation.Add("DarkBlue", property);
 
-        property.name = "Mayfair";
+        property.name = "Zurich";
         property.cost = 400;
         property.rent = new int[] { 50, 200, 600, 1400, 1700, 2000 };
         propertyInformation.Add("DarkBlue2", property);
@@ -510,16 +510,16 @@ public class CellInfo : MonoBehaviour
         railroadInformation = new Dictionary<string, RailRoad>();
         RailRoad railroad = new()
         {
-            name = "Kings Cross",
+            name = "San Marino",
             owner = -1,
             mortgaged = false
         };
         railroadInformation.Add("Station", railroad);
-        railroad.name = "Marylebone";
+        railroad.name = "Andorra la Vella";
         railroadInformation.Add("Station2", railroad);
-        railroad.name = "Fenchurch St";
+        railroad.name = "Vaduz";
         railroadInformation.Add("Station3", railroad);
-        railroad.name = "Liverpool St";
+        railroad.name = "Monaco";
         railroadInformation.Add("Station4", railroad);
     }
 
@@ -1097,17 +1097,17 @@ public class CellInfo : MonoBehaviour
         }
         else if (cardNumber == 2)
         {
-            tmp_Text.text = "Advance to Trafalgar Square. If you pass Go, collect 200";
+            tmp_Text.text = $"Advance to {propertyInformation["Red3"].name}. If you pass Go, collect 200";
             movements.MoveTo(actualCell, "Red3");
         }
         else if (cardNumber == 3)
         {
-            tmp_Text.text = "Advance to Mayfair";
+            tmp_Text.text = $"Advance to {propertyInformation["DarkBlue2"].name}. If you pass Go, collect 200";
             movements.MoveTo(actualCell, "DarkBlue2");
         }
         else if (cardNumber == 4)
         {
-            tmp_Text.text = "Advance to Pall Mall. If you pass Go, collect 200";
+            tmp_Text.text = $"Advance to {propertyInformation["Purple"].name}. If you pass Go, collect 200";
             movements.MoveTo(actualCell, "Purple");
         }
         else if (cardNumber == 5 || cardNumber == 6)
@@ -1158,7 +1158,7 @@ public class CellInfo : MonoBehaviour
         }
         else if (cardNumber == 14)
         {
-            tmp_Text.text = "Take a trip to Kings Cross Station. If you pass Go, collect 200";
+            tmp_Text.text = $"Take a trip to {railroadInformation["Station"].name} Station. If you pass Go, collect 200";
             movements.MoveTo(actualCell, "Station");
         }
         else if (cardNumber == 15)
