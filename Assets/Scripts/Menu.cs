@@ -165,4 +165,12 @@ public class Menu : MonoBehaviour
     {
         botDifficulty[3] = difficulty;
     }
+
+    /// <summary>
+    /// Method <c>QuitGame</c> quits the game.
+    /// </summary>
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

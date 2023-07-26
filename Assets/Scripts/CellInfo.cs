@@ -391,6 +391,11 @@ public class CellInfo : MonoBehaviour
     private Dictionary<string, GameObject[]> housesPrefabs;
 
     /// <summary>
+    /// Indicates if raycast is enabled
+    /// </summary>
+    private bool raycastEnabled = true;
+
+    /// <summary>
     /// Method <c>InitializePropertyDictionary</c> initializes <c>propertyInformation</c>.
     /// </summary>
     private void InitializePropertyDictionary() {
@@ -1915,13 +1920,21 @@ public class CellInfo : MonoBehaviour
     }
 
     /// <summary>
+    /// Method <c>SetRaycast</c> enables or disables the raycast of cells
+    /// </summary>
+    /// <param name="enable">True to enable, False to disable</param>
+    public void SetRaycast(bool enable) {
+        raycastEnabled = enable;
+    }
+
+    /// <summary>
     /// Method <c>Update</c> Interacts with cells after clicking on them.
     /// </summary>
     private void Update()
     {
         if (!Input.GetMouseButtonDown(0)) return;
 
-        if (!justButtons && !DisableCard() && !tradingSelected)
+        if (!justButtons && !DisableCard() && !tradingSelected && raycastEnabled)
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
