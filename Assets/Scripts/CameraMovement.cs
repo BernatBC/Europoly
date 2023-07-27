@@ -10,6 +10,11 @@ public class CameraMovement : MonoBehaviour
 
 {
     /// <summary>
+    /// bool <c>movementAllowed</c> indicates if on mouse drag, the board moves
+    /// </summary>
+    private bool movementAllowed;
+
+    /// <summary>
     /// bool <c>drag</c> indicates if the mouse is in dragging mode.
     /// </summary>
     private bool drag = false;
@@ -20,10 +25,20 @@ public class CameraMovement : MonoBehaviour
     private Vector3 previous;
 
     /// <summary>
+    /// Method <c>EnableMovement</c> modifies <c>movementAllowed</c> boolean.
+    /// </summary>
+    /// <param name="enable">true if movement is allowed, false otherwise.</param>
+    public void EnableMovement(bool enable) {
+        movementAllowed = enable;
+    }
+
+    /// <summary>
     /// Method <c>Update</c> calculates the new camera position when dragging the mouse.
     /// </summary>
     void Update()
     {
+        if (!movementAllowed) return;
+
         if (drag)
         {
             if (!Input.GetMouseButton(0)) {

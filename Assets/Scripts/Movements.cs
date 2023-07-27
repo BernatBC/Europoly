@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.XR;
 
 /// <summary>
 /// Class <c>Movements</c> functions and methods related to player movement.
@@ -68,6 +69,11 @@ public class Movements : MonoBehaviour
     /// AudioSource <c>diceSound</c> sound of a rolling dice.
     /// </summary>
     public AudioSource diceSound;
+
+    /// <summary>
+    /// GameObject <c>controlButtons</c> englobes the control buttons
+    /// </summary>
+    public GameObject controlButtons;
 
     /// <summary>
     /// bool <c>moving</c> indicates if the selected player is moving or not.
@@ -595,6 +601,8 @@ public class Movements : MonoBehaviour
     /// Method <c>MakeRollDice</c> Shows roll dice button if the player is not the computer, sends the bot he can roll the dice signal.
     /// </summary>
     private void MakeRollDice() {
+        BeforeRoll(playerInfo[playerTorn].isBot);
+
         if (playerInfo[playerTorn].isBot) playerInfo[playerTorn].bot.RollDice();
         else rollDice.gameObject.SetActive(true);
     }
@@ -631,6 +639,11 @@ public class Movements : MonoBehaviour
 
         if (doublesRolled > 0) MakeRollDice();
         else MakeEndTorn();
+    }
+
+    public void BeforeRoll(bool isBot) {
+        controlButtons.SetActive(!isBot);
+        cellInfo.SetRaycast(!isBot);
     }
 
     /// <summary>
